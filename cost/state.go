@@ -53,7 +53,7 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 
 			component := Component{
 				Quantity: quantity,
-				Unit:     prices[0].Unit,
+				Unit:     comp.Unit,
 				Rate:     rate,
 				Details:  comp.Details,
 			}
