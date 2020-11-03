@@ -15,7 +15,10 @@ type Instance struct {
 	region       string
 	instanceType string
 	tenancy      string
-	os           string
+
+	operatingSystem string
+	capacityStatus  string
+	preInstalledSW  string
 
 	rootVolume *Volume
 }
@@ -30,8 +33,11 @@ func (p *Provider) NewInstance(values map[string]interface{}) *Instance {
 		providerName: p.name,
 		instanceType: instType,
 		region:       zoneToRegion(zone),
-		// Note: every Instance is estimated as a Linux Instance
-		os: "Linux",
+
+		// Note: every Instance is estimated as a Linux without pre-installed S/W
+		operatingSystem: "Linux",
+		preInstalledSW:  "NA",
+		capacityStatus:  "Used",
 	}
 
 	// Terraform uses "default"/"dedicated", AWS expects "Shared"/"Dedicated"
@@ -94,9 +100,11 @@ func (inst *Instance) computeComponent() query.Component {
 			Family:   util.StringPtr("Compute Instance"),
 			Location: util.StringPtr(inst.region),
 			AttributeFilters: []*product.AttributeFilter{
+				{Key: "capacitystatus", Value: util.StringPtr(inst.capacityStatus)},
 				{Key: "instanceType", Value: util.StringPtr(inst.instanceType)},
 				{Key: "tenancy", Value: util.StringPtr(inst.tenancy)},
-				{Key: "operatingSystem", Value: util.StringPtr(inst.os)},
+				{Key: "operatingSystem", Value: util.StringPtr(inst.operatingSystem)},
+				{Key: "preInstalledSw", Value: util.StringPtr(inst.preInstalledSW)},
 			},
 		},
 		PriceFilter: &price.Filter{
