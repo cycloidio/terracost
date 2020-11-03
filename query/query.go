@@ -21,9 +21,11 @@ type Resource struct {
 // component of a resource. For example, a compute instance might be have different pricing for the number
 // of CPU's, amount of RAM, etc. - each of these would be a Component.
 type Component struct {
-	Name          string
-	Quantity      decimal.Decimal
-	Unit          string
-	ProductFilter *product.Filter
-	PriceFilter   *price.Filter
+	Name            string
+	HourlyQuantity  decimal.Decimal
+	MonthlyQuantity decimal.Decimal
+	Unit            string
+	Details         []string
+	ProductFilter   *product.Filter
+	PriceFilter     *price.Filter
 }
