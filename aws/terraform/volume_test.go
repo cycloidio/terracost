@@ -27,9 +27,10 @@ func TestVolume_Components(t *testing.T) {
 
 		expected := []query.Component{
 			{
-				Name:     "Storage",
-				Quantity: decimal.NewFromInt(42),
-				Unit:     "GB-Mo",
+				Name:            "Storage",
+				MonthlyQuantity: decimal.NewFromInt(42),
+				Unit:            "GB",
+				Details:         []string{"gp2"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
@@ -62,9 +63,10 @@ func TestVolume_Components(t *testing.T) {
 
 		expected := []query.Component{
 			{
-				Name:     "Storage",
-				Quantity: decimal.NewFromInt(42),
-				Unit:     "GB-Mo",
+				Name:            "Storage",
+				MonthlyQuantity: decimal.NewFromInt(42),
+				Unit:            "GB",
+				Details:         []string{"io2"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
@@ -76,9 +78,9 @@ func TestVolume_Components(t *testing.T) {
 				},
 			},
 			{
-				Name:     "Provisioned IOPS",
-				Quantity: decimal.NewFromInt(123),
-				Unit:     "IOPS-Mo",
+				Name:            "Provisioned IOPS",
+				MonthlyQuantity: decimal.NewFromInt(123),
+				Unit:            "IOPS",
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),

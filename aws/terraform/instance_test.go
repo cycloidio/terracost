@@ -28,18 +28,20 @@ func TestInstance_Components(t *testing.T) {
 
 		expected := []query.Component{
 			{
-				Name:     "EC2 instance hours",
-				Quantity: decimal.NewFromInt(730),
-				Unit:     "Hrs",
+				Name:           "Compute",
+				HourlyQuantity: decimal.NewFromInt(1),
+				Details:        []string{"Linux", "on-demand", "m5.xlarge"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Compute Instance"),
 					Location: util.StringPtr("eu-west-3"),
 					AttributeFilters: []*product.AttributeFilter{
+						{Key: "capacitystatus", Value: util.StringPtr("Used")},
 						{Key: "instanceType", Value: util.StringPtr("m5.xlarge")},
 						{Key: "tenancy", Value: util.StringPtr("Shared")},
 						{Key: "operatingSystem", Value: util.StringPtr("Linux")},
+						{Key: "preInstalledSw", Value: util.StringPtr("NA")},
 					},
 				},
 				PriceFilter: &price.Filter{
@@ -50,9 +52,10 @@ func TestInstance_Components(t *testing.T) {
 				},
 			},
 			{
-				Name:     "Root volume: Storage",
-				Quantity: decimal.NewFromInt(8),
-				Unit:     "GB-Mo",
+				Name:            "Root volume: Storage",
+				MonthlyQuantity: decimal.NewFromInt(8),
+				Unit:            "GB",
+				Details:         []string{"gp2"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
@@ -90,18 +93,20 @@ func TestInstance_Components(t *testing.T) {
 
 		expected := []query.Component{
 			{
-				Name:     "EC2 instance hours",
-				Quantity: decimal.NewFromInt(730),
-				Unit:     "Hrs",
+				Name:           "Compute",
+				HourlyQuantity: decimal.NewFromInt(1),
+				Details:        []string{"Linux", "on-demand", "m5.xlarge"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Compute Instance"),
 					Location: util.StringPtr("us-east-1"),
 					AttributeFilters: []*product.AttributeFilter{
+						{Key: "capacitystatus", Value: util.StringPtr("Used")},
 						{Key: "instanceType", Value: util.StringPtr("m5.xlarge")},
 						{Key: "tenancy", Value: util.StringPtr("Dedicated")},
 						{Key: "operatingSystem", Value: util.StringPtr("Linux")},
+						{Key: "preInstalledSw", Value: util.StringPtr("NA")},
 					},
 				},
 				PriceFilter: &price.Filter{
@@ -112,9 +117,10 @@ func TestInstance_Components(t *testing.T) {
 				},
 			},
 			{
-				Name:     "Root volume: Storage",
-				Quantity: decimal.NewFromInt(42),
-				Unit:     "GB-Mo",
+				Name:            "Root volume: Storage",
+				MonthlyQuantity: decimal.NewFromInt(42),
+				Unit:            "GB",
+				Details:         []string{"st1"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
