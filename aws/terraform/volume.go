@@ -61,9 +61,10 @@ func (v *Volume) Components() []query.Component {
 
 func (v *Volume) storageComponent() query.Component {
 	return query.Component{
-		Name:     "Storage",
-		Quantity: v.size,
-		Unit:     "GB-Mo",
+		Name:            "Storage",
+		MonthlyQuantity: v.size,
+		Unit:            "GB",
+		Details:         []string{v.volumeType},
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(v.providerName),
 			Service:  util.StringPtr("AmazonEC2"),
@@ -78,9 +79,9 @@ func (v *Volume) storageComponent() query.Component {
 
 func (v *Volume) iopsComponent() query.Component {
 	return query.Component{
-		Name:     "Provisioned IOPS",
-		Quantity: v.iops,
-		Unit:     "IOPS-Mo",
+		Name:            "Provisioned IOPS",
+		MonthlyQuantity: v.iops,
+		Unit:            "IOPS",
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(v.providerName),
 			Service:  util.StringPtr("AmazonEC2"),

@@ -91,9 +91,9 @@ func (inst *Instance) Components() []query.Component {
 
 func (inst *Instance) computeComponent() query.Component {
 	return query.Component{
-		Name:     "EC2 instance hours",
-		Quantity: decimal.NewFromInt(730),
-		Unit:     "Hrs",
+		Name:           "Compute",
+		Details:        []string{"Linux", "on-demand", inst.instanceType},
+		HourlyQuantity: decimal.NewFromInt(1),
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(inst.providerName),
 			Service:  util.StringPtr("AmazonEC2"),
