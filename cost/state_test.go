@@ -51,7 +51,7 @@ func TestNewState(t *testing.T) {
 
 	prod1 := &product.Product{ID: product.ID(1)}
 	productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return([]*product.Product{prod1}, nil)
-	prc1 := &price.Price{Value: decimal.NewFromFloat(1.23)}
+	prc1 := &price.Price{Value: decimal.NewFromFloat(1.23), Unit: "Hrs"}
 	priceRepo.EXPECT().Filter(ctx, prod1.ID, queries[0].Components[0].PriceFilter).Return([]*price.Price{prc1}, nil)
 
 	expected := &cost.State{
