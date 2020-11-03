@@ -37,9 +37,11 @@ func TestAWSEstimation(t *testing.T) {
 			Family:   "Compute Instance",
 			Location: "us-east-1",
 			Attributes: map[string]string{
+				"capacitystatus":  "Used",
 				"instanceType":    "t2.micro",
 				"tenancy":         "Shared",
 				"operatingSystem": "Linux",
+				"preInstalledSw":  "NA",
 			},
 		},
 		{
@@ -49,9 +51,11 @@ func TestAWSEstimation(t *testing.T) {
 			Family:   "Compute Instance",
 			Location: "us-east-1",
 			Attributes: map[string]string{
+				"capacitystatus":  "Used",
 				"instanceType":    "t2.xlarge",
 				"tenancy":         "Shared",
 				"operatingSystem": "Linux",
+				"preInstalledSw":  "NA",
 			},
 		},
 		{
@@ -127,10 +131,12 @@ func TestAWSEstimation(t *testing.T) {
 	require.Len(t, diffs, 1)
 	assert.Equal(t, "aws_instance.example", diffs[0].Address)
 
-	instHrs := diffs[0].ComponentDiffs["EC2 instance hours"]
-	require.NotNil(t, instHrs)
-	assertDecimalEqual(t, decimal.NewFromFloat(87.6), instHrs.PriorCost())
-	assertDecimalEqual(t, decimal.NewFromFloat(897.9), instHrs.PlannedCost())
+	compute := diffs[0].ComponentDiffs["Compute"]
+	require.NotNil(t, compute)
+	assert.Equal(t, []string{"Linux", "on-demand", "t2.micro"}, compute.Prior.Details)
+	assert.Equal(t, []string{"Linux", "on-demand", "t2.xlarge"}, compute.Planned.Details)
+	assertDecimalEqual(t, decimal.NewFromFloat(87.6), compute.PriorCost())
+	assertDecimalEqual(t, decimal.NewFromFloat(897.9), compute.PlannedCost())
 
 	rootVol := diffs[0].ComponentDiffs["Root volume: Storage"]
 	require.NotNil(t, rootVol)
