@@ -33,9 +33,8 @@ func TestNewState(t *testing.T) {
 			Address: "aws_instance.test1",
 			Components: []query.Component{
 				{
-					Name:     "EC2 instance hours",
-					Quantity: decimal.NewFromInt(730),
-					Unit:     "Hrs",
+					Name:           "Compute",
+					HourlyQuantity: decimal.NewFromInt(1),
 					ProductFilter: &product.Filter{
 						Provider: util.StringPtr("aws"),
 						Service:  util.StringPtr("AmazonEC2"),
@@ -59,10 +58,9 @@ func TestNewState(t *testing.T) {
 		Resources: map[string]cost.Resource{
 			"aws_instance.test1": {
 				Components: map[string]cost.Component{
-					"EC2 instance hours": {
-						Rate:     decimal.NewFromFloat(1.23),
-						Quantity: decimal.NewFromInt(730),
-						Unit:     "Hrs",
+					"Compute": {
+						Rate:     decimal.New(89790, -2),
+						Quantity: decimal.NewFromInt(1),
 					},
 				},
 			},
@@ -79,10 +77,9 @@ func TestState_Cost(t *testing.T) {
 		Resources: map[string]cost.Resource{
 			"aws_instance.test1": {
 				Components: map[string]cost.Component{
-					"EC2 instance hours": {
+					"Compute": {
 						Rate:     decimal.NewFromFloat(1.23),
 						Quantity: decimal.NewFromInt(730),
-						Unit:     "Hrs",
 					},
 				},
 			},
