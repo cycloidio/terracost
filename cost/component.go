@@ -10,6 +10,7 @@ type Component struct {
 	Quantity decimal.Decimal
 	Unit     string
 	Rate     decimal.Decimal
+	Details  []string
 }
 
 // Cost returns the cost of this component (Rate multiplied by Quantity).

@@ -44,7 +44,21 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 				return nil, fmt.Errorf("price not found")
 			}
 
-			state.addComponent(res.Address, comp.Name, comp.Quantity, comp.Unit, prices[0].Value)
+			quantity := comp.MonthlyQuantity
+			rate := prices[0].Value
+			if quantity.Equals(decimal.Zero) {
+				quantity = comp.HourlyQuantity
+				rate = rate.Mul(decimal.NewFromInt(730))
+			}
+
+			component := Component{
+				Quantity: quantity,
+				Unit:     prices[0].Unit,
+				Rate:     rate,
+				Details:  comp.Details,
+			}
+
+			state.addComponent(res.Address, comp.Name, component)
 		}
 	}
 
@@ -60,14 +74,10 @@ func (s *State) Cost() decimal.Decimal {
 	return total
 }
 
-func (s *State) addComponent(resAddress, compLabel string, quantity decimal.Decimal, unit string, rate decimal.Decimal) {
+func (s *State) addComponent(resAddress, compLabel string, component Component) {
 	if _, ok := s.Resources[resAddress]; !ok {
 		s.Resources[resAddress] = Resource{Components: make(map[string]Component)}
 	}
 
-	s.Resources[resAddress].Components[compLabel] = Component{
-		Quantity: quantity,
-		Unit:     unit,
-		Rate:     rate,
-	}
+	s.Resources[resAddress].Components[compLabel] = component
 }
