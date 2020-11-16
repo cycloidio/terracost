@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _FieldName = "SKUOfferTermCodeRateCodeTermTypePriceDescriptionEffectiveDateStartingRangeEndingRangeUnitPricePerUnitCurrencyLeaseContractLengthPurchaseOptionOfferingClassProduct FamilyserviceCodeLocationInstance TypeStorage MediaVolume TypeTenancyOperating SystemusageTypeCapacityStatusPre Installed S/WVolume API Name"
+const _FieldName = "SKUOfferTermCodeRateCodeTermTypePriceDescriptionEffectiveDateStartingRangeEndingRangeUnitPricePerUnitCurrencyLeaseContractLengthPurchaseOptionOfferingClassProduct FamilyserviceCodeLocationInstance TypeStorage MediaVolume TypeTenancyOperating SystemusageTypeCapacityStatusPre Installed S/WVolume API NameDatabase EngineDatabase EditionLicense ModelDeployment Option"
 
-var _FieldIndex = [...]uint16{0, 3, 16, 24, 32, 48, 61, 74, 85, 89, 101, 109, 128, 142, 155, 169, 180, 188, 201, 214, 225, 232, 248, 257, 271, 288, 303}
+var _FieldIndex = [...]uint16{0, 3, 16, 24, 32, 48, 61, 74, 85, 89, 101, 109, 128, 142, 155, 169, 180, 188, 201, 214, 225, 232, 248, 257, 271, 288, 303, 318, 334, 347, 364}
 
-const _FieldLowerName = "skuoffertermcoderatecodetermtypepricedescriptioneffectivedatestartingrangeendingrangeunitpriceperunitcurrencyleasecontractlengthpurchaseoptionofferingclassproduct familyservicecodelocationinstance typestorage mediavolume typetenancyoperating systemusagetypecapacitystatuspre installed s/wvolume api name"
+const _FieldLowerName = "skuoffertermcoderatecodetermtypepricedescriptioneffectivedatestartingrangeendingrangeunitpriceperunitcurrencyleasecontractlengthpurchaseoptionofferingclassproduct familyservicecodelocationinstance typestorage mediavolume typetenancyoperating systemusagetypecapacitystatuspre installed s/wvolume api namedatabase enginedatabase editionlicense modeldeployment option"
 
 func (i Field) String() string {
 	if i >= Field(len(_FieldIndex)-1) {
@@ -50,9 +50,13 @@ func _FieldNoOp() {
 	_ = x[CapacityStatus-(23)]
 	_ = x[PreInstalledSW-(24)]
 	_ = x[VolumeAPIName-(25)]
+	_ = x[DatabaseEngine-(26)]
+	_ = x[DatabaseEdition-(27)]
+	_ = x[LicenseModel-(28)]
+	_ = x[DeploymentOption-(29)]
 }
 
-var _FieldValues = []Field{SKU, OfferTermCode, RateCode, PurchaseOption, PriceDescription, EffectiveDate, StartingRange, EndingRange, Unit, PricePerUnit, Currency, TermLength, TermPurchaseOption, TermOfferingClass, ProductFamily, ServiceCode, Location, InstanceType, StorageMedia, VolumeType, Tenancy, OperatingSystem, UsageType, CapacityStatus, PreInstalledSW, VolumeAPIName}
+var _FieldValues = []Field{SKU, OfferTermCode, RateCode, PurchaseOption, PriceDescription, EffectiveDate, StartingRange, EndingRange, Unit, PricePerUnit, Currency, TermLength, TermPurchaseOption, TermOfferingClass, ProductFamily, ServiceCode, Location, InstanceType, StorageMedia, VolumeType, Tenancy, OperatingSystem, UsageType, CapacityStatus, PreInstalledSW, VolumeAPIName, DatabaseEngine, DatabaseEdition, LicenseModel, DeploymentOption}
 
 var _FieldNameToValueMap = map[string]Field{
 	_FieldName[0:3]:          SKU,
@@ -107,6 +111,14 @@ var _FieldNameToValueMap = map[string]Field{
 	_FieldLowerName[271:288]: PreInstalledSW,
 	_FieldName[288:303]:      VolumeAPIName,
 	_FieldLowerName[288:303]: VolumeAPIName,
+	_FieldName[303:318]:      DatabaseEngine,
+	_FieldLowerName[303:318]: DatabaseEngine,
+	_FieldName[318:334]:      DatabaseEdition,
+	_FieldLowerName[318:334]: DatabaseEdition,
+	_FieldName[334:347]:      LicenseModel,
+	_FieldLowerName[334:347]: LicenseModel,
+	_FieldName[347:364]:      DeploymentOption,
+	_FieldLowerName[347:364]: DeploymentOption,
 }
 
 var _FieldNames = []string{
@@ -136,6 +148,10 @@ var _FieldNames = []string{
 	_FieldName[257:271],
 	_FieldName[271:288],
 	_FieldName[288:303],
+	_FieldName[303:318],
+	_FieldName[318:334],
+	_FieldName[334:347],
+	_FieldName[347:364],
 }
 
 // FieldString retrieves an enum value from the enum constants string name.

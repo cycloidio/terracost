@@ -32,4 +32,10 @@ const (
 	CapacityStatus                  // CapacityStatus
 	PreInstalledSW                  // Pre Installed S/W
 	VolumeAPIName                   // Volume API Name
+
+	// RDS fields
+	DatabaseEngine   // Database Engine
+	DatabaseEdition  // Database Edition
+	LicenseModel     // License Model
+	DeploymentOption // Deployment Option
 )
