@@ -13,6 +13,7 @@ import (
 	"github.com/shopspring/decimal"
 
 	"github.com/cycloidio/cost-estimation/aws/field"
+	"github.com/cycloidio/cost-estimation/aws/region"
 	"github.com/cycloidio/cost-estimation/price"
 	"github.com/cycloidio/cost-estimation/product"
 )
@@ -248,7 +249,7 @@ func newProduct(values map[field.Field]string) *product.Product {
 		SKU:        values[field.SKU],
 		Service:    values[field.ServiceCode],
 		Family:     values[field.ProductFamily],
-		Location:   regionMap[values[field.Location]],
+		Location:   region.NewFromName(values[field.Location]).String(),
 		Attributes: attributes,
 	}
 	return prod

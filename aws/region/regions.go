@@ -1,7 +1,7 @@
-package aws
+package region
 
 // List of regions with their codes can be found here: https://docs.aws.amazon.com/general/latest/gr/ec2-service.html
-var regionMap = map[string]string{
+var nameToCode = map[string]Code{
 	"US East (N. Virginia)":      "us-east-1",
 	"US East (Ohio)":             "us-east-2",
 	"US West (N. California)":    "us-west-1",
@@ -28,4 +28,12 @@ var regionMap = map[string]string{
 	"AWS GovCloud (US-East)":     "us-gov-east-1",
 	"Middle East (Bahrain)":      "me-south-1",
 	"Africa (Cape Town)":         "af-south-1",
+}
+
+var codeToName = make(map[Code]string)
+
+func init() {
+	for name, code := range nameToCode {
+		codeToName[code] = name
+	}
 }
