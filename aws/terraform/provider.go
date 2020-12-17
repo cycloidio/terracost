@@ -38,6 +38,12 @@ func (p *Provider) ResourceComponents(tfRes terraform.Resource) []query.Componen
 			return nil
 		}
 		return p.newVolume(vals).Components()
+	case "aws_db_instance":
+		vals, err := decodeDBInstanceValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newDBInstance(vals).Components()
 	default:
 		return nil
 	}

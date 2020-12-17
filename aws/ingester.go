@@ -186,7 +186,14 @@ var columnToAttribute = map[field.Field]string{
 	field.CapacityStatus:  "capacitystatus",
 	field.Tenancy:         "tenancy",
 	field.VolumeAPIName:   "volumeApiName",
+	field.VolumeType:      "volumeType",
 	field.StorageMedia:    "storageMedia",
+
+	// RDS attributes
+	field.DeploymentOption: "deploymentOption",
+	field.LicenseModel:     "licenseModel",
+	field.DatabaseEdition:  "databaseEdition",
+	field.DatabaseEngine:   "databaseEngine",
 }
 
 // columnToPriceAttribute is a mapping from column title to the price.Price attribute name under which the value will
