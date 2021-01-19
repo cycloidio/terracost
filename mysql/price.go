@@ -62,6 +62,7 @@ func newPrice(pwp *price.WithProduct) (*dbPrice, error) {
 	}, nil
 }
 
+// Filter returns all the price.Price that belong to a given product with given product.ID and that matches the price.Filter.
 func (r *PriceRepository) Filter(ctx context.Context, productID product.ID, filter *price.Filter) ([]*price.Price, error) {
 	where := parsePriceFilter(filter, productID)
 	q := fmt.Sprintf(`
@@ -90,6 +91,7 @@ func (r *PriceRepository) Filter(ctx context.Context, productID product.ID, filt
 	return ps, nil
 }
 
+// Upsert updates a price.WithProduct if it exists or inserts it otherwise.
 func (r *PriceRepository) Upsert(ctx context.Context, pwp *price.WithProduct) (price.ID, error) {
 	p, err := newPrice(pwp)
 	if err != nil {
@@ -119,6 +121,7 @@ func (r *PriceRepository) Upsert(ctx context.Context, pwp *price.WithProduct) (p
 	return price.ID(id), nil
 }
 
+// DeleteByProductWithKeep deletes all the prices of the product with given product.ID except the ones in the keep slice.
 func (r *PriceRepository) DeleteByProductWithKeep(ctx context.Context, productID product.ID, keep []price.ID) error {
 	marks := make([]string, 0, len(keep))
 	values := make([]interface{}, 0, len(keep)+1)

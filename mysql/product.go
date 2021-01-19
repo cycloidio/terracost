@@ -61,6 +61,7 @@ func newProduct(p *product.Product) (*dbProduct, error) {
 	}, nil
 }
 
+// Filter returns all the product.Product that match the given product.Filter.
 func (r *ProductRepository) Filter(ctx context.Context, filter *product.Filter) ([]*product.Product, error) {
 	where := parseProductFilter(filter)
 	q := fmt.Sprintf(`
@@ -89,6 +90,7 @@ func (r *ProductRepository) Filter(ctx context.Context, filter *product.Filter) 
 	return ps, nil
 }
 
+// FindByVendorAndSKU returns a single product.Product of the given vendor and sku.
 func (r *ProductRepository) FindByVendorAndSKU(ctx context.Context, vendor string, sku string) (*product.Product, error) {
 	q := `
 		SELECT id, provider, sku, service, family, location, attributes
@@ -100,6 +102,7 @@ func (r *ProductRepository) FindByVendorAndSKU(ctx context.Context, vendor strin
 	return scanProduct(row)
 }
 
+// Upsert updates a product.Product if it exists or inserts a new one otherwise.
 func (r *ProductRepository) Upsert(ctx context.Context, prod *product.Product) (product.ID, error) {
 	p, err := newProduct(prod)
 	if err != nil {
