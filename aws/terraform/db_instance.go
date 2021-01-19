@@ -12,31 +12,44 @@ import (
 	"github.com/cycloidio/cost-estimation/util"
 )
 
+// DBInstance represents an RDS database instance definition that can be cost-estimated.
 type DBInstance struct {
 	providerKey string
 
 	region       region.Code
 	instanceType string
 
-	databaseEngine   string
-	databaseEdition  string
-	licenseModel     string
+	// databaseEngine can be one of "Aurora MySQL", "MariaDB", "MySQL", "PostgreSQL", "Oracle", "SQL Server".
+	databaseEngine string
+
+	// databaseEdition is only valid for Oracle and SQL Server and denotes an edition of the database.
+	databaseEdition string
+
+	// licenseModel is only valid for Oracle and SQL Server and can be either "License included" or "Bring your own license".
+	licenseModel string
+
+	// deploymentOption can be either "Single-AZ" or "Multi-AZ".
 	deploymentOption string
 
-	storageType      string
+	// storageType can be either "standard" (magnetic), "io1" (provisioned IOPS) or "gp2" (general purpose).
+	storageType string
+
+	// allocatedStorage is how much storage should be allocated for the database, in GB.
 	allocatedStorage decimal.Decimal
-	storageIOPS      decimal.Decimal
+
+	// storageIOPS is only valid for Provisioned IOPS types of storage and denotes the amount of IOPS allocated.
+	storageIOPS decimal.Decimal
 }
 
 type dbInstanceValues struct {
-	InstanceClass string `mapstructure:"instance_class"`
-	AvailabilityZone string `mapstructure:"availability_zone"`
-	Engine string `mapstructure:"engine"`
-	LicenseModel string `mapstructure:"license_model"`
-	MultiAZ bool `mapstructure:"multi_az"`
+	InstanceClass    string  `mapstructure:"instance_class"`
+	AvailabilityZone string  `mapstructure:"availability_zone"`
+	Engine           string  `mapstructure:"engine"`
+	LicenseModel     string  `mapstructure:"license_model"`
+	MultiAZ          bool    `mapstructure:"multi_az"`
 	AllocatedStorage float64 `mapstructure:"allocated_storage"`
-	StorageType string `mapstructure:"storage_type"`
-	IOPS float64 `mapstructure:"iops"`
+	StorageType      string  `mapstructure:"storage_type"`
+	IOPS             float64 `mapstructure:"iops"`
 }
 
 type dbType struct {

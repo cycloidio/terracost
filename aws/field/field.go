@@ -5,6 +5,7 @@ package field
 // Field represents a single column in an AWS offer file.
 type Field uint8
 
+// List of fields used by the AWS pricing offer file (CSV).
 const (
 	SKU                Field = iota // SKU
 	OfferTermCode                   // OfferTermCode
