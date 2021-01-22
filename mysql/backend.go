@@ -24,5 +24,8 @@ func NewBackend(querier sqlr.Querier) *Backend {
 	}
 }
 
+// Product returns the product.Repository that uses the Backend's querier.
 func (b *Backend) Product() product.Repository { return b.productRepo }
-func (b *Backend) Price() price.Repository     { return b.priceRepo }
+
+// Price returns the price.Repository that uses the Backend's querier.
+func (b *Backend) Price() price.Repository { return b.priceRepo }
