@@ -20,6 +20,6 @@ type ProviderInitializer struct {
 	// implementation (such as `google` and `google-beta`).
 	MatchNames []string
 
-	// Provider initializes a Provider instance given the ProviderConfig and returns it.
-	Provider func(config ProviderConfig) (Provider, error)
+	// Provider initializes a Provider instance given the values defined in the config and returns it.
+	Provider func(values map[string]string) (Provider, error)
 }

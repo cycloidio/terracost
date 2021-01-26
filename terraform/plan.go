@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/cycloidio/terracost/query"
 )
@@ -12,9 +13,10 @@ import (
 type Plan struct {
 	providerInitializers map[string]ProviderInitializer
 
-	Configuration Configuration     `json:"configuration"`
-	PriorState    *State            `json:"prior_state"`
-	PlannedValues map[string]Module `json:"planned_values"`
+	Configuration Configuration       `json:"configuration"`
+	PriorState    *State              `json:"prior_state"`
+	PlannedValues map[string]Module   `json:"planned_values"`
+	Variables     map[string]Variable `json:"variables"`
 }
 
 // NewPlan returns an empty Plan.
@@ -48,6 +50,9 @@ func (p *Plan) ExtractPlannedQueries() ([]query.Resource, error) {
 
 // ExtractPriorQueries extracts a query.Resource slice from the `prior_state` part of the Plan.
 func (p *Plan) ExtractPriorQueries() ([]query.Resource, error) {
+	if p.PriorState == nil {
+		return []query.Resource{}, nil
+	}
 	providers, err := p.extractProviders()
 	if err != nil {
 		return nil, fmt.Errorf("unable to extract prior queries: %w", err)
@@ -58,12 +63,21 @@ func (p *Plan) ExtractPriorQueries() ([]query.Resource, error) {
 // extractProviders returns a slice of initialized Provider instances that were found in plan's configuration.
 func (p *Plan) extractProviders() (map[string]Provider, error) {
 	providers := make(map[string]Provider)
-	for alias, provConfig := range p.Configuration.ProviderConfig {
+	for name, provConfig := range p.Configuration.ProviderConfig {
+		if provConfig.Alias != "" {
+			continue
+		}
 		if pi, ok := p.providerInitializers[provConfig.Name]; ok {
-			var err error
-			providers[alias], err = pi.Provider(provConfig)
+			values, err := p.evaluateProviderConfigExpressions(provConfig)
+			if err != nil {
+				return nil, fmt.Errorf("failed to read config of provider %q: %w", name, err)
+			}
+			prov, err := pi.Provider(values)
 			if err != nil {
 				return nil, err
+			}
+			for _, name := range pi.MatchNames {
+				providers[name] = prov
 			}
 		}
 	}
@@ -89,4 +103,33 @@ func (p *Plan) extractQueries(modules map[string]Module, providers map[string]Pr
 		}
 	}
 	return result
+}
+
+// evaluateProviderConfigExpressions returns evaluated values of provider's configuration block, whether a constant
+// value or reference to a variable.
+func (p *Plan) evaluateProviderConfigExpressions(config ProviderConfig) (map[string]string, error) {
+	values := make(map[string]string)
+	for name, e := range config.Expressions {
+		if e.ConstantValue != "" {
+			values[name] = e.ConstantValue
+			continue
+		}
+
+		if len(e.References) < 1 {
+			return nil, fmt.Errorf("config expression contains invalid reference")
+		}
+
+		ref := strings.Split(e.References[0], ".")
+		if len(ref) < 2 {
+			return nil, fmt.Errorf("config expression contains invalid reference")
+		}
+
+		varName := ref[1]
+		v, ok := p.Variables[varName]
+		if !ok || v.Value == "" {
+			return nil, fmt.Errorf("required variable %q is not defined", varName)
+		}
+		values[name] = v.Value
+	}
+	return values, nil
 }
