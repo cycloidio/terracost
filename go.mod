@@ -1,4 +1,4 @@
-module github.com/cycloidio/cost-estimation
+module github.com/cycloidio/terracost
 
 go 1.15
 
@@ -15,6 +15,5 @@ require (
 	github.com/mitchellh/mapstructure v1.3.3
 	github.com/shopspring/decimal v1.2.0
 	github.com/stretchr/testify v1.6.1
-	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )

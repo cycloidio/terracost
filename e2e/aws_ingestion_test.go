@@ -12,12 +12,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	costestimation "github.com/cycloidio/cost-estimation"
-	"github.com/cycloidio/cost-estimation/aws"
-	"github.com/cycloidio/cost-estimation/mock"
-	"github.com/cycloidio/cost-estimation/mysql"
-	"github.com/cycloidio/cost-estimation/product"
-	"github.com/cycloidio/cost-estimation/util"
+	costestimation "github.com/cycloidio/terracost"
+	"github.com/cycloidio/terracost/aws"
+	"github.com/cycloidio/terracost/mock"
+	"github.com/cycloidio/terracost/mysql"
+	"github.com/cycloidio/terracost/product"
+	"github.com/cycloidio/terracost/util"
 )
 
 func TestAWSIngestion(t *testing.T) {

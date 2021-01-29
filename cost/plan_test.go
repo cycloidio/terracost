@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cycloidio/cost-estimation/cost"
+	"github.com/cycloidio/terracost/cost"
 )
 
 func TestPlan_ResourceDifferences(t *testing.T) {

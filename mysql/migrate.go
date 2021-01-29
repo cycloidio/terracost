@@ -6,7 +6,7 @@ import (
 
 	"github.com/lopezator/migrator"
 
-	"github.com/cycloidio/cost-estimation/mysql/migrations"
+	"github.com/cycloidio/terracost/mysql/migrations"
 )
 
 // Migrate runs the migrations on the provided DB using the provided table to track them.

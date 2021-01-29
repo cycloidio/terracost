@@ -3,8 +3,8 @@ package mysql
 import (
 	"github.com/cycloidio/sqlr"
 
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
 )
 
 // Backend is the MySQL implementation of the costestimation.Backend, using repositories that connect

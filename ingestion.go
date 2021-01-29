@@ -1,14 +1,14 @@
-package costestimation
+package terracost
 
 import (
 	"context"
 
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
 )
 
-//go:generate go run github.com/golang/mock/mockgen -destination=mock/ingester.go -mock_names=Ingester=Ingester -package mock github.com/cycloidio/cost-estimation Ingester
-//go:generate go run github.com/golang/mock/mockgen -destination=mock/backend.go -mock_names=Backend=Backend -package mock github.com/cycloidio/cost-estimation Backend
+//go:generate go run github.com/golang/mock/mockgen -destination=mock/ingester.go -mock_names=Ingester=Ingester -package mock github.com/cycloidio/terracost Ingester
+//go:generate go run github.com/golang/mock/mockgen -destination=mock/backend.go -mock_names=Backend=Backend -package mock github.com/cycloidio/terracost Backend
 
 // Ingester represents a vendor-specific mechanism to load pricing data.
 type Ingester interface {

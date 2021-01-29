@@ -7,11 +7,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
-	"github.com/cycloidio/cost-estimation/query"
-	"github.com/cycloidio/cost-estimation/terraform"
-	"github.com/cycloidio/cost-estimation/util"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
+	"github.com/cycloidio/terracost/query"
+	"github.com/cycloidio/terracost/terraform"
+	"github.com/cycloidio/terracost/util"
 )
 
 func TestDBInstance_Components(t *testing.T) {

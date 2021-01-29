@@ -1,4 +1,4 @@
-package costestimation
+package terracost
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cycloidio/cost-estimation/mock"
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/mock"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
 )
 
 func TestIngestPricing(t *testing.T) {

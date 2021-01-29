@@ -3,9 +3,9 @@ package terraform
 import (
 	"fmt"
 
-	"github.com/cycloidio/cost-estimation/aws/region"
-	"github.com/cycloidio/cost-estimation/query"
-	"github.com/cycloidio/cost-estimation/terraform"
+	"github.com/cycloidio/terracost/aws/region"
+	"github.com/cycloidio/terracost/query"
+	"github.com/cycloidio/terracost/terraform"
 )
 
 // Provider is an implementation of the terraform.Provider, used to extract component queries from

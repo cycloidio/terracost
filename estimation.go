@@ -1,12 +1,12 @@
-package costestimation
+package terracost
 
 import (
 	"context"
 	"io"
 
-	"github.com/cycloidio/cost-estimation/aws"
-	"github.com/cycloidio/cost-estimation/cost"
-	"github.com/cycloidio/cost-estimation/terraform"
+	"github.com/cycloidio/terracost/aws"
+	"github.com/cycloidio/terracost/cost"
+	"github.com/cycloidio/terracost/terraform"
 )
 
 // EstimateTerraformPlan is a helper function that reads a Terraform plan using the provided io.Reader,

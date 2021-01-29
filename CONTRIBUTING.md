@@ -6,7 +6,7 @@ Cycloid Team is glad to see you contributing to this project ! In this document,
 
 ### Issues
 
-When you find a bug in cost-estimation, it should be reported using [Github issues](https://github.com/cycloidio/cost-estimation/issues). Please provide key information like your Operating System (OS), Go version and finally the version of the library that you're using.
+When you find a bug in Terracost, it should be reported using [Github issues](https://github.com/cycloidio/terracost/issues). Please provide key information like your Operating System (OS), Go version and finally the version of the library that you're using.
 
 ## Submit a contribution
 
@@ -15,14 +15,14 @@ When you find a bug in cost-estimation, it should be reported using [Github issu
 If you want to contribute to an existing issue, you can start by _forking_ this repository, then clone your fork on your machine.
 
 ```shell
-$ git clone https://github.com/<your-username>/cost-estimation.git
-$ cd cost-estimation
+$ git clone https://github.com/<your-username>/terracost.git
+$ cd terracost
 ```
 
-In order to stay updated with the upstream, it's highly recommended to add `cycloidio/cost-estimation` as a remote upstream.
+In order to stay updated with the upstream, it's highly recommended to add `cycloidio/terracost` as a remote upstream.
 
 ```shell
-$ git remote add upstream https://github.com/cycloidio/cost-estimation.git
+$ git remote add upstream https://github.com/cycloidio/terracost.git
 ```
 
 Do not forget to frequently update your fork with the upstream.

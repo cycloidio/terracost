@@ -3,8 +3,8 @@ package query
 import (
 	"github.com/shopspring/decimal"
 
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
 )
 
 // Resource represents a single cloud resource. It has a unique Address and a collection of multiple

@@ -8,7 +8,7 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/product"
 )
 
 // ID represents the Price ID.

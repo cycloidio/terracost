@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cycloidio/cost-estimation/aws/region"
+	"github.com/cycloidio/terracost/aws/region"
 )
 
 func TestNewFromZone(t *testing.T) {

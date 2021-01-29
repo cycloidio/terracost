@@ -7,7 +7,7 @@ import (
 
 	"github.com/cycloidio/sqlr"
 
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/product"
 )
 
 // ProductRepository implements the product.Repository.

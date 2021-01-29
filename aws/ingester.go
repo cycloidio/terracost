@@ -12,10 +12,10 @@ import (
 	"github.com/machinebox/progress"
 	"github.com/shopspring/decimal"
 
-	"github.com/cycloidio/cost-estimation/aws/field"
-	"github.com/cycloidio/cost-estimation/aws/region"
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/aws/field"
+	"github.com/cycloidio/terracost/aws/region"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
 )
 
 // ProviderName uniquely identifies this provider implementation.

@@ -1,9 +1,9 @@
 package aws
 
 import (
-	"github.com/cycloidio/cost-estimation/aws/region"
-	awstf "github.com/cycloidio/cost-estimation/aws/terraform"
-	"github.com/cycloidio/cost-estimation/terraform"
+	"github.com/cycloidio/terracost/aws/region"
+	awstf "github.com/cycloidio/terracost/aws/terraform"
+	"github.com/cycloidio/terracost/terraform"
 )
 
 // TerraformProviderInitializer is a terraform.ProviderInitializer that initializes the default AWS provider.

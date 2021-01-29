@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cycloidio/cost-estimation/query"
+	"github.com/cycloidio/terracost/query"
 )
 
 // Plan is a representation of a Terraform plan file.

@@ -6,7 +6,7 @@ import (
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/cycloidio/cost-estimation/cost"
+	"github.com/cycloidio/terracost/cost"
 )
 
 func TestComponentDiff_PriorCost(t *testing.T) {

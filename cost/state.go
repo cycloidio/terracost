@@ -6,9 +6,9 @@ import (
 
 	"github.com/shopspring/decimal"
 
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
-	"github.com/cycloidio/cost-estimation/query"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
+	"github.com/cycloidio/terracost/query"
 )
 
 // Backend represents a storage method used to query pricing data. It must include concrete implementations

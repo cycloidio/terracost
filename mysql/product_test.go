@@ -7,8 +7,8 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cycloidio/cost-estimation/mysql"
-	"github.com/cycloidio/cost-estimation/product"
+	"github.com/cycloidio/terracost/mysql"
+	"github.com/cycloidio/terracost/product"
 )
 
 var productColumns = []string{"id", "provider", "sku", "service", "family", "location", "attributes"}

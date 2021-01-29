@@ -1,11 +1,11 @@
-# cost-estimation
+# Terracost
 
 Go library for estimating Terraform costs using ingested cloud vendor prices. It is meant to be imported and used by programs (API's or standalone) with access to a MySQL-compatible database and the Internet.
 
 ## Installation
 
 ```shell
-go get github.com/cycloidio/cost-estimation
+go get github.com/cycloidio/terracost
 ```
 
 ## Requirements
@@ -15,7 +15,7 @@ go get github.com/cycloidio/cost-estimation
 
 ## Provider support
 
-Currently, cost-estimation supports only a few resources of the AWS provider, however we're actively working on adding more support. See the full list of supported resources [on this wiki page](https://github.com/cycloidio/cost-estimation/wiki/Supported-Resources).
+Currently, Terracost supports only a few resources of the AWS provider, however we're actively working on adding more support. See the full list of supported resources [on this wiki page](https://github.com/cycloidio/terracost/wiki/Supported-Resources).
 
 ## Usage
 
@@ -38,7 +38,7 @@ backend := mysql.NewBackend(db)
 // service can be "AmazonEC2" or "AmazonRDS"
 // region is any AWS region, e.g. "us-east-1" or "eu-west-3"
 ingester := aws.NewIngester(service, region)
-err = costestimation.IngestPricing(ctx, backend, ingester)
+err = terracost.IngestPricing(ctx, backend, ingester)
 ```
 
 ### Tracking ingestion progress
@@ -85,7 +85,7 @@ db, err := db.Open("mysql", "...")
 backend := mysql.NewBackend(db)
 
 file, err := os.Open("path/to/tfplan.json")
-plan, err := costestimation.EstimateTerraformPlan(ctx, backend, file)
+plan, err := terracost.EstimateTerraformPlan(ctx, backend, file)
 
 for _, res := range plan.ResourceDifferences() {
     fmt.Printf("%s: %s -> %s\n", res.Address, res.PriorCost().String(), res.PlannedCost().String())

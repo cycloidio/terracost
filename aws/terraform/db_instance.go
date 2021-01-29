@@ -5,11 +5,11 @@ import (
 	"github.com/shopspring/decimal"
 	"strings"
 
-	"github.com/cycloidio/cost-estimation/aws/region"
-	"github.com/cycloidio/cost-estimation/price"
-	"github.com/cycloidio/cost-estimation/product"
-	"github.com/cycloidio/cost-estimation/query"
-	"github.com/cycloidio/cost-estimation/util"
+	"github.com/cycloidio/terracost/aws/region"
+	"github.com/cycloidio/terracost/price"
+	"github.com/cycloidio/terracost/product"
+	"github.com/cycloidio/terracost/query"
+	"github.com/cycloidio/terracost/util"
 )
 
 // DBInstance represents an RDS database instance definition that can be cost-estimated.
