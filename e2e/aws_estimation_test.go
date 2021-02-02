@@ -20,9 +20,9 @@ import (
 )
 
 var terraformProviderInitializer = terraform.ProviderInitializer{
-	MatchNames: []string{"aws-test"},
-	Provider: func(config terraform.ProviderConfig) (terraform.Provider, error) {
-		regCode := region.Code(config.Expressions["region"].ConstantValue)
+	MatchNames: []string{"aws", "aws-test"},
+	Provider: func(config map[string]string) (terraform.Provider, error) {
+		regCode := region.Code(config["region"])
 		return awstf.NewProvider("aws-test", regCode)
 	},
 }

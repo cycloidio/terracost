@@ -2,12 +2,14 @@ package terraform
 
 // ProviderConfigExpression is a single configuration variable of a ProviderConfig.
 type ProviderConfigExpression struct {
-	ConstantValue string `json:"constant_value"`
+	ConstantValue string   `json:"constant_value"`
+	References    []string `json:"references"`
 }
 
 // ProviderConfig is configuration of a provider with the given Name.
 type ProviderConfig struct {
 	Name        string                              `json:"name"`
+	Alias       string                              `json:"alias"`
 	Expressions map[string]ProviderConfigExpression `json:"expressions"`
 }
 
@@ -34,4 +36,9 @@ type Module struct {
 // Configuration is a Terraform plan configuration.
 type Configuration struct {
 	ProviderConfig map[string]ProviderConfig `json:"provider_config"`
+}
+
+// Variable is a Terraform variable declaration.
+type Variable struct {
+	Value string `json:"value"`
 }

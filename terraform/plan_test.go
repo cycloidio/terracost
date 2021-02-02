@@ -22,8 +22,8 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		provider := mock.NewTerraformProvider(ctrl)
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
-			MatchNames: []string{"aws-test"},
-			Provider: func(_ terraform.ProviderConfig) (terraform.Provider, error) {
+			MatchNames: []string{"aws", "aws-test"},
+			Provider: func(_ map[string]string) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
@@ -51,8 +51,8 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		defer ctrl.Finish()
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
-			MatchNames: []string{"aws-test"},
-			Provider: func(_ terraform.ProviderConfig) (terraform.Provider, error) {
+			MatchNames: []string{"aws", "aws-test"},
+			Provider: func(_ map[string]string) (terraform.Provider, error) {
 				return nil, errors.New("bad provider")
 			},
 		})
@@ -75,8 +75,8 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		provider := mock.NewTerraformProvider(ctrl)
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
-			MatchNames: []string{"aws-test"},
-			Provider: func(_ terraform.ProviderConfig) (terraform.Provider, error) {
+			MatchNames: []string{"aws", "aws-test"},
+			Provider: func(_ map[string]string) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
@@ -106,8 +106,8 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		provider := mock.NewTerraformProvider(ctrl)
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
-			MatchNames: []string{"aws-test"},
-			Provider: func(_ terraform.ProviderConfig) (terraform.Provider, error) {
+			MatchNames: []string{"aws", "aws-test"},
+			Provider: func(_ map[string]string) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
@@ -135,8 +135,8 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		defer ctrl.Finish()
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
-			MatchNames: []string{"aws-test"},
-			Provider: func(_ terraform.ProviderConfig) (terraform.Provider, error) {
+			MatchNames: []string{"aws", "aws-test"},
+			Provider: func(_ map[string]string) (terraform.Provider, error) {
 				return nil, errors.New("bad provider")
 			},
 		})
@@ -159,8 +159,8 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		provider := mock.NewTerraformProvider(ctrl)
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
-			MatchNames: []string{"aws-test"},
-			Provider: func(_ terraform.ProviderConfig) (terraform.Provider, error) {
+			MatchNames: []string{"aws", "aws-test"},
+			Provider: func(_ map[string]string) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
