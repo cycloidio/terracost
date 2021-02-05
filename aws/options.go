@@ -45,3 +45,10 @@ func WithProgress(progressCh chan<- progress.Progress, interval time.Duration) O
 		ing.progressInterval = interval
 	}
 }
+
+// WithIngestionFilter sets a custom IngestionFilter to control which pricing data records should be ingested.
+func WithIngestionFilter(filter IngestionFilter) Option {
+	return func(ing *Ingester) {
+		ing.ingestionFilter = filter
+	}
+}

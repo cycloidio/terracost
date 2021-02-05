@@ -39,6 +39,8 @@ type Ingester struct {
 	progressCh       chan<- progress.Progress
 	progressInterval time.Duration
 
+	ingestionFilter IngestionFilter
+
 	err error
 }
 
@@ -46,12 +48,13 @@ type Ingester struct {
 // WithRepositories function, other configuration options will use their default values.
 func NewIngester(service, region string, options ...Option) *Ingester {
 	ing := &Ingester{
-		httpClient: &http.Client{},
-		pricingURL: defaultPricingURL,
-		bufferSize: defaultBufferSize,
-		service:    service,
-		region:     region,
-		progressCh: nil,
+		httpClient:      &http.Client{},
+		pricingURL:      defaultPricingURL,
+		bufferSize:      defaultBufferSize,
+		service:         service,
+		region:          region,
+		progressCh:      nil,
+		ingestionFilter: DefaultFilter,
 	}
 	for _, opt := range options {
 		opt(ing)
@@ -141,7 +144,9 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 				return
 			}
 
-			results <- pp
+			if ing.ingestionFilter(pp) {
+				results <- pp
+			}
 		}
 	}()
 
