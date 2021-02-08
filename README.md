@@ -1,5 +1,7 @@
 # Terracost
 
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/cycloidio/terracost)](https://pkg.go.dev/github.com/cycloidio/terracost)
+
 Go library for estimating Terraform costs using ingested cloud vendor prices. It is meant to be imported and used by programs (API's or standalone) with access to a MySQL-compatible database and the Internet.
 
 ## Installation
