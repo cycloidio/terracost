@@ -1,4 +1,8 @@
-# Terracost
+<p align="center">
+  <img src="docs/terracost-logo_icon-color.png" width="150" alt="TerraCost logo">
+</p>
+
+# TerraCost
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/cycloidio/terracost)](https://pkg.go.dev/github.com/cycloidio/terracost)
 
