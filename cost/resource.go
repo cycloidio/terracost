@@ -43,3 +43,26 @@ func (rd ResourceDiff) PlannedCost() decimal.Decimal {
 	}
 	return total
 }
+
+// Errors returns a map of Component errors keyed by the Component label.
+func (rd ResourceDiff) Errors() map[string]error {
+	errs := make(map[string]error)
+	for label, cd := range rd.ComponentDiffs {
+		if cd.Prior != nil && cd.Prior.Error != nil {
+			errs[label] = cd.Prior.Error
+		} else if cd.Planned != nil && cd.Planned.Error != nil {
+			errs[label] = cd.Planned.Error
+		}
+	}
+	return errs
+}
+
+// Valid returns true if there are no errors in all of the ResourceDiff's components.
+func (rd ResourceDiff) Valid() bool {
+	for _, cd := range rd.ComponentDiffs {
+		if (cd.Prior != nil && cd.Prior.Error != nil) || (cd.Planned != nil && cd.Planned.Error != nil) {
+			return false
+		}
+	}
+	return true
+}

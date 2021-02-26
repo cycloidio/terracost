@@ -87,8 +87,9 @@ func TestNewState(t *testing.T) {
 
 		productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return(nil, errors.New("repo fail"))
 
-		_, err := cost.NewState(ctx, backend, queries)
-		assert.Error(t, err)
+		state, err := cost.NewState(ctx, backend, queries)
+		require.NoError(t, err)
+		assert.Error(t, state.Resources["aws_instance.test1"].Components["Compute"].Error)
 	})
 
 	t.Run("PriceRepositoryFailure", func(t *testing.T) {
@@ -106,8 +107,9 @@ func TestNewState(t *testing.T) {
 		productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return([]*product.Product{prod1}, nil)
 		priceRepo.EXPECT().Filter(ctx, prod1.ID, queries[0].Components[0].PriceFilter).Return(nil, errors.New("repo fail"))
 
-		_, err := cost.NewState(ctx, backend, queries)
-		assert.Error(t, err)
+		state, err := cost.NewState(ctx, backend, queries)
+		require.NoError(t, err)
+		assert.Error(t, state.Resources["aws_instance.test1"].Components["Compute"].Error)
 	})
 }
 
