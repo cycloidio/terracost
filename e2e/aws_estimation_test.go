@@ -13,6 +13,7 @@ import (
 	costestimation "github.com/cycloidio/terracost"
 	"github.com/cycloidio/terracost/aws/region"
 	awstf "github.com/cycloidio/terracost/aws/terraform"
+	"github.com/cycloidio/terracost/cost"
 	"github.com/cycloidio/terracost/mysql"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
@@ -159,8 +160,22 @@ func TestAWSEstimation(t *testing.T) {
 		require.NoError(t, err)
 		defer f.Close()
 
-		_, err = costestimation.EstimateTerraformPlan(ctx, backend, f, terraformProviderInitializer)
-		assert.Error(t, err)
+		plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformProviderInitializer)
+		require.NoError(t, err)
+
+		diffs := plan.ResourceDifferences()
+		require.Len(t, diffs, 1)
+		rd := diffs[0]
+
+		rootVol := diffs[0].ComponentDiffs["Root volume: Storage"]
+		require.NotNil(t, rootVol)
+		assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PriorCost())
+		assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PlannedCost())
+
+		expected := map[string]error{
+			"Compute": cost.ErrProductNotFound,
+		}
+		assert.Equal(t, expected, rd.Errors())
 	})
 }
 
