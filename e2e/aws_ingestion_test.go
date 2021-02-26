@@ -31,7 +31,7 @@ func TestAWSIngestion(t *testing.T) {
 
 	httpClient := mock.NewHTTPClient(ctrl)
 
-	db, err := sql.Open("mysql", "root:youdeploy@tcp(localhost:3306)/youdeploy_public_test?multiStatements=true")
+	db, err := sql.Open("mysql", "root:terracost@tcp(localhost:33060)/terracost_test?multiStatements=true")
 	require.NoError(t, err)
 
 	f, err := os.Open("testdata/AmazonEC2_eu-west-3.csv")
