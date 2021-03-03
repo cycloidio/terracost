@@ -1,9 +1,10 @@
 package terraform
 
 import (
+	"strings"
+
 	"github.com/mitchellh/mapstructure"
 	"github.com/shopspring/decimal"
-	"strings"
 
 	"github.com/cycloidio/terracost/aws/region"
 	"github.com/cycloidio/terracost/price"

@@ -6,9 +6,10 @@ package mock
 
 import (
 	context "context"
+	reflect "reflect"
+
 	price "github.com/cycloidio/terracost/price"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // Ingester is a mock of Ingester interface

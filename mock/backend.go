@@ -5,10 +5,11 @@
 package mock
 
 import (
+	reflect "reflect"
+
 	price "github.com/cycloidio/terracost/price"
 	product "github.com/cycloidio/terracost/product"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // Backend is a mock of Backend interface
