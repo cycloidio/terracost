@@ -33,7 +33,7 @@ func TestAWSEstimation(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	db, err := sql.Open("mysql", "root:youdeploy@tcp(localhost:3306)/youdeploy_public_test?multiStatements=true")
+	db, err := sql.Open("mysql", "root:terracost@tcp(localhost:33060)/terracost_test?multiStatements=true")
 	require.NoError(t, err)
 
 	backend := mysql.NewBackend(db)

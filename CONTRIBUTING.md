@@ -32,6 +32,20 @@ $ git fetch upstream --prune
 $ git rebase upstream/master
 ```
 
+### Test your submission
+
+First-time setup of the development environment requires running the database migrations:
+
+```shell
+$ make db-migrate
+```
+
+Run all the tests:
+
+```shell
+$ make test
+```
+
 ## Adding a new resource
 
 ### AWS

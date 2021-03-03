@@ -2,6 +2,7 @@ package terracost
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
@@ -40,18 +41,18 @@ func IngestPricing(ctx context.Context, backend Backend, ingester Ingester) erro
 			var err error
 			pp.Product.ID, err = backend.Product().Upsert(ctx, pp.Product)
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to upsert product (SKU=%q): %w", pp.Product.SKU, err)
 			}
 			skuProductID[pp.Product.SKU] = pp.Product.ID
 		}
 
 		if _, err := backend.Price().Upsert(ctx, pp); err != nil {
-			return err
+			return fmt.Errorf("failed to upsert price (SKU=%q): %w", pp.Product.SKU, err)
 		}
 	}
 
 	if err := ingester.Err(); err != nil {
-		return err
+		return fmt.Errorf("unexpected ingester error: %w", err)
 	}
 	return nil
 }
