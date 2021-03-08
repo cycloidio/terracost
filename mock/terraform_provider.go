@@ -5,10 +5,11 @@
 package mock
 
 import (
+	reflect "reflect"
+
 	query "github.com/cycloidio/terracost/query"
 	terraform "github.com/cycloidio/terracost/terraform"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // TerraformProvider is a mock of Provider interface

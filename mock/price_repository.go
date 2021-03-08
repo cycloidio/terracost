@@ -6,10 +6,11 @@ package mock
 
 import (
 	context "context"
+	reflect "reflect"
+
 	price "github.com/cycloidio/terracost/price"
 	product "github.com/cycloidio/terracost/product"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // PriceRepository is a mock of Repository interface
