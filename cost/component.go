@@ -11,6 +11,8 @@ type Component struct {
 	Unit     string
 	Rate     decimal.Decimal
 	Details  []string
+
+	Error error
 }
 
 // Cost returns the cost of this component (Rate multiplied by Quantity).
@@ -37,4 +39,9 @@ func (cd ComponentDiff) PlannedCost() decimal.Decimal {
 		return decimal.Zero
 	}
 	return cd.Planned.Cost()
+}
+
+// Valid returns true if there are no errors in both the Planned and Prior components.
+func (cd ComponentDiff) Valid() bool {
+	return !((cd.Prior != nil && cd.Prior.Error != nil) || (cd.Planned != nil && cd.Planned.Error != nil))
 }

@@ -29,6 +29,12 @@ type State struct {
 // It is calculated as 365 days in a year x 24 hours in a day / 12 months in year.
 const HoursPerMonth = 730
 
+// Errors that might be returned from NewState if either a product or a price are not found.
+var (
+	ErrProductNotFound = fmt.Errorf("product not found")
+	ErrPriceNotFound   = fmt.Errorf("price not found")
+)
+
 // NewState returns a new State from a query.Resource slice by using the Backend to fetch the pricing data.
 func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*State, error) {
 	state := &State{Resources: make(map[string]Resource)}
@@ -37,17 +43,21 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 		for _, comp := range res.Components {
 			prods, err := backend.Product().Filter(ctx, comp.ProductFilter)
 			if err != nil {
-				return nil, err
+				state.addComponent(res.Address, comp.Name, Component{Error: err})
+				continue
 			}
 			if len(prods) < 1 {
-				return nil, fmt.Errorf("product not found")
+				state.addComponent(res.Address, comp.Name, Component{Error: ErrProductNotFound})
+				continue
 			}
 			prices, err := backend.Price().Filter(ctx, prods[0].ID, comp.PriceFilter)
 			if err != nil {
-				return nil, err
+				state.addComponent(res.Address, comp.Name, Component{Error: err})
+				continue
 			}
 			if len(prices) < 1 {
-				return nil, fmt.Errorf("price not found")
+				state.addComponent(res.Address, comp.Name, Component{Error: ErrPriceNotFound})
+				continue
 			}
 
 			quantity := comp.MonthlyQuantity
