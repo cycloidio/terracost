@@ -10,6 +10,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/cycloidio/terracost/mock"
 	"github.com/cycloidio/terracost/price"
@@ -17,12 +18,23 @@ import (
 )
 
 func TestIngester_Ingest(t *testing.T) {
+	t.Run("InvalidService", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		client := mock.NewHTTPClient(ctrl)
+		ing, err := NewIngester("InvalidService", "eu-west-3", WithHTTPClient(client))
+		assert.Error(t, err)
+		assert.Nil(t, ing)
+	})
+
 	t.Run("EC2", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
 		client := mock.NewHTTPClient(ctrl)
-		ing := NewIngester("AmazonEC2", "eu-west-3", WithHTTPClient(client))
+		ing, err := NewIngester("AmazonEC2", "eu-west-3", WithHTTPClient(client))
+		require.NoError(t, err)
 
 		content := makeCSV([][]string{
 			{"SKU", "Product Family", "serviceCode", "TermType", "Location", "Unit", "Currency", "PricePerUnit", "Tenancy", "Instance Type", "Operating System", "Volume API Name"},
