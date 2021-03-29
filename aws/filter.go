@@ -20,6 +20,8 @@ func MinimalFilter(pp *price.WithProduct) bool {
 		return minimalFilterEC2(pp)
 	case "AmazonRDS":
 		return minimalFilterRDS(pp)
+	case "AWSELB":
+		return true // the ELB service is minimal already
 	default:
 		return false
 	}
