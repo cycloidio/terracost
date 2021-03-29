@@ -41,7 +41,8 @@ func TestAWSIngestion(t *testing.T) {
 	httpClient.EXPECT().Do(gomock.Any()).Return(&http.Response{Body: f}, nil)
 
 	backend := mysql.NewBackend(db)
-	ingester := aws.NewIngester("AmazonEC2-test", "eu-west-3", aws.WithHTTPClient(httpClient))
+	ingester, err := aws.NewIngester("AmazonEC2", "eu-west-3", aws.WithHTTPClient(httpClient))
+	require.NoError(t, err)
 
 	err = costestimation.IngestPricing(ctx, backend, ingester)
 	require.NoError(t, err)
