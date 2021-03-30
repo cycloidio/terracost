@@ -44,6 +44,16 @@ func (p *Provider) ResourceComponents(tfRes terraform.Resource) []query.Componen
 			return nil
 		}
 		return p.newDBInstance(vals).Components()
+	case "aws_lb", "aws_alb":
+		vals, err := decodeLBValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newLB(vals).Components()
+	case "aws_elb":
+		// ELB Classic does not have any special configuration.
+		vals := lbValues{LoadBalancerType: "classic"}
+		return p.newLB(vals).Components()
 	default:
 		return nil
 	}
