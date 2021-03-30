@@ -46,7 +46,13 @@ type Ingester struct {
 
 // NewIngester returns a new Ingester using the given options. Only the repositories must be provided using the
 // WithRepositories function, other configuration options will use their default values.
-func NewIngester(service, region string, options ...Option) *Ingester {
+// The service must be a valid AWS service name that is supported by Terracost, otherwise this function will
+// return an error.
+func NewIngester(service, region string, options ...Option) (*Ingester, error) {
+	if !IsServiceSupported(service) {
+		return nil, fmt.Errorf("service not supported: %s", service)
+	}
+
 	ing := &Ingester{
 		httpClient:      &http.Client{},
 		pricingURL:      defaultPricingURL,
@@ -60,7 +66,7 @@ func NewIngester(service, region string, options ...Option) *Ingester {
 		opt(ing)
 	}
 
-	return ing
+	return ing, nil
 }
 
 // Ingest starts a goroutine that reads pricing data from AWS and, for the duration of the context, sends
