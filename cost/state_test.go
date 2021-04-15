@@ -38,6 +38,10 @@ func TestNewState(t *testing.T) {
 				},
 			},
 		},
+		{
+			Address:    "aws_invalid_resource.skipped",
+			Components: nil,
+		},
 	}
 
 	t.Run("Success", func(t *testing.T) {
@@ -65,6 +69,9 @@ func TestNewState(t *testing.T) {
 							Quantity: decimal.NewFromInt(1),
 						},
 					},
+				},
+				"aws_invalid_resource.skipped": {
+					Skipped: true,
 				},
 			},
 		}

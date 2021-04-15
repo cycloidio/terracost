@@ -167,3 +167,90 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 		})
 	})
 }
+
+func TestPlan_SkippedAddresses(t *testing.T) {
+	t.Run("OnlyPrior", func(t *testing.T) {
+		prior := &cost.State{
+			Resources: map[string]cost.Resource{
+				"aws_instance.test_valid": {
+					Components: map[string]cost.Component{
+						"EC2 instance hours": {
+							Quantity: decimal.NewFromInt(730),
+							Unit:     "Hrs",
+							Rate:     decimal.NewFromFloat(2.50),
+						},
+					},
+				},
+				"aws_invalid_resource.test_skipped": {
+					Skipped: true,
+				},
+			},
+		}
+		plan := cost.NewPlan(prior, nil)
+		skipped := plan.SkippedAddresses()
+		require.Len(t, skipped, 1)
+		assert.Contains(t, skipped, "aws_invalid_resource.test_skipped")
+	})
+
+	t.Run("OnlyPlanned", func(t *testing.T) {
+		planned := &cost.State{
+			Resources: map[string]cost.Resource{
+				"aws_instance.test_valid": {
+					Components: map[string]cost.Component{
+						"EC2 instance hours": {
+							Quantity: decimal.NewFromInt(730),
+							Unit:     "Hrs",
+							Rate:     decimal.NewFromFloat(2.50),
+						},
+					},
+				},
+				"aws_invalid_resource.test_skipped": {
+					Skipped: true,
+				},
+			},
+		}
+		plan := cost.NewPlan(nil, planned)
+		skipped := plan.SkippedAddresses()
+		require.Len(t, skipped, 1)
+		assert.Contains(t, skipped, "aws_invalid_resource.test_skipped")
+	})
+
+	t.Run("PriorAndPlanned", func(t *testing.T) {
+		prior := &cost.State{
+			Resources: map[string]cost.Resource{
+				"aws_instance.test_prior": {
+					Components: map[string]cost.Component{
+						"EC2 instance hours": {
+							Quantity: decimal.NewFromInt(730),
+							Unit:     "Hrs",
+							Rate:     decimal.NewFromFloat(2.50),
+						},
+					},
+				},
+				"aws_invalid_resource.skipped_prior_planned": {Skipped: true},
+				"aws_invalid_resource.skipped_prior":         {Skipped: true},
+			},
+		}
+		planned := &cost.State{
+			Resources: map[string]cost.Resource{
+				"aws_instance.test_prior": {
+					Components: map[string]cost.Component{
+						"EC2 instance hours": {
+							Quantity: decimal.NewFromInt(730),
+							Unit:     "Hrs",
+							Rate:     decimal.NewFromFloat(2.50),
+						},
+					},
+				},
+				"aws_invalid_resource.skipped_prior_planned": {Skipped: true},
+				"aws_invalid_resource.skipped_planned":       {Skipped: true},
+			},
+		}
+		plan := cost.NewPlan(prior, planned)
+		skipped := plan.SkippedAddresses()
+		require.Len(t, skipped, 3)
+		assert.Contains(t, skipped, "aws_invalid_resource.skipped_prior_planned")
+		assert.Contains(t, skipped, "aws_invalid_resource.skipped_prior")
+		assert.Contains(t, skipped, "aws_invalid_resource.skipped_planned")
+	})
+}
