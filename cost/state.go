@@ -40,6 +40,11 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 	state := &State{Resources: make(map[string]Resource)}
 
 	for _, res := range queries {
+		// Mark the Resource as skipped if there are no valid Components.
+		if len(res.Components) == 0 {
+			state.Resources[res.Address] = Resource{Skipped: true}
+		}
+
 		for _, comp := range res.Components {
 			prods, err := backend.Product().Filter(ctx, comp.ProductFilter)
 			if err != nil {

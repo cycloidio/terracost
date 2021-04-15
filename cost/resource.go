@@ -8,6 +8,7 @@ import (
 // by the label.
 type Resource struct {
 	Components map[string]Component
+	Skipped    bool
 }
 
 // Cost returns the sum of costs of every Component of this Resource.

@@ -1,6 +1,8 @@
 package cost
 
 import (
+	"sort"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -52,10 +54,40 @@ func (p Plan) ResourceDifferences() []ResourceDiff {
 	return rds
 }
 
+// SkippedAddresses returns the addresses of resources that were excluded from the estimation process.
+// The order of the elements in the slice is undefined and unstable.
+func (p Plan) SkippedAddresses() []string {
+	skippedMap := make(map[string]struct{})
+	if p.Prior != nil {
+		for addr, res := range p.Prior.Resources {
+			if res.Skipped {
+				skippedMap[addr] = struct{}{}
+			}
+		}
+	}
+	if p.Planned != nil {
+		for addr, res := range p.Planned.Resources {
+			if res.Skipped {
+				skippedMap[addr] = struct{}{}
+			}
+		}
+	}
+	skippedList := make([]string, 0, len(skippedMap))
+	for addr := range skippedMap {
+		skippedList = append(skippedList, addr)
+	}
+	sort.Strings(skippedList)
+	return skippedList
+}
+
 // mergeResourceDiffsFromState adds all the resources from the State to the provided ResourceDiff map. Each component
 // of every resource is then placed into an appropriate ComponentDiff field based on the value of the `planned` argument.
 func mergeResourceDiffsFromState(rdmap map[string]ResourceDiff, state *State, planned bool) {
 	for address, res := range state.Resources {
+		if res.Skipped {
+			continue
+		}
+
 		if _, ok := rdmap[address]; !ok {
 			rdmap[address] = ResourceDiff{
 				Address:        address,
