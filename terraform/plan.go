@@ -92,6 +92,10 @@ func (p *Plan) extractQueries(modules map[string]Module, providers map[string]Pr
 	result := make([]query.Resource, 0)
 	for _, module := range modules {
 		for _, tfres := range module.Resources {
+			if tfres.Mode != "managed" {
+				continue
+			}
+
 			providerKey, ok := resToProvKey[tfres.Address]
 			if !ok {
 				providerKey = tfres.ProviderName
@@ -99,13 +103,11 @@ func (p *Plan) extractQueries(modules map[string]Module, providers map[string]Pr
 
 			if provider, ok := providers[providerKey]; ok {
 				comps := provider.ResourceComponents(tfres)
-				if comps != nil {
-					q := query.Resource{
-						Address:    tfres.Address,
-						Components: comps,
-					}
-					result = append(result, q)
+				q := query.Resource{
+					Address:    tfres.Address,
+					Components: comps,
 				}
+				result = append(result, q)
 			}
 		}
 	}

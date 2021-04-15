@@ -22,6 +22,7 @@ type State struct {
 type Resource struct {
 	Address      string                 `json:"address"`
 	Index        int                    `json:"index"`
+	Mode         string                 `json:"mode"`
 	Type         string                 `json:"type"`
 	Name         string                 `json:"name"`
 	ProviderName string                 `json:"provider_name"`
