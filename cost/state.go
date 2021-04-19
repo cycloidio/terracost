@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/shopspring/decimal"
-
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
@@ -24,10 +22,6 @@ type Backend interface {
 type State struct {
 	Resources map[string]Resource
 }
-
-// HoursPerMonth is an approximate number of hours in a month.
-// It is calculated as 365 days in a year x 24 hours in a day / 12 months in year.
-const HoursPerMonth = 730
 
 // Errors that might be returned from NewState if either a product or a price are not found.
 var (
@@ -66,10 +60,11 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 			}
 
 			quantity := comp.MonthlyQuantity
-			rate := prices[0].Value
-			if quantity.Equals(decimal.Zero) {
+			rate := NewMonthly(prices[0].Value)
+
+			if quantity.IsZero() {
 				quantity = comp.HourlyQuantity
-				rate = rate.Mul(decimal.NewFromInt(HoursPerMonth))
+				rate = NewHourly(prices[0].Value)
 			}
 
 			component := Component{
@@ -87,8 +82,8 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 }
 
 // Cost returns the sum of the costs of every Resource included in this State.
-func (s *State) Cost() decimal.Decimal {
-	total := decimal.Zero
+func (s *State) Cost() Cost {
+	var total Cost
 	for _, re := range s.Resources {
 		total = total.Add(re.Cost())
 	}
