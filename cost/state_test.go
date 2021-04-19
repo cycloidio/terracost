@@ -65,7 +65,7 @@ func TestNewState(t *testing.T) {
 				"aws_instance.test1": {
 					Components: map[string]cost.Component{
 						"Compute": {
-							Rate:     decimal.New(89790, -2),
+							Rate:     cost.NewMonthly(decimal.New(89790, -2)),
 							Quantity: decimal.NewFromInt(1),
 						},
 					},
@@ -126,7 +126,7 @@ func TestState_Cost(t *testing.T) {
 			"aws_instance.test1": {
 				Components: map[string]cost.Component{
 					"Compute": {
-						Rate:     decimal.NewFromFloat(1.23),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
 						Quantity: decimal.NewFromInt(730),
 					},
 				},
@@ -135,5 +135,5 @@ func TestState_Cost(t *testing.T) {
 	}
 
 	expected := decimal.NewFromFloat(897.9)
-	assert.True(t, expected.Equal(state.Cost()))
+	assert.True(t, expected.Equal(state.Cost().Monthly()))
 }
