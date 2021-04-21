@@ -36,14 +36,19 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		require.NoError(t, err)
 
 		provider.EXPECT().ResourceComponents(gomock.Any()).DoAndReturn(func(res terraform.Resource) ([]query.Component, error) {
-			assert.Equal(t, "aws_instance.example", res.Address)
-			assert.Equal(t, "t2.xlarge", res.Values["instance_type"])
+			if res.Type == "aws_instance" {
+				assert.Equal(t, "aws_instance.example", res.Address)
+				assert.Equal(t, "t2.xlarge", res.Values["instance_type"])
+			} else {
+				assert.Equal(t, "aws_lb.example", res.Address)
+				assert.Equal(t, "application", res.Values["load_balancer_type"])
+			}
 			return []query.Component{}, nil
-		})
+		}).Times(2)
 
 		queries, err := plan.ExtractPlannedQueries()
 		require.NoError(t, err)
-		require.Len(t, queries, 1)
+		require.Len(t, queries, 2)
 	})
 
 	t.Run("BadProvider", func(t *testing.T) {
@@ -90,7 +95,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 
 		provider.EXPECT().ResourceComponents(gomock.Any()).DoAndReturn(func(res terraform.Resource) ([]query.Component, error) {
 			return nil, errors.New("ResourceComponents fail")
-		})
+		}).Times(2)
 
 		queries, err := plan.ExtractPlannedQueries()
 		require.NoError(t, err)
