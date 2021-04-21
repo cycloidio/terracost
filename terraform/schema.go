@@ -36,9 +36,21 @@ type Module struct {
 // Configuration is a Terraform plan configuration.
 type Configuration struct {
 	ProviderConfig map[string]ProviderConfig `json:"provider_config"`
+	RootModule     ConfigurationModule       `json:"root_module"`
 }
 
 // Variable is a Terraform variable declaration.
 type Variable struct {
 	Value string `json:"value"`
+}
+
+// ConfigurationModule is used to configure a module.
+type ConfigurationModule struct {
+	Resources []ConfigurationResource `json:"resources"`
+}
+
+// ConfigurationResource is used to configure a single reosurce.
+type ConfigurationResource struct {
+	Address           string `json:"address"`
+	ProviderConfigKey string `json:"provider_config_key"`
 }

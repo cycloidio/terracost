@@ -64,9 +64,6 @@ func (p *Plan) ExtractPriorQueries() ([]query.Resource, error) {
 func (p *Plan) extractProviders() (map[string]Provider, error) {
 	providers := make(map[string]Provider)
 	for name, provConfig := range p.Configuration.ProviderConfig {
-		if provConfig.Alias != "" {
-			continue
-		}
 		if pi, ok := p.providerInitializers[provConfig.Name]; ok {
 			values, err := p.evaluateProviderConfigExpressions(provConfig)
 			if err != nil {
@@ -76,9 +73,7 @@ func (p *Plan) extractProviders() (map[string]Provider, error) {
 			if err != nil {
 				return nil, err
 			}
-			for _, name := range pi.MatchNames {
-				providers[name] = prov
-			}
+			providers[name] = prov
 		}
 	}
 	return providers, nil
@@ -87,10 +82,22 @@ func (p *Plan) extractProviders() (map[string]Provider, error) {
 // extractQueries iterates over every resource and passes each to the corresponding Provider to get the components.
 // These are used to form a slice of resource queries that are then returned back to the caller.
 func (p *Plan) extractQueries(modules map[string]Module, providers map[string]Provider) []query.Resource {
+	// Create a map to associate each resource with a key of the provider that
+	// should be used to estimate it.
+	resToProvKey := make(map[string]string)
+	for _, res := range p.Configuration.RootModule.Resources {
+		resToProvKey[res.Address] = res.ProviderConfigKey
+	}
+
 	result := make([]query.Resource, 0)
 	for _, module := range modules {
 		for _, tfres := range module.Resources {
-			if provider, ok := providers[tfres.ProviderName]; ok {
+			providerKey, ok := resToProvKey[tfres.Address]
+			if !ok {
+				providerKey = tfres.ProviderName
+			}
+
+			if provider, ok := providers[providerKey]; ok {
 				comps := provider.ResourceComponents(tfres)
 				if comps != nil {
 					q := query.Resource{
