@@ -1,6 +1,6 @@
 {
   "format_version": "0.1",
-  "terraform_version": "0.12.28",
+  "terraform_version": "0.14.9",
   "planned_values": {
     "root_module": {
       "resources": [
@@ -9,7 +9,7 @@
           "mode": "managed",
           "type": "aws_instance",
           "name": "example",
-          "provider_name": "aws",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
           "schema_version": 1,
           "values": {
             "ami": "ami-2757f631",
@@ -23,6 +23,17 @@
               }
             ],
             "tenancy": "default"
+          }
+        },
+        {
+          "address": "aws_lb.example",
+          "mode": "managed",
+          "type": "aws_lb",
+          "name": "example",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 0,
+          "values": {
+            "load_balancer_type": "application"
           }
         }
       ]
@@ -64,6 +75,23 @@
             }
           ],
           "tenancy": "default"
+        },
+        "after_unknown": {}
+      }
+    },
+    {
+      "address": "aws_lb.example",
+      "mode": "managed",
+      "type": "aws_lb",
+      "name": "example",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "load_balancer_type": "application"
         },
         "after_unknown": {}
       }
@@ -112,6 +140,17 @@
             "constant_value": "us-east-1"
           }
         }
+      },
+      "aws.paris": {
+        "name": "aws-test",
+        "expressions": {
+          "profile": {
+            "constant_value": "default"
+          },
+          "region": {
+            "constant_value": "eu-west-3"
+          }
+        }
       }
     },
     "root_module": {
@@ -128,6 +167,19 @@
             },
             "instance_type": {
               "constant_value": "t2.xlarge"
+            }
+          },
+          "schema_version": 1
+        },
+        {
+          "address": "aws_lb.example",
+          "mode": "managed",
+          "type": "aws_lb",
+          "name": "example",
+          "provider_config_key": "aws.paris",
+          "expressions": {
+            "load_balancer_type": {
+              "constant_value": "application"
             }
           },
           "schema_version": 1

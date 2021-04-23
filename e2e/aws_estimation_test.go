@@ -139,20 +139,30 @@ func TestAWSEstimation(t *testing.T) {
 		assertDecimalEqual(t, decimal.NewFromFloat(901.5), plan.PlannedCost())
 
 		diffs := plan.ResourceDifferences()
-		require.Len(t, diffs, 1)
-		assert.Equal(t, "aws_instance.example", diffs[0].Address)
+		require.Len(t, diffs, 2)
 
-		compute := diffs[0].ComponentDiffs["Compute"]
-		require.NotNil(t, compute)
-		assert.Equal(t, []string{"Linux", "on-demand", "t2.micro"}, compute.Prior.Details)
-		assert.Equal(t, []string{"Linux", "on-demand", "t2.xlarge"}, compute.Planned.Details)
-		assertDecimalEqual(t, decimal.NewFromFloat(87.6), compute.PriorCost())
-		assertDecimalEqual(t, decimal.NewFromFloat(897.9), compute.PlannedCost())
+		for _, diff := range diffs {
+			switch diff.Address {
+			case "aws_instance.example":
+				compute := diff.ComponentDiffs["Compute"]
+				require.NotNil(t, compute)
+				assert.Equal(t, []string{"Linux", "on-demand", "t2.micro"}, compute.Prior.Details)
+				assert.Equal(t, []string{"Linux", "on-demand", "t2.xlarge"}, compute.Planned.Details)
+				assertDecimalEqual(t, decimal.NewFromFloat(87.6), compute.PriorCost())
+				assertDecimalEqual(t, decimal.NewFromFloat(897.9), compute.PlannedCost())
 
-		rootVol := diffs[0].ComponentDiffs["Root volume: Storage"]
-		require.NotNil(t, rootVol)
-		assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PriorCost())
-		assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PlannedCost())
+				rootVol := diff.ComponentDiffs["Root volume: Storage"]
+				require.NotNil(t, rootVol)
+				assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PriorCost())
+				assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PlannedCost())
+
+			case "aws_lb.example":
+				lb := diff.ComponentDiffs["Application Load Balancer"]
+				require.NotNil(t, lb)
+				assert.False(t, diff.Valid())
+				assertDecimalEqual(t, decimal.NewFromFloat(0), lb.Planned.Cost())
+			}
+		}
 	})
 
 	t.Run("ProductNotFound", func(t *testing.T) {
