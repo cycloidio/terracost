@@ -99,7 +99,8 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 
 		queries, err := plan.ExtractPlannedQueries()
 		require.NoError(t, err)
-		require.Len(t, queries, 0)
+		require.Len(t, queries, 2)
+		assert.Contains(t, queries, query.Resource{Address: "aws_instance.example"})
 	})
 }
 
@@ -183,6 +184,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 
 		queries, err := plan.ExtractPriorQueries()
 		require.NoError(t, err)
-		require.Len(t, queries, 0)
+		require.Len(t, queries, 1)
+		assert.Contains(t, queries, query.Resource{Address: "aws_instance.example"})
 	})
 }
