@@ -1,9 +1,5 @@
 package cost
 
-import (
-	"github.com/shopspring/decimal"
-)
-
 // Resource represents costs of a single cloud resource. Each Resource includes a Component map, keyed
 // by the label.
 type Resource struct {
@@ -12,8 +8,8 @@ type Resource struct {
 }
 
 // Cost returns the sum of costs of every Component of this Resource.
-func (re Resource) Cost() decimal.Decimal {
-	var total decimal.Decimal
+func (re Resource) Cost() Cost {
+	var total Cost
 	for _, comp := range re.Components {
 		total = total.Add(comp.Cost())
 	}
@@ -28,8 +24,8 @@ type ResourceDiff struct {
 }
 
 // PriorCost returns the sum of costs of every Component's PriorCost.
-func (rd ResourceDiff) PriorCost() decimal.Decimal {
-	var total decimal.Decimal
+func (rd ResourceDiff) PriorCost() Cost {
+	total := Zero
 	for _, cd := range rd.ComponentDiffs {
 		total = total.Add(cd.PriorCost())
 	}
@@ -37,8 +33,8 @@ func (rd ResourceDiff) PriorCost() decimal.Decimal {
 }
 
 // PlannedCost returns the sum of costs of every Component's PlannedCost.
-func (rd ResourceDiff) PlannedCost() decimal.Decimal {
-	var total decimal.Decimal
+func (rd ResourceDiff) PlannedCost() Cost {
+	total := Zero
 	for _, cd := range rd.ComponentDiffs {
 		total = total.Add(cd.PlannedCost())
 	}

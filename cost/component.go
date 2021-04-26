@@ -9,15 +9,18 @@ import (
 type Component struct {
 	Quantity decimal.Decimal
 	Unit     string
-	Rate     decimal.Decimal
+	Rate     Cost
 	Details  []string
 
 	Error error
 }
 
 // Cost returns the cost of this component (Rate multiplied by Quantity).
-func (c Component) Cost() decimal.Decimal {
-	return c.Rate.Mul(c.Quantity)
+func (c Component) Cost() Cost {
+	if c.Rate.IsZero() || c.Quantity.IsZero() {
+		return Zero
+	}
+	return c.Rate.MulDecimal(c.Quantity)
 }
 
 // ComponentDiff is a difference between the Prior and Planned Component.
@@ -26,17 +29,17 @@ type ComponentDiff struct {
 }
 
 // PriorCost returns the full cost of the Prior Component or decimal.Zero if it doesn't exist.
-func (cd ComponentDiff) PriorCost() decimal.Decimal {
+func (cd ComponentDiff) PriorCost() Cost {
 	if cd.Prior == nil {
-		return decimal.Zero
+		return Zero
 	}
 	return cd.Prior.Cost()
 }
 
 // PlannedCost returns the full cost of the Planned Component or decimal.Zero if it doesn't exist.
-func (cd ComponentDiff) PlannedCost() decimal.Decimal {
+func (cd ComponentDiff) PlannedCost() Cost {
 	if cd.Planned == nil {
-		return decimal.Zero
+		return Zero
 	}
 	return cd.Planned.Cost()
 }

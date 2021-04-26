@@ -2,8 +2,6 @@ package cost
 
 import (
 	"sort"
-
-	"github.com/shopspring/decimal"
 )
 
 // Plan is the cost difference between two State instances. It is not tied to any specific cloud provider or IaC tool.
@@ -20,17 +18,17 @@ func NewPlan(prior, planned *State) *Plan {
 }
 
 // PriorCost returns the total cost of the Prior State or decimal.Zero if it isn't included in the plan.
-func (p Plan) PriorCost() decimal.Decimal {
+func (p Plan) PriorCost() Cost {
 	if p.Prior == nil {
-		return decimal.Zero
+		return Zero
 	}
 	return p.Prior.Cost()
 }
 
 // PlannedCost returns the total cost of the Planned State or decimal.Zero if it isn't included in the plan.
-func (p Plan) PlannedCost() decimal.Decimal {
+func (p Plan) PlannedCost() Cost {
 	if p.Planned == nil {
-		return decimal.Zero
+		return Zero
 	}
 	return p.Planned.Cost()
 }
