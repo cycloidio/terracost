@@ -15,7 +15,7 @@ type Plan struct {
 
 	Configuration Configuration       `json:"configuration"`
 	PriorState    *State              `json:"prior_state"`
-	PlannedValues map[string]Module   `json:"planned_values"`
+	PlannedValues Values              `json:"planned_values"`
 	Variables     map[string]Variable `json:"variables"`
 }
 
@@ -81,36 +81,74 @@ func (p *Plan) extractProviders() (map[string]Provider, error) {
 
 // extractQueries iterates over every resource and passes each to the corresponding Provider to get the components.
 // These are used to form a slice of resource queries that are then returned back to the caller.
-func (p *Plan) extractQueries(modules map[string]Module, providers map[string]Provider) []query.Resource {
-	// Create a map to associate each resource with a key of the provider that
+func (p *Plan) extractQueries(values Values, providers map[string]Provider) []query.Resource {
+	// Create a map to associate each resource with a Provider that
 	// should be used to estimate it.
-	resToProvKey := make(map[string]string)
-	for _, res := range p.Configuration.RootModule.Resources {
-		resToProvKey[res.Address] = res.ProviderConfigKey
-	}
+	resourceProviders := make(map[string]Provider)
+	p.extractModuleConfiguration("", &p.Configuration.RootModule, providers, resourceProviders)
+	return p.extractModuleQueries(&values.RootModule, resourceProviders)
+}
 
-	result := make([]query.Resource, 0)
-	for _, module := range modules {
-		for _, tfres := range module.Resources {
-			if tfres.Mode != "managed" {
-				continue
-			}
+// extractModuleConfiguration iterates over all the modules included in the plan's configuration block and
+// extracts the provider that should be used for each resource. This function calls itself recursively until
+// data from the entire module tree is extracted. It takes the following arguments:
+//   - prefix - the current module's address. Empty string signifies the root module.
+//   - module - the module's configuration block itself.
+//   - providers - map of provider name to Provider.
+//   - resourceProviders - used as an output of this function, it's a map of resource addresses to their assigned
+//     Provider. This map should be passed empty and not nil.
+func (p *Plan) extractModuleConfiguration(prefix string, module *ConfigurationModule, providers map[string]Provider, resourceProviders map[string]Provider) {
+	for _, res := range module.Resources {
+		key := res.ProviderConfigKey
+		if strings.Contains(key, ":") {
+			parts := strings.Split(key, ":")
+			key = parts[len(parts)-1]
+		}
 
-			providerKey, ok := resToProvKey[tfres.Address]
-			if !ok {
-				providerKey = tfres.ProviderName
-			}
+		addr := res.Address
+		if prefix != "" {
+			addr = fmt.Sprintf("module.%s.%s", prefix, addr)
+		}
 
-			if provider, ok := providers[providerKey]; ok {
-				comps := provider.ResourceComponents(tfres)
-				q := query.Resource{
-					Address:    tfres.Address,
-					Components: comps,
-				}
-				result = append(result, q)
-			}
+		if prov, ok := providers[key]; ok {
+			resourceProviders[addr] = prov
 		}
 	}
+
+	for k, child := range module.ModuleCalls {
+		if child.Module != nil {
+			nextPrefix := k
+			if prefix != "" {
+				nextPrefix = fmt.Sprintf("%s.%s", prefix, k)
+			}
+			p.extractModuleConfiguration(nextPrefix, child.Module, providers, resourceProviders)
+		}
+	}
+}
+
+// extractModuleQueries iterates recursively over all the module's (and its descendants) resources. It uses the
+// resourceProviders map to retrieve the correct Provider based on the resource address.
+func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string]Provider) []query.Resource {
+	result := make([]query.Resource, 0, len(resourceProviders))
+
+	for _, tfres := range module.Resources {
+		provider, ok := resourceProviders[tfres.Address]
+		if !ok || tfres.Mode != "managed" {
+			continue
+		}
+
+		comps := provider.ResourceComponents(tfres)
+		q := query.Resource{
+			Address:    tfres.Address,
+			Components: comps,
+		}
+		result = append(result, q)
+	}
+
+	for _, child := range module.ChildModules {
+		result = append(result, p.extractModuleQueries(child, resourceProviders)...)
+	}
+
 	return result
 }
 
