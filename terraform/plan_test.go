@@ -37,7 +37,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 
 		provider.EXPECT().ResourceComponents(gomock.Any()).DoAndReturn(func(res terraform.Resource) ([]query.Component, error) {
 			if res.Type == "aws_instance" {
-				assert.Equal(t, "aws_instance.example", res.Address)
+				assert.Equal(t, "module.instance.aws_instance.example", res.Address)
 				assert.Equal(t, "t2.xlarge", res.Values["instance_type"])
 			} else {
 				assert.Equal(t, "aws_lb.example", res.Address)
@@ -100,7 +100,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		queries, err := plan.ExtractPlannedQueries()
 		require.NoError(t, err)
 		require.Len(t, queries, 2)
-		assert.Contains(t, queries, query.Resource{Address: "aws_instance.example"})
+		assert.Contains(t, queries, query.Resource{Address: "module.instance.aws_instance.example"})
 	})
 }
 
@@ -126,7 +126,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		require.NoError(t, err)
 
 		provider.EXPECT().ResourceComponents(gomock.Any()).DoAndReturn(func(res terraform.Resource) ([]query.Component, error) {
-			assert.Equal(t, "aws_instance.example", res.Address)
+			assert.Equal(t, "module.instance.aws_instance.example", res.Address)
 			assert.Equal(t, "t2.micro", res.Values["instance_type"])
 			return []query.Component{}, nil
 		})
@@ -185,6 +185,6 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		queries, err := plan.ExtractPriorQueries()
 		require.NoError(t, err)
 		require.Len(t, queries, 1)
-		assert.Contains(t, queries, query.Resource{Address: "aws_instance.example"})
+		assert.Contains(t, queries, query.Resource{Address: "module.instance.aws_instance.example"})
 	})
 }

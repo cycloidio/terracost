@@ -3,28 +3,35 @@
   "terraform_version": "0.14.9",
   "planned_values": {
     "root_module": {
-      "resources": [
+      "child_modules": [
         {
-          "address": "aws_instance.example",
-          "mode": "managed",
-          "type": "aws_instance",
-          "name": "example",
-          "provider_name": "registry.terraform.io/hashicorp/aws",
-          "schema_version": 1,
-          "values": {
-            "ami": "ami-2757f631",
-            "availability_zone": "us-east-1e",
-            "instance_type": "t2.xlarge",
-            "root_block_device": [
-              {
-                "iops": 100,
-                "volume_size": 8,
-                "volume_type": "gp2"
+          "resources": [
+            {
+              "address": "module.instance.aws_instance.example",
+              "mode": "managed",
+              "type": "aws_instance",
+              "name": "example",
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "ami": "ami-2757f631",
+                "availability_zone": "us-east-1e",
+                "instance_type": "t2.xlarge",
+                "root_block_device": [
+                  {
+                    "iops": 100,
+                    "volume_size": 8,
+                    "volume_type": "gp2"
+                  }
+                ],
+                "tenancy": "default"
               }
-            ],
-            "tenancy": "default"
-          }
-        },
+            }
+          ],
+          "address": "module.instance"
+        }
+      ],
+      "resources": [
         {
           "address": "aws_lb.example",
           "mode": "managed",
@@ -41,7 +48,8 @@
   },
   "resource_changes": [
     {
-      "address": "aws_instance.example",
+      "address": "module.instance.aws_instance.example",
+      "module_address": "module.instance",
       "mode": "managed",
       "type": "aws_instance",
       "name": "example",
@@ -102,27 +110,32 @@
     "terraform_version": "0.12.28",
     "values": {
       "root_module": {
-        "resources": [
+        "child_modules": [
           {
-            "address": "aws_instance.example",
-            "mode": "managed",
-            "type": "aws_instance",
-            "name": "example",
-            "provider_name": "aws",
-            "schema_version": 1,
-            "values": {
-              "ami": "ami-2757f631",
-              "availability_zone": "us-east-1e",
-              "instance_type": "t2.micro",
-              "root_block_device": [
-                {
-                  "iops": 100,
-                  "volume_size": 8,
-                  "volume_type": "gp2"
+            "resources": [
+              {
+                "address": "module.instance.aws_instance.example",
+                "mode": "managed",
+                "type": "aws_instance",
+                "name": "example",
+                "provider_name": "aws",
+                "schema_version": 1,
+                "values": {
+                  "ami": "ami-2757f631",
+                  "availability_zone": "us-east-1e",
+                  "instance_type": "t2.micro",
+                  "root_block_device": [
+                    {
+                      "iops": 100,
+                      "volume_size": 8,
+                      "volume_type": "gp2"
+                    }
+                  ],
+                  "tenancy": "default"
                 }
-              ],
-              "tenancy": "default"
-            }
+              }
+            ],
+            "address": "module.instance"
           }
         ]
       }
@@ -154,23 +167,32 @@
       }
     },
     "root_module": {
+      "module_calls": {
+        "instance": {
+          "source": "./instance",
+          "module": {
+            "resources": [
+              {
+                "address": "aws_instance.example",
+                "mode": "managed",
+                "type": "aws_instance",
+                "name": "example",
+                "provider_config_key": "instance:aws",
+                "expressions": {
+                  "ami": {
+                    "constant_value": "ami-2757f631"
+                  },
+                  "instance_type": {
+                    "constant_value": "t2.xlarge"
+                  }
+                },
+                "schema_version": 1
+              }
+            ]
+          }
+        }
+      },
       "resources": [
-        {
-          "address": "aws_instance.example",
-          "mode": "managed",
-          "type": "aws_instance",
-          "name": "example",
-          "provider_config_key": "aws",
-          "expressions": {
-            "ami": {
-              "constant_value": "ami-2757f631"
-            },
-            "instance_type": {
-              "constant_value": "t2.xlarge"
-            }
-          },
-          "schema_version": 1
-        },
         {
           "address": "aws_lb.example",
           "mode": "managed",
