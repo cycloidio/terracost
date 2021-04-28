@@ -13,9 +13,14 @@ type ProviderConfig struct {
 	Expressions map[string]ProviderConfigExpression `json:"expressions"`
 }
 
+// Values is a tree of modules and resources within.
+type Values struct {
+	RootModule Module `json:"root_module"`
+}
+
 // State is a collection of resource modules.
 type State struct {
-	Values map[string]Module `json:"values"`
+	Values Values `json:"values"`
 }
 
 // Resource is a single Terraform resource definition.
@@ -31,7 +36,9 @@ type Resource struct {
 
 // Module is a collection of resources.
 type Module struct {
-	Resources []Resource `json:"resources"`
+	Address      string     `json:"address"`
+	Resources    []Resource `json:"resources"`
+	ChildModules []*Module  `json:"child_modules"`
 }
 
 // Configuration is a Terraform plan configuration.
@@ -47,7 +54,10 @@ type Variable struct {
 
 // ConfigurationModule is used to configure a module.
 type ConfigurationModule struct {
-	Resources []ConfigurationResource `json:"resources"`
+	Resources   []ConfigurationResource `json:"resources"`
+	ModuleCalls map[string]struct {
+		Module *ConfigurationModule `json:"module"`
+	} `json:"module_calls"`
 }
 
 // ConfigurationResource is used to configure a single reosurce.

@@ -6,3 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Add support for child modules in Terraform plan files
+  ([Issue #37](https://github.com/cycloidio/terracost/issues/37))
