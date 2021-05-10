@@ -89,6 +89,8 @@ func mergeResourceDiffsFromState(rdmap map[string]ResourceDiff, state *State, pl
 		if _, ok := rdmap[address]; !ok {
 			rdmap[address] = ResourceDiff{
 				Address:        address,
+				Provider:       res.Provider,
+				Type:           res.Type,
 				ComponentDiffs: make(map[string]*ComponentDiff),
 			}
 		}

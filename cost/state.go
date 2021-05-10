@@ -35,9 +35,7 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 
 	for _, res := range queries {
 		// Mark the Resource as skipped if there are no valid Components.
-		if len(res.Components) == 0 {
-			state.Resources[res.Address] = Resource{Skipped: true}
-		}
+		state.ensureResource(res.Address, res.Provider, res.Type, len(res.Components) == 0)
 
 		for _, comp := range res.Components {
 			prods, err := backend.Product().Filter(ctx, comp.ProductFilter)
@@ -90,12 +88,24 @@ func (s *State) Cost() Cost {
 	return total
 }
 
-// addComponent adds the Component with given label to the Resource at given address. The Resource is created
-// if it doesn't already exist.
-func (s *State) addComponent(resAddress, compLabel string, component Component) {
-	if _, ok := s.Resources[resAddress]; !ok {
-		s.Resources[resAddress] = Resource{Components: make(map[string]Component)}
-	}
+// ensureResource creates Resource at the given address if it doesn't already exist.
+func (s *State) ensureResource(address, provider, typ string, skipped bool) {
+	if _, ok := s.Resources[address]; !ok {
+		res := Resource{
+			Provider: provider,
+			Type:     typ,
+			Skipped:  skipped,
+		}
 
+		if !skipped {
+			res.Components = make(map[string]Component)
+		}
+
+		s.Resources[address] = res
+	}
+}
+
+// addComponent adds the Component with given label to the Resource at given address.
+func (s *State) addComponent(resAddress, compLabel string, component Component) {
 	s.Resources[resAddress].Components[compLabel] = component
 }
