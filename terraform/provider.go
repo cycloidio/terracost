@@ -8,6 +8,9 @@ import (
 
 // Provider represents a Terraform provider. It extracts price queries from Terraform resources.
 type Provider interface {
+	// Name returns the common name of this Provider.
+	Name() string
+
 	// ResourceComponents returns price component queries for the given Resource. Nil may be returned
 	// which signifies a resource that is not supported by this Provider.
 	ResourceComponents(res Resource) []query.Component
