@@ -3,6 +3,8 @@ package cost
 // Resource represents costs of a single cloud resource. Each Resource includes a Component map, keyed
 // by the label.
 type Resource struct {
+	Provider   string
+	Type       string
 	Components map[string]Component
 	Skipped    bool
 }
@@ -20,6 +22,8 @@ func (re Resource) Cost() Cost {
 // map, keyed by the label.
 type ResourceDiff struct {
 	Address        string
+	Provider       string
+	Type           string
 	ComponentDiffs map[string]*ComponentDiff
 }
 

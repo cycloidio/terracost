@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### Added
+
+- Expose `provider` and `type` fields for estimated resources
+  ([Issue #42](https://github.com/cycloidio/terracost/issues/42))
 
 ## [0.1.1] _2021-04-29_
 

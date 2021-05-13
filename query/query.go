@@ -13,6 +13,12 @@ type Resource struct {
 	// Address uniquely identifies this cloud Resource.
 	Address string
 
+	// Provider is the cloud provider that this Resource belongs to.
+	Provider string
+
+	// Type describes the type of the Resource.
+	Type string
+
 	// Components is a list of price components that make up this Resource. If it is empty, the resource
 	// is considered to be skipped.
 	Components []Component

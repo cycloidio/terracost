@@ -140,6 +140,8 @@ func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string
 		comps := provider.ResourceComponents(tfres)
 		q := query.Resource{
 			Address:    tfres.Address,
+			Provider:   provider.Name(),
+			Type:       tfres.Type,
 			Components: comps,
 		}
 		result = append(result, q)
