@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+
+## [0.2.0] _2021-05-14_
+
 ### Added
 
 - Expose `provider` and `type` fields for estimated resources
