@@ -1,6 +1,13 @@
 ## [Unreleased]
 
 
+## [0.3.0] _2021-06-01_
+
+### Added
+
+- Support estimation of a directory of HCL files
+  ([Issue #29](https://github.com/cycloidio/terracost/issues/29))
+
 ## [0.2.0] _2021-05-14_
 
 ### Added
