@@ -19,7 +19,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
 						},
 					},
 				},
@@ -36,7 +36,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 					Prior: &cost.Component{
 						Quantity: decimal.NewFromInt(730),
 						Unit:     "Hrs",
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
 					},
 				},
 			},
@@ -51,7 +51,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
 						},
 					},
 				},
@@ -68,7 +68,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 					Planned: &cost.Component{
 						Quantity: decimal.NewFromInt(730),
 						Unit:     "Hrs",
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
 					},
 				},
 			},
@@ -83,7 +83,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.50)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.50), "USD"),
 						},
 					},
 				},
@@ -92,7 +92,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
 						},
 					},
 				},
@@ -105,7 +105,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50), "USD"),
 						},
 					},
 				},
@@ -114,7 +114,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(3.21)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(3.21), "USD"),
 						},
 					},
 				},
@@ -131,12 +131,12 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 					Prior: &cost.Component{
 						Quantity: decimal.NewFromInt(730),
 						Unit:     "Hrs",
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.50)),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.50), "USD"),
 					},
 					Planned: &cost.Component{
 						Quantity: decimal.NewFromInt(730),
 						Unit:     "Hrs",
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50)),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50), "USD"),
 					},
 				},
 			},
@@ -148,7 +148,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 					Planned: &cost.Component{
 						Quantity: decimal.NewFromInt(730),
 						Unit:     "Hrs",
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(3.21)),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(3.21), "USD"),
 					},
 				},
 			},
@@ -160,7 +160,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 					Prior: &cost.Component{
 						Quantity: decimal.NewFromInt(730),
 						Unit:     "Hrs",
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
+						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
 					},
 				},
 			},
@@ -177,7 +177,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50), "USD"),
 						},
 					},
 				},
@@ -200,7 +200,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50), "USD"),
 						},
 					},
 				},
@@ -223,7 +223,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50), "USD"),
 						},
 					},
 				},
@@ -238,7 +238,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 						"EC2 instance hours": {
 							Quantity: decimal.NewFromInt(730),
 							Unit:     "Hrs",
-							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50)),
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(2.50), "USD"),
 						},
 					},
 				},

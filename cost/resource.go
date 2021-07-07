@@ -1,5 +1,7 @@
 package cost
 
+import "fmt"
+
 // Resource represents costs of a single cloud resource. Each Resource includes a Component map, keyed
 // by the label.
 type Resource struct {
@@ -10,12 +12,17 @@ type Resource struct {
 }
 
 // Cost returns the sum of costs of every Component of this Resource.
-func (re Resource) Cost() Cost {
+// Error is returned if there is a mismatch in Component currency.
+func (re Resource) Cost() (Cost, error) {
 	var total Cost
-	for _, comp := range re.Components {
-		total = total.Add(comp.Cost())
+	var err error
+	for name, comp := range re.Components {
+		total, err = total.Add(comp.Cost())
+		if err != nil {
+			return Zero, fmt.Errorf("failed to add cost of component %s: %w", name, err)
+		}
 	}
-	return total
+	return total, nil
 }
 
 // ResourceDiff is the difference in costs between prior and planned Resource. It contains a ComponentDiff
@@ -28,21 +35,31 @@ type ResourceDiff struct {
 }
 
 // PriorCost returns the sum of costs of every Component's PriorCost.
-func (rd ResourceDiff) PriorCost() Cost {
+// Error is returned if there is a mismatch between currencies of the Components.
+func (rd ResourceDiff) PriorCost() (Cost, error) {
 	total := Zero
+	var err error
 	for _, cd := range rd.ComponentDiffs {
-		total = total.Add(cd.PriorCost())
+		total, err = total.Add(cd.PriorCost())
+		if err != nil {
+			return Zero, fmt.Errorf("failed calculating prior cost : %w", err)
+		}
 	}
-	return total
+	return total, nil
 }
 
 // PlannedCost returns the sum of costs of every Component's PlannedCost.
-func (rd ResourceDiff) PlannedCost() Cost {
+// Error is returned if there is a mismatch between currencies of the Components.
+func (rd ResourceDiff) PlannedCost() (Cost, error) {
 	total := Zero
+	var err error
 	for _, cd := range rd.ComponentDiffs {
-		total = total.Add(cd.PlannedCost())
+		total, err = total.Add(cd.PriorCost())
+		if err != nil {
+			return Zero, fmt.Errorf("failed calculating planned cost: %w", err)
+		}
 	}
-	return total
+	return total, nil
 }
 
 // Errors returns a map of Component errors keyed by the Component label.

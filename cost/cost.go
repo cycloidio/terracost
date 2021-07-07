@@ -1,6 +1,8 @@
 package cost
 
 import (
+	"fmt"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -12,19 +14,21 @@ var HoursPerMonth = decimal.NewFromInt(730)
 type Cost struct {
 	// Decimal is price per month.
 	decimal.Decimal
+	// Currency of the cost.
+	Currency string
 }
 
 // Zero is Cost with zero value.
 var Zero = Cost{}
 
-// NewMonthly returns a new Cost from price per month.
-func NewMonthly(monthly decimal.Decimal) Cost {
-	return Cost{Decimal: monthly}
+// NewMonthly returns a new Cost from price per month with currency.
+func NewMonthly(monthly decimal.Decimal, currency string) Cost {
+	return Cost{Decimal: monthly, Currency: currency}
 }
 
-// NewHourly returns a new Cost from price per hour.
-func NewHourly(hourly decimal.Decimal) Cost {
-	return Cost{Decimal: hourly.Mul(HoursPerMonth)}
+// NewHourly returns a new Cost from price per hour with currency.
+func NewHourly(hourly decimal.Decimal, currency string) Cost {
+	return Cost{Decimal: hourly.Mul(HoursPerMonth), Currency: currency}
 }
 
 // Monthly returns the cost per month.
@@ -38,11 +42,21 @@ func (c Cost) Hourly() decimal.Decimal {
 }
 
 // Add adds the values of two Cost structs.
-func (c Cost) Add(c2 Cost) Cost {
-	return Cost{Decimal: c.Decimal.Add(c2.Monthly())}
+// If the currency of both costs doesn't match, error is returned.
+func (c Cost) Add(c2 Cost) (Cost, error) {
+	// If there is no currency, use the currency of the addition
+	if c.Currency == "" {
+		c.Currency = c2.Currency
+	}
+
+	if c.Currency != c2.Currency {
+		return Zero, fmt.Errorf("currency mismatch: expected %s, got %s", c.Currency, c2.Currency)
+	}
+
+	return Cost{Decimal: c.Decimal.Add(c2.Monthly()), Currency: c.Currency}, nil
 }
 
 // MulDecimal multiplies the Cost by the given decimal.Decimal.
 func (c Cost) MulDecimal(d decimal.Decimal) Cost {
-	return Cost{Decimal: c.Decimal.Mul(d)}
+	return Cost{Decimal: c.Decimal.Mul(d), Currency: c.Currency}
 }
