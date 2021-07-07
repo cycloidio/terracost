@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### Added
+
+- Include currency in resource component cost estimation
+  ([Issue #48](https://github.com/cycloidio/terracost/issues/48))
 
 ## [0.3.0] _2021-06-01_
 
