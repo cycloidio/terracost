@@ -135,8 +135,13 @@ func TestAWSEstimation(t *testing.T) {
 		plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformProviderInitializer)
 		require.NoError(t, err)
 
-		assertDecimalEqual(t, decimal.NewFromFloat(91.2), plan.PriorCost().Monthly())
-		assertDecimalEqual(t, decimal.NewFromFloat(901.5), plan.PlannedCost().Monthly())
+		pcost, err := plan.PriorCost()
+		assert.NoError(t, err)
+		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(91.2), "USD"), pcost)
+
+		pcost, err = plan.PlannedCost()
+		assert.NoError(t, err)
+		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(901.5), "USD"), pcost)
 
 		diffs := plan.ResourceDifferences()
 		require.Len(t, diffs, 2)
@@ -148,19 +153,19 @@ func TestAWSEstimation(t *testing.T) {
 				require.NotNil(t, compute)
 				assert.Equal(t, []string{"Linux", "on-demand", "t2.micro"}, compute.Prior.Details)
 				assert.Equal(t, []string{"Linux", "on-demand", "t2.xlarge"}, compute.Planned.Details)
-				assertDecimalEqual(t, decimal.NewFromFloat(87.6), compute.PriorCost().Monthly())
-				assertDecimalEqual(t, decimal.NewFromFloat(897.9), compute.PlannedCost().Monthly())
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(87.6), "USD"), compute.PriorCost())
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(897.9), "USD"), compute.PlannedCost())
 
 				rootVol := diff.ComponentDiffs["Root volume: Storage"]
 				require.NotNil(t, rootVol)
-				assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PriorCost().Monthly())
-				assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PlannedCost().Monthly())
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PriorCost())
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PlannedCost())
 
 			case "aws_lb.example":
 				lb := diff.ComponentDiffs["Application Load Balancer"]
 				require.NotNil(t, lb)
 				assert.False(t, diff.Valid())
-				assertDecimalEqual(t, decimal.NewFromFloat(0), lb.Planned.Cost().Monthly())
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), lb.Planned.Cost())
 			}
 		}
 	})
@@ -179,8 +184,8 @@ func TestAWSEstimation(t *testing.T) {
 
 		rootVol := diffs[0].ComponentDiffs["Root volume: Storage"]
 		require.NotNil(t, rootVol)
-		assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PriorCost().Monthly())
-		assertDecimalEqual(t, decimal.NewFromFloat(3.6), rootVol.PlannedCost().Monthly())
+		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), rootVol.PriorCost())
+		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), rootVol.PlannedCost())
 
 		expected := map[string]error{
 			"Compute": cost.ErrProductNotFound,
@@ -189,6 +194,7 @@ func TestAWSEstimation(t *testing.T) {
 	})
 }
 
-func assertDecimalEqual(t *testing.T, expected, actual decimal.Decimal) {
-	assert.Truef(t, expected.Equal(actual), "Not equal:\nexpected: %s\nactual  : %s", expected, actual)
+func assertCostEqual(t *testing.T, expected, actual cost.Cost) {
+	assert.Truef(t, expected.Equal(actual.Decimal), "Not equal:\nexpected value: %s\nactual value: %s", expected, actual)
+	assert.Truef(t, expected.Currency == actual.Currency, "Not equal:\nexpected currency: %s\nactual currency: %s", expected.Currency, actual.Currency)
 }
