@@ -58,11 +58,11 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 			}
 
 			quantity := comp.MonthlyQuantity
-			rate := NewMonthly(prices[0].Value)
+			rate := NewMonthly(prices[0].Value, prices[0].Currency)
 
 			if quantity.IsZero() {
 				quantity = comp.HourlyQuantity
-				rate = NewHourly(prices[0].Value)
+				rate = NewHourly(prices[0].Value, prices[0].Currency)
 			}
 
 			component := Component{
@@ -80,12 +80,21 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 }
 
 // Cost returns the sum of the costs of every Resource included in this State.
-func (s *State) Cost() Cost {
+// Error is returned if there is a mismatch in resource currencies.
+func (s *State) Cost() (Cost, error) {
 	var total Cost
-	for _, re := range s.Resources {
-		total = total.Add(re.Cost())
+	for name, re := range s.Resources {
+		rCost, err := re.Cost()
+		if err != nil {
+			return Zero, fmt.Errorf("failed to get cost of resource %s: %w", name, err)
+		}
+		total, err = total.Add(rCost)
+		if err != nil {
+			return Zero, fmt.Errorf("failed to add cost of resource %s: %w", name, err)
+		}
 	}
-	return total
+
+	return total, nil
 }
 
 // ensureResource creates Resource at the given address if it doesn't already exist.

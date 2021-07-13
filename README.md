@@ -43,7 +43,7 @@ backend := mysql.NewBackend(db)
 
 // service can be "AmazonEC2" or "AmazonRDS"
 // region is any AWS region, e.g. "us-east-1" or "eu-west-3"
-ingester := aws.NewIngester(service, region)
+ingester, err := aws.NewIngester(service, region)
 err = terracost.IngestPricing(ctx, backend, ingester)
 ```
 
@@ -67,7 +67,7 @@ go func() {
 2. Initialize an ingester capable of tracking progress (in this example the channel will receive an update every 5 seconds):
 
 ```go
-ingester := aws.NewIngester(service, region, aws.WithProgress(progressCh, 5*time.Second))
+ingester, err := aws.NewIngester(service, region, aws.WithProgress(progressCh, 5*time.Second))
 ```
 
 3. Use the ingester as in the previous section.

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/text/currency"
+
 	"github.com/cycloidio/sqlr"
 	"github.com/shopspring/decimal"
 
@@ -52,10 +54,15 @@ func newPrice(pwp *price.WithProduct) (*dbPrice, error) {
 		return nil, err
 	}
 
+	cur, err := currency.ParseISO(pwp.Currency)
+	if err != nil {
+		return nil, err
+	}
+
 	return &dbPrice{
 		ProductID:  pwp.Product.ID,
 		Hash:       pwp.GenerateHash(),
-		Currency:   pwp.Currency,
+		Currency:   cur.String(),
 		Value:      pwp.Value,
 		Unit:       pwp.Unit,
 		Attributes: string(attributes),

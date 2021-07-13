@@ -18,17 +18,17 @@ func NewPlan(prior, planned *State) *Plan {
 }
 
 // PriorCost returns the total cost of the Prior State or decimal.Zero if it isn't included in the plan.
-func (p Plan) PriorCost() Cost {
+func (p Plan) PriorCost() (Cost, error) {
 	if p.Prior == nil {
-		return Zero
+		return Zero, nil
 	}
 	return p.Prior.Cost()
 }
 
 // PlannedCost returns the total cost of the Planned State or decimal.Zero if it isn't included in the plan.
-func (p Plan) PlannedCost() Cost {
+func (p Plan) PlannedCost() (Cost, error) {
 	if p.Planned == nil {
-		return Zero
+		return Zero, nil
 	}
 	return p.Planned.Cost()
 }

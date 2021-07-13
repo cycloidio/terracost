@@ -57,7 +57,7 @@ func TestNewState(t *testing.T) {
 
 		prod1 := &product.Product{ID: product.ID(1)}
 		productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return([]*product.Product{prod1}, nil)
-		prc1 := &price.Price{Value: decimal.NewFromFloat(1.23), Unit: "Hrs"}
+		prc1 := &price.Price{Value: decimal.NewFromFloat(1.23), Unit: "Hrs", Currency: "USD"}
 		priceRepo.EXPECT().Filter(ctx, prod1.ID, queries[0].Components[0].PriceFilter).Return([]*price.Price{prc1}, nil)
 
 		expected := &cost.State{
@@ -65,7 +65,7 @@ func TestNewState(t *testing.T) {
 				"aws_instance.test1": {
 					Components: map[string]cost.Component{
 						"Compute": {
-							Rate:     cost.NewMonthly(decimal.New(89790, -2)),
+							Rate:     cost.NewMonthly(decimal.New(89790, -2), "USD"),
 							Quantity: decimal.NewFromInt(1),
 						},
 					},
@@ -121,19 +121,45 @@ func TestNewState(t *testing.T) {
 }
 
 func TestState_Cost(t *testing.T) {
-	state := &cost.State{
-		Resources: map[string]cost.Resource{
-			"aws_instance.test1": {
-				Components: map[string]cost.Component{
-					"Compute": {
-						Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23)),
-						Quantity: decimal.NewFromInt(730),
+	t.Run("Success", func(t *testing.T) {
+		state := &cost.State{
+			Resources: map[string]cost.Resource{
+				"aws_instance.test1": {
+					Components: map[string]cost.Component{
+						"Compute": {
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
+							Quantity: decimal.NewFromInt(730),
+						},
 					},
 				},
 			},
-		},
-	}
+		}
 
-	expected := decimal.NewFromFloat(897.9)
-	assert.True(t, expected.Equal(state.Cost().Monthly()))
+		expected := cost.NewMonthly(decimal.New(89790, -2), "USD")
+		actual, err := state.Cost()
+		assert.NoError(t, err)
+		assert.Equal(t, expected, actual)
+	})
+	t.Run("ComponentCostMismatch", func(t *testing.T) {
+		state := &cost.State{
+			Resources: map[string]cost.Resource{
+				"aws_instance.test1": {
+					Components: map[string]cost.Component{
+						"Compute": {
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "USD"),
+							Quantity: decimal.NewFromInt(730),
+						},
+						"Storage": {
+							Rate:     cost.NewMonthly(decimal.NewFromFloat(1.23), "EUR"),
+							Quantity: decimal.NewFromInt(730),
+						},
+					},
+				},
+			},
+		}
+
+		actual, err := state.Cost()
+		assert.Error(t, err)
+		assert.Equal(t, cost.Zero, actual)
+	})
 }
