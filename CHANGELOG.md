@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.4.0] _2021-07-13_
+
 ### Added
 
 - Include currency in resource component cost estimation
