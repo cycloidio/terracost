@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.4.1] _2021-07-15_
+
+### Fixed
+
+- Correct calculation for planned cost in resource diff
+  ([Issue #51](https://github.com/cycloidio/terracost/issues/51))
+
 ## [0.4.0] _2021-07-13_
 
 ### Added
