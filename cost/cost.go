@@ -44,6 +44,11 @@ func (c Cost) Hourly() decimal.Decimal {
 // Add adds the values of two Cost structs.
 // If the currency of both costs doesn't match, error is returned.
 func (c Cost) Add(c2 Cost) (Cost, error) {
+	// if cost addition iz Zero, ignore it
+	if c2 == Zero {
+		return c, nil
+	}
+
 	// If there is no currency, use the currency of the addition
 	if c.Currency == "" {
 		c.Currency = c2.Currency
