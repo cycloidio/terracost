@@ -161,11 +161,27 @@ func TestAWSEstimation(t *testing.T) {
 				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PriorCost())
 				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PlannedCost())
 
+				priorCost, err := diff.PriorCost()
+				require.NoError(t, err)
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(91.2), "USD"), priorCost)
+
+				plannedCost, err := diff.PlannedCost()
+				require.NoError(t, err)
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(901.5), "USD"), plannedCost)
+
 			case "aws_lb.example":
 				lb := diff.ComponentDiffs["Application Load Balancer"]
 				require.NotNil(t, lb)
 				assert.False(t, diff.Valid())
 				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), lb.Planned.Cost())
+
+				priorCost, err := diff.PriorCost()
+				require.NoError(t, err)
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), priorCost)
+
+				plannedCost, err := diff.PlannedCost()
+				require.NoError(t, err)
+				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), plannedCost)
 			}
 		}
 	})
