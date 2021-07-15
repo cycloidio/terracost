@@ -42,7 +42,7 @@ func (rd ResourceDiff) PriorCost() (Cost, error) {
 	for _, cd := range rd.ComponentDiffs {
 		total, err = total.Add(cd.PriorCost())
 		if err != nil {
-			return Zero, fmt.Errorf("failed calculating prior cost : %w", err)
+			return Zero, fmt.Errorf("failed calculating prior cost: %w", err)
 		}
 	}
 	return total, nil
@@ -54,7 +54,7 @@ func (rd ResourceDiff) PlannedCost() (Cost, error) {
 	total := Zero
 	var err error
 	for _, cd := range rd.ComponentDiffs {
-		total, err = total.Add(cd.PriorCost())
+		total, err = total.Add(cd.PlannedCost())
 		if err != nil {
 			return Zero, fmt.Errorf("failed calculating planned cost: %w", err)
 		}
