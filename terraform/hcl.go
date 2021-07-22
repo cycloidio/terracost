@@ -84,6 +84,8 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 			}
 			queries = append(queries, query.Resource{
 				Address:    addr,
+				Type:       rv.Type,
+				Provider:   rv.Provider.Type,
 				Components: comps,
 			})
 		}
