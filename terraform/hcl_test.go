@@ -98,6 +98,10 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 		queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/stack-test")
 		require.NoError(t, err)
 		require.Len(t, queries, 5)
+		for _, q := range queries {
+			require.Equal(t, "aws", q.Provider)
+			require.NotEmpty(t, q.Type)
+		}
 	})
 
 	t.Run("BadProvider", func(t *testing.T) {

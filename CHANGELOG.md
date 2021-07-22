@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [0.4.2] _2021-07-22_
+
+### Fixed
+
+- Add missing type/provider to resources in plans
+  ([Pull #54](https://github.com/cycloidio/terracost/pull/54))
+
 ## [0.4.1] _2021-07-15_
 
 ### Fixed
