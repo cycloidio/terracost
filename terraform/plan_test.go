@@ -28,7 +28,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 			},
 		})
 
-		f, err := os.Open("../testdata/terraform-plan.json")
+		f, err := os.Open("../testdata/aws/terraform-plan.json")
 		require.NoError(t, err)
 		defer f.Close()
 
@@ -63,7 +63,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 			},
 		})
 
-		f, err := os.Open("../testdata/terraform-plan.json")
+		f, err := os.Open("../testdata/aws/terraform-plan.json")
 		require.NoError(t, err)
 		defer f.Close()
 
@@ -87,7 +87,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 			},
 		})
 
-		f, err := os.Open("../testdata/terraform-plan.json")
+		f, err := os.Open("../testdata/aws/terraform-plan.json")
 		require.NoError(t, err)
 		defer f.Close()
 
@@ -124,7 +124,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 			},
 		})
 
-		f, err := os.Open("../testdata/terraform-plan.json")
+		f, err := os.Open("../testdata/aws/terraform-plan.json")
 		require.NoError(t, err)
 		defer f.Close()
 
@@ -154,7 +154,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 			},
 		})
 
-		f, err := os.Open("../testdata/terraform-plan.json")
+		f, err := os.Open("../testdata/aws/terraform-plan.json")
 		require.NoError(t, err)
 		defer f.Close()
 
@@ -178,7 +178,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 			},
 		})
 
-		f, err := os.Open("../testdata/terraform-plan.json")
+		f, err := os.Open("../testdata/aws/terraform-plan.json")
 		require.NoError(t, err)
 		defer f.Close()
 

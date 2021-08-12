@@ -20,11 +20,29 @@ import (
 	"github.com/cycloidio/terracost/terraform"
 )
 
-var terraformProviderInitializer = terraform.ProviderInitializer{
+// terraformAWSTestProviderInitializer is a testing ProviderInitializer
+// pricing are directly inserted inside the database, which allows us to
+// test the processing with smaller subset of data, as well as the functioning
+// of MatchNames for a given provider - as data are injected using 'aws-test'
+// which is also used in the tfplan & co.
+var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 	MatchNames: []string{"aws", "aws-test"},
 	Provider: func(config map[string]string) (terraform.Provider, error) {
 		regCode := region.Code(config["region"])
 		return awstf.NewProvider("aws-test", regCode)
+	},
+}
+
+// terraformAWSProviderInitializer is a proper AWS provider.
+// We do not want to reuse the testing terraformAWSTestProviderInitializer
+// because the HCL contains actual valid AWS resources and provider
+// meaning 'aws' is used an not 'aws-test'. On top of that pricing data
+// from a real dump are injected to ensure better testing scenarios
+var terraformAWSProviderInitializer = terraform.ProviderInitializer{
+	MatchNames: []string{"aws"},
+	Provider: func(config map[string]string) (terraform.Provider, error) {
+		regCode := region.Code(config["region"])
+		return awstf.NewProvider("aws", regCode)
 	},
 }
 
@@ -127,86 +145,101 @@ func TestAWSEstimation(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	t.Run("Success", func(t *testing.T) {
-		f, err := os.Open("../testdata/terraform-plan.json")
-		require.NoError(t, err)
-		defer f.Close()
+	t.Run("TFPlan", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/terraform-plan.json")
+			require.NoError(t, err)
+			defer f.Close()
 
-		plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformProviderInitializer)
-		require.NoError(t, err)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			require.NoError(t, err)
 
-		pcost, err := plan.PriorCost()
-		assert.NoError(t, err)
-		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(91.2), "USD"), pcost)
+			pcost, err := plan.PriorCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(91.2), "USD"), pcost)
 
-		pcost, err = plan.PlannedCost()
-		assert.NoError(t, err)
-		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(901.5), "USD"), pcost)
+			pcost, err = plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(901.5), "USD"), pcost)
 
-		diffs := plan.ResourceDifferences()
-		require.Len(t, diffs, 2)
+			diffs := plan.ResourceDifferences()
+			require.Len(t, diffs, 2)
 
-		for _, diff := range diffs {
-			switch diff.Address {
-			case "aws_instance.example":
-				compute := diff.ComponentDiffs["Compute"]
-				require.NotNil(t, compute)
-				assert.Equal(t, []string{"Linux", "on-demand", "t2.micro"}, compute.Prior.Details)
-				assert.Equal(t, []string{"Linux", "on-demand", "t2.xlarge"}, compute.Planned.Details)
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(87.6), "USD"), compute.PriorCost())
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(897.9), "USD"), compute.PlannedCost())
+			for _, diff := range diffs {
+				switch diff.Address {
+				case "aws_instance.example":
+					compute := diff.ComponentDiffs["Compute"]
+					require.NotNil(t, compute)
+					assert.Equal(t, []string{"Linux", "on-demand", "t2.micro"}, compute.Prior.Details)
+					assert.Equal(t, []string{"Linux", "on-demand", "t2.xlarge"}, compute.Planned.Details)
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(87.6), "USD"), compute.PriorCost())
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(897.9), "USD"), compute.PlannedCost())
 
-				rootVol := diff.ComponentDiffs["Root volume: Storage"]
-				require.NotNil(t, rootVol)
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PriorCost())
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PlannedCost())
+					rootVol := diff.ComponentDiffs["Root volume: Storage"]
+					require.NotNil(t, rootVol)
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PriorCost())
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), compute.PlannedCost())
 
-				priorCost, err := diff.PriorCost()
-				require.NoError(t, err)
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(91.2), "USD"), priorCost)
+					priorCost, err := diff.PriorCost()
+					require.NoError(t, err)
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(91.2), "USD"), priorCost)
 
-				plannedCost, err := diff.PlannedCost()
-				require.NoError(t, err)
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(901.5), "USD"), plannedCost)
+					plannedCost, err := diff.PlannedCost()
+					require.NoError(t, err)
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(901.5), "USD"), plannedCost)
 
-			case "aws_lb.example":
-				lb := diff.ComponentDiffs["Application Load Balancer"]
-				require.NotNil(t, lb)
-				assert.False(t, diff.Valid())
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), lb.Planned.Cost())
+				case "aws_lb.example":
+					lb := diff.ComponentDiffs["Application Load Balancer"]
+					require.NotNil(t, lb)
+					assert.False(t, diff.Valid())
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), lb.Planned.Cost())
 
-				priorCost, err := diff.PriorCost()
-				require.NoError(t, err)
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), priorCost)
+					priorCost, err := diff.PriorCost()
+					require.NoError(t, err)
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), priorCost)
 
-				plannedCost, err := diff.PlannedCost()
-				require.NoError(t, err)
-				assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), plannedCost)
+					plannedCost, err := diff.PlannedCost()
+					require.NoError(t, err)
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), plannedCost)
+				}
 			}
-		}
+		})
+
+		t.Run("ProductNotFound", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/terraform-plan-invalid.json")
+			require.NoError(t, err)
+			defer f.Close()
+
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			require.NoError(t, err)
+
+			diffs := plan.ResourceDifferences()
+			require.Len(t, diffs, 1)
+			rd := diffs[0]
+
+			rootVol := diffs[0].ComponentDiffs["Root volume: Storage"]
+			require.NotNil(t, rootVol)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), rootVol.PriorCost())
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), rootVol.PlannedCost())
+
+			expected := map[string]error{
+				"Compute": cost.ErrProductNotFound,
+			}
+			assert.Equal(t, expected, rd.Errors())
+		})
 	})
+	t.Run("HCL", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
 
-	t.Run("ProductNotFound", func(t *testing.T) {
-		f, err := os.Open("../testdata/terraform-plan-invalid.json")
-		require.NoError(t, err)
-		defer f.Close()
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", terraformAWSProviderInitializer)
+			require.NoError(t, err)
 
-		plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformProviderInitializer)
-		require.NoError(t, err)
+			assert.Nil(t, plan.Prior)
 
-		diffs := plan.ResourceDifferences()
-		require.Len(t, diffs, 1)
-		rd := diffs[0]
-
-		rootVol := diffs[0].ComponentDiffs["Root volume: Storage"]
-		require.NotNil(t, rootVol)
-		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), rootVol.PriorCost())
-		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(3.6), "USD"), rootVol.PlannedCost())
-
-		expected := map[string]error{
-			"Compute": cost.ErrProductNotFound,
-		}
-		assert.Equal(t, expected, rd.Errors())
+			pcost, err := plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(32.374), "USD"), pcost)
+		})
 	})
 }
 

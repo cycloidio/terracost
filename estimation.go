@@ -27,7 +27,7 @@ func EstimateTerraformPlan(ctx context.Context, backend Backend, plan io.Reader,
 	}
 
 	priorQueries, err := tfplan.ExtractPriorQueries()
-	if err != nil {
+	if err != nil && err != terraform.ErrNoQueries {
 		return nil, err
 	}
 	prior, err := cost.NewState(ctx, backend, priorQueries)

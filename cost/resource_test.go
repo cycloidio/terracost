@@ -208,7 +208,13 @@ func TestResourceDiff_Cost(t *testing.T) {
 
 		_, err := rd.PriorCost()
 		require.Error(t, err)
-		assert.Equal(t, "failed calculating prior cost: currency mismatch: expected USD, got EUR", err.Error())
+		// Because of the iterration of the map the order of currency can be reversed.
+		// We want simply to ensure that an error is returned, the order doesn't matter
+		errs := []string{
+			"failed calculating prior cost: currency mismatch: expected USD, got EUR",
+			"failed calculating prior cost: currency mismatch: expected EUR, got USD",
+		}
+		assert.Contains(t, errs, err.Error())
 	})
 	t.Run("PlannedCurrencyMismatch", func(t *testing.T) {
 		rd := &cost.ResourceDiff{
@@ -230,6 +236,12 @@ func TestResourceDiff_Cost(t *testing.T) {
 
 		_, err := rd.PlannedCost()
 		require.Error(t, err)
-		assert.Equal(t, "failed calculating planned cost: currency mismatch: expected USD, got EUR", err.Error())
+		// Because of the iterration of the map the order of currency can be reversed.
+		// We want simply to ensure that an error is returned, the order doesn't matter
+		errs := []string{
+			"failed calculating planned cost: currency mismatch: expected USD, got EUR",
+			"failed calculating planned cost: currency mismatch: expected EUR, got USD",
+		}
+		assert.Contains(t, errs, err.Error())
 	})
 }
