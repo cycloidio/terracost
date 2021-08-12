@@ -1,0 +1,269 @@
+{
+  "format_version": "0.1",
+  "terraform_version": "0.15.5",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "google_compute_instance.vm_instance",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "vm_instance",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 6,
+          "values": {
+            "advanced_machine_features": [],
+            "allow_stopping_for_update": null,
+            "attached_disk": [],
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "disk_encryption_key_raw": null,
+                "initialize_params": [
+                  {
+                    "image": "debian-cloud/debian-9"
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "can_ip_forward": false,
+            "deletion_protection": false,
+            "description": null,
+            "desired_status": null,
+            "enable_display": null,
+            "hostname": null,
+            "labels": null,
+            "machine_type": "f1-micro",
+            "metadata": null,
+            "metadata_startup_script": null,
+            "name": "terraform-instance",
+            "network_interface": [
+              {
+                "access_config": [
+                  {
+                    "public_ptr_domain_name": null
+                  }
+                ],
+                "alias_ip_range": [],
+                "network": "default",
+                "nic_type": null
+              }
+            ],
+            "resource_policies": null,
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": null,
+            "timeouts": null
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "google_compute_instance.vm_instance",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "vm_instance",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "advanced_machine_features": [],
+          "allow_stopping_for_update": null,
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "auto_delete": true,
+              "disk_encryption_key_raw": null,
+              "initialize_params": [
+                {
+                  "image": "debian-cloud/debian-9"
+                }
+              ],
+              "mode": "READ_WRITE"
+            }
+          ],
+          "can_ip_forward": false,
+          "deletion_protection": false,
+          "description": null,
+          "desired_status": null,
+          "enable_display": null,
+          "hostname": null,
+          "labels": null,
+          "machine_type": "f1-micro",
+          "metadata": null,
+          "metadata_startup_script": null,
+          "name": "terraform-instance",
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "public_ptr_domain_name": null
+                }
+              ],
+              "alias_ip_range": [],
+              "network": "default",
+              "nic_type": null
+            }
+          ],
+          "resource_policies": null,
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": null,
+          "timeouts": null
+        },
+        "after_unknown": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "initialize_params": [
+                {
+                  "labels": true,
+                  "size": true,
+                  "type": true
+                }
+              ],
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "confidential_instance_config": true,
+          "cpu_platform": true,
+          "current_status": true,
+          "guest_accelerator": true,
+          "id": true,
+          "instance_id": true,
+          "label_fingerprint": true,
+          "metadata_fingerprint": true,
+          "min_cpu_platform": true,
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "nat_ip": true,
+                  "network_tier": true
+                }
+              ],
+              "alias_ip_range": [],
+              "name": true,
+              "network_ip": true,
+              "subnetwork": true,
+              "subnetwork_project": true
+            }
+          ],
+          "project": true,
+          "reservation_affinity": true,
+          "scheduling": true,
+          "scratch_disk": [],
+          "self_link": true,
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags_fingerprint": true,
+          "zone": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "disk_encryption_key_raw": true,
+              "initialize_params": [
+                {
+                  "labels": {}
+                }
+              ]
+            }
+          ],
+          "confidential_instance_config": [],
+          "guest_accelerator": [],
+          "network_interface": [
+            {
+              "access_config": [
+                {}
+              ],
+              "alias_ip_range": []
+            }
+          ],
+          "reservation_affinity": [],
+          "scheduling": [],
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": []
+        }
+      }
+    }
+  ],
+  "configuration": {
+    "provider_config": {
+      "google": {
+        "name": "google",
+        "expressions": {
+          "access_token": {
+            "constant_value": "some-token"
+          },
+          "project": {
+            "constant_value": "my-project-id"
+          },
+          "region": {
+            "constant_value": "us-central1"
+          },
+          "zone": {
+            "constant_value": "us-central1-c"
+          }
+        }
+      }
+    },
+    "root_module": {
+      "resources": [
+        {
+          "address": "google_compute_instance.vm_instance",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "vm_instance",
+          "provider_config_key": "google",
+          "expressions": {
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "image": {
+                      "constant_value": "debian-cloud/debian-9"
+                    }
+                  }
+                ]
+              }
+            ],
+            "machine_type": {
+              "constant_value": "f1-micro"
+            },
+            "name": {
+              "constant_value": "terraform-instance"
+            },
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "network": {
+                  "constant_value": "default"
+                }
+              }
+            ]
+          },
+          "schema_version": 6
+        }
+      ]
+    }
+  }
+}

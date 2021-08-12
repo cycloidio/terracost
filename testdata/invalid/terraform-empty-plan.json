@@ -1,0 +1,57 @@
+{
+  "version": 4,
+  "terraform_version": "0.13.5",
+  "serial": 1,
+  "lineage": "c347191e-1am4-7986-c515-e795e3058733",
+  "outputs": {
+    "plan_content": {
+      "value": "some-byte-string",
+      "type": "string",
+      "sensitive": true
+    },
+    "plan_content_json": {
+      "value": "some-byte-string",
+      "type": "string",
+      "sensitive": true
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "stateful_string",
+      "name": "plan_output",
+      "provider": "provider[\"github.com/ashald/stateful\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "desired": "some-other-byte-strin",
+            "hash": "9f2ac091ba0545f0a65c4e0d0c45cc821ca1766fed54b335b92911d92be535b2",
+            "id": "3b16ce1e-9981-5555-b1d4-780e64c31e45",
+            "real": null
+          },
+          "private": "bnVsbO=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "stateful_string",
+      "name": "plan_output_json",
+      "provider": "provider[\"github.com/ashald/stateful\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "desired": "some-other-byte-string",
+            "hash": "357bbeb647b1b73960393fab41e18289529703241576b6036fbb7ef263da4490",
+            "id": "0516ca1d-5113-49e5-314p-6c958536ba2d",
+            "real": null
+          },
+          "private": "bnPsbA=="
+        }
+      ]
+    }
+  ]
+}
+
