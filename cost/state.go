@@ -7,6 +7,7 @@ import (
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
+	"github.com/cycloidio/terracost/terraform"
 )
 
 // Backend represents a storage method used to query pricing data. It must include concrete implementations
@@ -33,6 +34,9 @@ var (
 func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*State, error) {
 	state := &State{Resources: make(map[string]Resource)}
 
+	if len(queries) == 0 {
+		return nil, terraform.ErrNoQueries
+	}
 	for _, res := range queries {
 		// Mark the Resource as skipped if there are no valid Components.
 		state.ensureResource(res.Address, res.Provider, res.Type, len(res.Components) == 0)

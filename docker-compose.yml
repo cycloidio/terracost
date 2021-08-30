@@ -16,11 +16,20 @@ services:
     ports:
       - '33060:3306'
     environment:
+      - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD=terracost
       - MYSQL_DATABASE=terracost_test
     networks:
       terracost-subnet:
         ipv4_address: 172.44.0.2
+
+  # This service is used to wait for service to be ready
+  # to accept connections, see dev-env-up target in Makefile.
+  wait:
+    image: dokku/wait:0.4.3
+    networks:
+      terracost-subnet:
+        ipv4_address: 172.44.0.42
 
 networks:
   terracost-subnet:

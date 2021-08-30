@@ -6,7 +6,6 @@ import (
 
 	"github.com/spf13/afero"
 
-	"github.com/cycloidio/terracost/aws"
 	"github.com/cycloidio/terracost/cost"
 	"github.com/cycloidio/terracost/terraform"
 )
@@ -16,9 +15,7 @@ import (
 // It uses the Backend to retrieve the pricing data.
 func EstimateTerraformPlan(ctx context.Context, backend Backend, plan io.Reader, providerInitializers ...terraform.ProviderInitializer) (*cost.Plan, error) {
 	if len(providerInitializers) == 0 {
-		providerInitializers = []terraform.ProviderInitializer{
-			aws.TerraformProviderInitializer,
-		}
+		providerInitializers = getDefaultProviders()
 	}
 
 	tfplan := terraform.NewPlan(providerInitializers...)
@@ -52,9 +49,7 @@ func EstimateTerraformPlan(ctx context.Context, backend Backend, plan io.Reader,
 // It uses the Backend to retrieve the pricing data.
 func EstimateHCL(ctx context.Context, backend Backend, fs afero.Fs, path string, providerInitializers ...terraform.ProviderInitializer) (*cost.Plan, error) {
 	if len(providerInitializers) == 0 {
-		providerInitializers = []terraform.ProviderInitializer{
-			aws.TerraformProviderInitializer,
-		}
+		providerInitializers = getDefaultProviders()
 	}
 
 	plannedQueries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, path)
