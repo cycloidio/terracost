@@ -240,6 +240,17 @@ func TestAWSEstimation(t *testing.T) {
 			assert.NoError(t, err)
 			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(32.374), "USD"), pcost)
 		})
+		t.Run("SuccessMagento", func(t *testing.T) {
+
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", terraformAWSProviderInitializer)
+			require.NoError(t, err)
+
+			assert.Nil(t, plan.Prior)
+
+			pcost, err := plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(50.794), "USD"), pcost)
+		})
 	})
 }
 
