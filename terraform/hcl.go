@@ -32,17 +32,18 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 	if err != nil {
 		return nil, err
 	}
+
+	err = validateProviders(queries, providers)
+	if err != nil {
+		return nil, err
+	}
+
 	return queries, nil
 }
 
 // extractHCLModule returns the resources found in the provided module.
 func extractHCLModule(providers map[string]Provider, parser *configs.Parser, modPath string, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
-
-	// knownProvider will remain false, until one resource from a
-	// known provider is encountered. This allows to know if through
-	// all the given resources some could be estimated or not
-	knownProvider := false
 
 	for rk, rv := range mod.ManagedResources {
 		if modName != "" {
@@ -53,10 +54,7 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 		if rv.ProviderConfigRef != nil {
 			providerKey = rv.ProviderConfigRef.String()
 		}
-		provider, ok := providers[providerKey]
-		if ok {
-			knownProvider = true
-		}
+		provider := providers[providerKey]
 
 		// Parse the HCL body of the resource block and evaluate it. The JSON (in the form of map[string]interface{} type)
 		// is then placed into the cfg.
@@ -164,9 +162,6 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 			return nil, err
 		}
 		queries = append(queries, qs...)
-	}
-	if knownProvider == false {
-		return nil, ErrNoKnownProvider
 	}
 
 	return queries, nil

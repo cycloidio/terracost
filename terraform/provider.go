@@ -26,3 +26,15 @@ type ProviderInitializer struct {
 	// Provider initializes a Provider instance given the values defined in the config and returns it.
 	Provider func(values map[string]string) (Provider, error)
 }
+
+// validateProviders will verify that at least one of the queries is from a known provider
+// if none matches an error will be returned to stop the processing
+func validateProviders(queries []query.Resource, providers map[string]Provider) error {
+	for _, q := range queries {
+		_, ok := providers[q.Provider]
+		if ok {
+			return nil
+		}
+	}
+	return ErrNoKnownProvider
+}
