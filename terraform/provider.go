@@ -24,6 +24,7 @@ type ProviderInitializer struct {
 	MatchNames []string
 
 	// Provider initializes a Provider instance given the values defined in the config and returns it.
+	// If a provider must be ignored (related to version constraints, etc), please return nil to avoid using it.
 	Provider func(values map[string]string) (Provider, error)
 }
 

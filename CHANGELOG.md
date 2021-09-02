@@ -1,5 +1,19 @@
 ## [Unreleased]
 
+### Fixed
+
+- Ignore providers related to constraints
+  ([Pull #58](https://github.com/cycloidio/terracost/pull/58))
+- Unexpected error when using supported/unsupported providers
+  ([Pull #56](https://github.com/cycloidio/terracost/pull/56))
+
+## [0.4.3] _2021-08-30_
+
+### Changed
+
+- Improved error returned when using unknown providers, empty terraform
+  ([Pull #55](https://github.com/cycloidio/terracost/pull/55))
+
 ## [0.4.2] _2021-07-22_
 
 ### Fixed

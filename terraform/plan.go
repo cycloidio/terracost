@@ -45,11 +45,7 @@ func (p *Plan) ExtractPlannedQueries() ([]query.Resource, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to extract planned queries: %w", err)
 	}
-	queries, err := p.extractQueries(p.PlannedValues, providers), nil
-	if err != nil {
-		return nil, err
-	}
-	return queries, nil
+	return p.extractQueries(p.PlannedValues, providers), nil
 }
 
 // ExtractPriorQueries extracts a query.Resource slice from the `prior_state` part of the Plan.
@@ -77,8 +73,13 @@ func (p *Plan) extractProviders() (map[string]Provider, error) {
 			if err != nil {
 				return nil, err
 			}
-			providers[name] = prov
+			if prov != nil {
+				providers[name] = prov
+			}
 		}
+	}
+	if len(providers) == 0 {
+		return nil, ErrNoProviders
 	}
 	return providers, nil
 }
