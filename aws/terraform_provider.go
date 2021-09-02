@@ -13,7 +13,11 @@ const RegistryName = "registry.terraform.io/hashicorp/aws"
 var TerraformProviderInitializer = terraform.ProviderInitializer{
 	MatchNames: []string{ProviderName, RegistryName},
 	Provider: func(values map[string]string) (terraform.Provider, error) {
-		regCode := region.Code(values["region"])
+		r, ok := values["region"]
+		if !ok {
+			return nil, nil
+		}
+		regCode := region.Code(r)
 		return awstf.NewProvider(ProviderName, regCode)
 	},
 }

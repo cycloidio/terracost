@@ -142,34 +142,7 @@
     }
   },
   "configuration": {
-    "provider_config": {
-      "aws": {
-        "name": "aws-test",
-        "expressions": {
-          "profile": {
-            "constant_value": "default"
-          },
-          "region": {
-            "constant_value": "us-east-1"
-          }
-        }
-      },
-      "aws.paris": {
-        "name": "aws-test",
-        "expressions": {
-          "profile": {
-            "constant_value": "default"
-          },
-          "region": {
-            "constant_value": "eu-west-3"
-          }
-        }
-      },
-      "ignored": {
-        "name": "aws-constrain",
-        "version_constraint": ">= 1.1.1",
-        "module_address": "some-module"
-      }
+    "provider_config": {}
     },
     "root_module": {
       "module_calls": {

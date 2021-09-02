@@ -28,7 +28,11 @@ import (
 var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 	MatchNames: []string{"aws", "aws-test"},
 	Provider: func(config map[string]string) (terraform.Provider, error) {
-		regCode := region.Code(config["region"])
+		r, ok := config["region"]
+		if !ok {
+			return nil, nil
+		}
+		regCode := region.Code(r)
 		return awstf.NewProvider("aws-test", regCode)
 	},
 }
@@ -41,7 +45,11 @@ var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 var terraformAWSProviderInitializer = terraform.ProviderInitializer{
 	MatchNames: []string{"aws"},
 	Provider: func(config map[string]string) (terraform.Provider, error) {
-		regCode := region.Code(config["region"])
+		r, ok := config["region"]
+		if !ok {
+			return nil, nil
+		}
+		regCode := region.Code(r)
 		return awstf.NewProvider("aws", regCode)
 	},
 }
@@ -226,6 +234,15 @@ func TestAWSEstimation(t *testing.T) {
 				"Compute": cost.ErrProductNotFound,
 			}
 			assert.Equal(t, expected, rd.Errors())
+		})
+		t.Run("NoProvider", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/terraform-plan-noprovider.json")
+			require.NoError(t, err)
+			defer f.Close()
+
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			require.Error(t, err, terraform.ErrNoProviders)
+			require.Nil(t, plan)
 		})
 	})
 	t.Run("HCL", func(t *testing.T) {
