@@ -8,8 +8,8 @@ import (
 	"github.com/cycloidio/terracost/product"
 )
 
-//go:generate go run github.com/golang/mock/mockgen -destination=mock/ingester.go -mock_names=Ingester=Ingester -package mock github.com/cycloidio/terracost Ingester
-//go:generate go run github.com/golang/mock/mockgen -destination=mock/backend.go -mock_names=Backend=Backend -package mock github.com/cycloidio/terracost Backend
+//go:generate mockgen -destination=mock/ingester.go -mock_names=Ingester=Ingester -package mock github.com/cycloidio/terracost Ingester
+//go:generate mockgen -destination=mock/backend.go -mock_names=Backend=Backend -package mock github.com/cycloidio/terracost Backend
 
 // Ingester represents a vendor-specific mechanism to load pricing data.
 type Ingester interface {

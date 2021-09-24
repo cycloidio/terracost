@@ -4,7 +4,7 @@ import (
 	"github.com/cycloidio/terracost/query"
 )
 
-//go:generate go run github.com/golang/mock/mockgen -destination=../mock/terraform_provider.go -mock_names=Provider=TerraformProvider -package mock github.com/cycloidio/terracost/terraform Provider
+//go:generate mockgen -destination=../mock/terraform_provider.go -mock_names=Provider=TerraformProvider -package mock github.com/cycloidio/terracost/terraform Provider
 
 // Provider represents a Terraform provider. It extracts price queries from Terraform resources.
 type Provider interface {

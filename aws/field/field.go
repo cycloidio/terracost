@@ -1,6 +1,6 @@
 package field
 
-//go:generate go run github.com/dmarkham/enumer -type=Field -output=field_gen.go -linecomment
+//go:generate enumer -type=Field -output=field_gen.go -linecomment
 
 // Field represents a single column in an AWS offer file.
 type Field uint8
