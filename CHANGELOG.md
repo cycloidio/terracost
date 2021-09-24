@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+### Changed
+
+- **[breaking]** Remove the repeated Backend and abstracted it to it's own package
+  ([Pull #60](https://github.com/cycloidio/terracost/pull/59))
+
+## [0.4.4] _2021-09-31_
+
 ### Fixed
 
 - Ignore providers related to constraints
