@@ -6,7 +6,7 @@ import (
 	"github.com/cycloidio/terracost/product"
 )
 
-//go:generate go run github.com/golang/mock/mockgen -destination=../mock/price_repository.go -mock_names=Repository=PriceRepository -package mock github.com/cycloidio/terracost/price Repository
+//go:generate mockgen -destination=../mock/price_repository.go -mock_names=Repository=PriceRepository -package mock github.com/cycloidio/terracost/price Repository
 
 // Repository describes interactions with a storage system to deal with Price entries.
 type Repository interface {

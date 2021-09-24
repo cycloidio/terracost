@@ -7,7 +7,7 @@ import (
 	"github.com/machinebox/progress"
 )
 
-//go:generate go run github.com/golang/mock/mockgen -destination=../mock/http_client.go -mock_names=HTTPClient=HTTPClient -package mock github.com/cycloidio/terracost/aws HTTPClient
+//go:generate mockgen -destination=../mock/http_client.go -mock_names=HTTPClient=HTTPClient -package mock github.com/cycloidio/terracost/aws HTTPClient
 
 // HTTPClient is an interface of a client that is able to Do HTTP requests
 type HTTPClient interface {
