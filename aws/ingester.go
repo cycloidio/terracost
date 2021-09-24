@@ -54,7 +54,7 @@ func NewIngester(service, region string, options ...Option) (*Ingester, error) {
 	}
 
 	ing := &Ingester{
-		httpClient:      &http.Client{},
+		httpClient:      http.DefaultClient,
 		pricingURL:      defaultPricingURL,
 		bufferSize:      defaultBufferSize,
 		service:         service,
