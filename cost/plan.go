@@ -4,6 +4,8 @@ import (
 	"sort"
 )
 
+var isPlanned = true
+
 // Plan is the cost difference between two State instances. It is not tied to any specific cloud provider or IaC tool.
 // Instead, it is a representation of the differences between two snapshots of cloud resources, with their associated
 // costs. The Plan instance can be used to calculate the total cost difference of a plan, as well as cost differences
@@ -39,10 +41,10 @@ func (p Plan) ResourceDifferences() []ResourceDiff {
 	rdmap := make(map[string]ResourceDiff)
 
 	if p.Prior != nil {
-		mergeResourceDiffsFromState(rdmap, p.Prior, false)
+		mergeResourceDiffsFromState(rdmap, p.Prior, !isPlanned)
 	}
 	if p.Planned != nil {
-		mergeResourceDiffsFromState(rdmap, p.Planned, true)
+		mergeResourceDiffsFromState(rdmap, p.Planned, isPlanned)
 	}
 
 	rds := make([]ResourceDiff, 0, len(rdmap))
