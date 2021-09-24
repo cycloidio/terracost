@@ -12,30 +12,30 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// Ingester is a mock of Ingester interface
+// Ingester is a mock of Ingester interface.
 type Ingester struct {
 	ctrl     *gomock.Controller
 	recorder *IngesterMockRecorder
 }
 
-// IngesterMockRecorder is the mock recorder for Ingester
+// IngesterMockRecorder is the mock recorder for Ingester.
 type IngesterMockRecorder struct {
 	mock *Ingester
 }
 
-// NewIngester creates a new mock instance
+// NewIngester creates a new mock instance.
 func NewIngester(ctrl *gomock.Controller) *Ingester {
 	mock := &Ingester{ctrl: ctrl}
 	mock.recorder = &IngesterMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *Ingester) EXPECT() *IngesterMockRecorder {
 	return m.recorder
 }
 
-// Err mocks base method
+// Err mocks base method.
 func (m *Ingester) Err() error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Err")
@@ -43,13 +43,13 @@ func (m *Ingester) Err() error {
 	return ret0
 }
 
-// Err indicates an expected call of Err
+// Err indicates an expected call of Err.
 func (mr *IngesterMockRecorder) Err() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Err", reflect.TypeOf((*Ingester)(nil).Err))
 }
 
-// Ingest mocks base method
+// Ingest mocks base method.
 func (m *Ingester) Ingest(arg0 context.Context, arg1 int) <-chan *price.WithProduct {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Ingest", arg0, arg1)
@@ -57,7 +57,7 @@ func (m *Ingester) Ingest(arg0 context.Context, arg1 int) <-chan *price.WithProd
 	return ret0
 }
 
-// Ingest indicates an expected call of Ingest
+// Ingest indicates an expected call of Ingest.
 func (mr *IngesterMockRecorder) Ingest(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ingest", reflect.TypeOf((*Ingester)(nil).Ingest), arg0, arg1)

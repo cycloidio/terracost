@@ -160,8 +160,8 @@ func FieldString(s string) (Field, error) {
 	if val, ok := _FieldNameToValueMap[s]; ok {
 		return val, nil
 	}
-	s = strings.ToLower(s)
-	if val, ok := _FieldNameToValueMap[s]; ok {
+
+	if val, ok := _FieldNameToValueMap[strings.ToLower(s)]; ok {
 		return val, nil
 	}
 	return 0, fmt.Errorf("%s does not belong to Field values", s)

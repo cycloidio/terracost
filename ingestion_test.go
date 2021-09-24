@@ -51,8 +51,8 @@ func TestIngestPricing(t *testing.T) {
 	backend := mock.NewBackend(ctrl)
 	ingester := mock.NewIngester(ctrl)
 
-	backend.EXPECT().Product().AnyTimes().Return(productRepo)
-	backend.EXPECT().Price().AnyTimes().Return(priceRepo)
+	backend.EXPECT().Products().AnyTimes().Return(productRepo)
+	backend.EXPECT().Prices().AnyTimes().Return(priceRepo)
 
 	ingester.EXPECT().Ingest(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, chSize int) <-chan *price.WithProduct {
 		results := make(chan *price.WithProduct, chSize)

@@ -11,30 +11,30 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// HTTPClient is a mock of HTTPClient interface
+// HTTPClient is a mock of HTTPClient interface.
 type HTTPClient struct {
 	ctrl     *gomock.Controller
 	recorder *HTTPClientMockRecorder
 }
 
-// HTTPClientMockRecorder is the mock recorder for HTTPClient
+// HTTPClientMockRecorder is the mock recorder for HTTPClient.
 type HTTPClientMockRecorder struct {
 	mock *HTTPClient
 }
 
-// NewHTTPClient creates a new mock instance
+// NewHTTPClient creates a new mock instance.
 func NewHTTPClient(ctrl *gomock.Controller) *HTTPClient {
 	mock := &HTTPClient{ctrl: ctrl}
 	mock.recorder = &HTTPClientMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use
+// EXPECT returns an object that allows the caller to indicate expected use.
 func (m *HTTPClient) EXPECT() *HTTPClientMockRecorder {
 	return m.recorder
 }
 
-// Do mocks base method
+// Do mocks base method.
 func (m *HTTPClient) Do(arg0 *http.Request) (*http.Response, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Do", arg0)
@@ -43,7 +43,7 @@ func (m *HTTPClient) Do(arg0 *http.Request) (*http.Response, error) {
 	return ret0, ret1
 }
 
-// Do indicates an expected call of Do
+// Do indicates an expected call of Do.
 func (mr *HTTPClientMockRecorder) Do(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Do", reflect.TypeOf((*HTTPClient)(nil).Do), arg0)

@@ -4,18 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cycloidio/terracost/price"
-	"github.com/cycloidio/terracost/product"
+	"github.com/cycloidio/terracost/backend"
 	"github.com/cycloidio/terracost/query"
 	"github.com/cycloidio/terracost/terraform"
 )
-
-// Backend represents a storage method used to query pricing data. It must include concrete implementations
-// of all repositories.
-type Backend interface {
-	Product() product.Repository
-	Price() price.Repository
-}
 
 // State represents a collection of all the Resource costs (either prior or planned.) It is not tied to any specific
 // cloud provider or IaC tool. Instead, it is a representation of a snapshot of cloud resources at a given point
@@ -31,7 +23,7 @@ var (
 )
 
 // NewState returns a new State from a query.Resource slice by using the Backend to fetch the pricing data.
-func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*State, error) {
+func NewState(ctx context.Context, backend backend.Backend, queries []query.Resource) (*State, error) {
 	state := &State{Resources: make(map[string]Resource)}
 
 	if len(queries) == 0 {
@@ -42,7 +34,7 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 		state.ensureResource(res.Address, res.Provider, res.Type, len(res.Components) == 0)
 
 		for _, comp := range res.Components {
-			prods, err := backend.Product().Filter(ctx, comp.ProductFilter)
+			prods, err := backend.Products().Filter(ctx, comp.ProductFilter)
 			if err != nil {
 				state.addComponent(res.Address, comp.Name, Component{Error: err})
 				continue
@@ -51,7 +43,7 @@ func NewState(ctx context.Context, backend Backend, queries []query.Resource) (*
 				state.addComponent(res.Address, comp.Name, Component{Error: ErrProductNotFound})
 				continue
 			}
-			prices, err := backend.Price().Filter(ctx, prods[0].ID, comp.PriceFilter)
+			prices, err := backend.Prices().Filter(ctx, prods[0].ID, comp.PriceFilter)
 			if err != nil {
 				state.addComponent(res.Address, comp.Name, Component{Error: err})
 				continue
