@@ -52,8 +52,8 @@ func TestNewState(t *testing.T) {
 		productRepo := mock.NewProductRepository(ctrl)
 		priceRepo := mock.NewPriceRepository(ctrl)
 		backend := mock.NewBackend(ctrl)
-		backend.EXPECT().Product().AnyTimes().Return(productRepo)
-		backend.EXPECT().Price().AnyTimes().Return(priceRepo)
+		backend.EXPECT().Products().AnyTimes().Return(productRepo)
+		backend.EXPECT().Prices().AnyTimes().Return(priceRepo)
 
 		prod1 := &product.Product{ID: product.ID(1)}
 		productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return([]*product.Product{prod1}, nil)
@@ -89,8 +89,8 @@ func TestNewState(t *testing.T) {
 		productRepo := mock.NewProductRepository(ctrl)
 		priceRepo := mock.NewPriceRepository(ctrl)
 		backend := mock.NewBackend(ctrl)
-		backend.EXPECT().Product().AnyTimes().Return(productRepo)
-		backend.EXPECT().Price().AnyTimes().Return(priceRepo)
+		backend.EXPECT().Products().AnyTimes().Return(productRepo)
+		backend.EXPECT().Prices().AnyTimes().Return(priceRepo)
 
 		productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return(nil, errors.New("repo fail"))
 
@@ -107,8 +107,8 @@ func TestNewState(t *testing.T) {
 		productRepo := mock.NewProductRepository(ctrl)
 		priceRepo := mock.NewPriceRepository(ctrl)
 		backend := mock.NewBackend(ctrl)
-		backend.EXPECT().Product().AnyTimes().Return(productRepo)
-		backend.EXPECT().Price().AnyTimes().Return(priceRepo)
+		backend.EXPECT().Products().AnyTimes().Return(productRepo)
+		backend.EXPECT().Prices().AnyTimes().Return(priceRepo)
 
 		prod1 := &product.Product{ID: product.ID(1)}
 		productRepo.EXPECT().Filter(ctx, queries[0].Components[0].ProductFilter).Return([]*product.Product{prod1}, nil)

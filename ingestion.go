@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cycloidio/terracost/backend"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 )
 
 //go:generate mockgen -destination=mock/ingester.go -mock_names=Ingester=Ingester -package mock github.com/cycloidio/terracost Ingester
-//go:generate mockgen -destination=mock/backend.go -mock_names=Backend=Backend -package mock github.com/cycloidio/terracost Backend
 
 // Ingester represents a vendor-specific mechanism to load pricing data.
 type Ingester interface {
@@ -21,15 +21,8 @@ type Ingester interface {
 	Err() error
 }
 
-// Backend represents a storage method used to store pricing data. It must include concrete implementations
-// of all repositories.
-type Backend interface {
-	Product() product.Repository
-	Price() price.Repository
-}
-
 // IngestPricing uses the Ingester to load the pricing data and stores it into the Backend.
-func IngestPricing(ctx context.Context, backend Backend, ingester Ingester) error {
+func IngestPricing(ctx context.Context, be backend.Backend, ingester Ingester) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -39,14 +32,14 @@ func IngestPricing(ctx context.Context, backend Backend, ingester Ingester) erro
 			pp.Product.ID = id
 		} else {
 			var err error
-			pp.Product.ID, err = backend.Product().Upsert(ctx, pp.Product)
+			pp.Product.ID, err = be.Products().Upsert(ctx, pp.Product)
 			if err != nil {
 				return fmt.Errorf("failed to upsert product (SKU=%q): %w", pp.Product.SKU, err)
 			}
 			skuProductID[pp.Product.SKU] = pp.Product.ID
 		}
 
-		if _, err := backend.Price().Upsert(ctx, pp); err != nil {
+		if _, err := be.Prices().Upsert(ctx, pp); err != nil {
 			return fmt.Errorf("failed to upsert price (SKU=%q): %w", pp.Product.SKU, err)
 		}
 	}

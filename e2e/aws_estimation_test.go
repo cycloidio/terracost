@@ -108,7 +108,7 @@ func TestAWSEstimation(t *testing.T) {
 
 	for _, p := range prods {
 		var err error
-		p.ID, err = backend.Product().Upsert(ctx, p)
+		p.ID, err = backend.Products().Upsert(ctx, p)
 		require.NoError(t, err)
 	}
 
@@ -149,7 +149,7 @@ func TestAWSEstimation(t *testing.T) {
 	}
 
 	for _, p := range prices {
-		_, err := backend.Price().Upsert(ctx, p)
+		_, err := backend.Prices().Upsert(ctx, p)
 		require.NoError(t, err)
 	}
 

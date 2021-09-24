@@ -47,12 +47,12 @@ func TestAWSIngestion(t *testing.T) {
 	err = costestimation.IngestPricing(ctx, backend, ingester)
 	require.NoError(t, err)
 
-	allProds, err := backend.Product().Filter(ctx, &product.Filter{Provider: util.StringPtr("aws"), Service: util.StringPtr("AmazonEC2-test")})
+	allProds, err := backend.Products().Filter(ctx, &product.Filter{Provider: util.StringPtr("aws"), Service: util.StringPtr("AmazonEC2-test")})
 	require.NoError(t, err)
 	assert.Len(t, allProds, 5)
 
 	for _, prod := range allProds {
-		prices, err := backend.Price().Filter(ctx, prod.ID, nil)
+		prices, err := backend.Prices().Filter(ctx, prod.ID, nil)
 		require.NoError(t, err)
 		assert.Len(t, prices, 1)
 	}
