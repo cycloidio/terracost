@@ -28,8 +28,11 @@ func EstimateTerraformPlan(ctx context.Context, be backend.Backend, plan io.Read
 	if err != nil {
 		return nil, err
 	}
+
+	// If it's the first time we run the plan, then we might not have
+	// prior queries so we ignore it and move forward
 	prior, err := cost.NewState(ctx, be, priorQueries)
-	if err != nil {
+	if err != nil && err != terraform.ErrNoQueries {
 		return nil, err
 	}
 

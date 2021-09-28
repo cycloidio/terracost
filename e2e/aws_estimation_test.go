@@ -6,10 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/shopspring/decimal"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-
 	costestimation "github.com/cycloidio/terracost"
 	"github.com/cycloidio/terracost/aws/region"
 	awstf "github.com/cycloidio/terracost/aws/terraform"
@@ -18,6 +14,9 @@ import (
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/terraform"
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // terraformAWSTestProviderInitializer is a testing ProviderInitializer
@@ -43,7 +42,7 @@ var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 // meaning 'aws' is used an not 'aws-test'. On top of that pricing data
 // from a real dump are injected to ensure better testing scenarios
 var terraformAWSProviderInitializer = terraform.ProviderInitializer{
-	MatchNames: []string{"aws"},
+	MatchNames: []string{"aws", "registry.terraform.io/hashicorp/aws"},
 	Provider: func(config map[string]string) (terraform.Provider, error) {
 		r, ok := config["region"]
 		if !ok {
@@ -211,6 +210,26 @@ func TestAWSEstimation(t *testing.T) {
 					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), plannedCost)
 				}
 			}
+		})
+		t.Run("SuccessNoPrior", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/terraform-noprior-plan.json")
+			require.NoError(t, err)
+			defer f.Close()
+
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSProviderInitializer)
+			require.NoError(t, err)
+
+			pcost, err := plan.PriorCost()
+			assert.NoError(t, err)
+			assert.Equal(t, cost.Zero, pcost)
+
+			pcost, err = plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(31.984), "USD"), pcost)
+
+			diffs := plan.ResourceDifferences()
+			require.Len(t, diffs, 1)
+			require.Len(t, diffs[0].ComponentDiffs, 2)
 		})
 
 		t.Run("ProductNotFound", func(t *testing.T) {

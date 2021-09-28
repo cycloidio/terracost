@@ -1,0 +1,1315 @@
+{
+  "format_version": "0.2",
+  "terraform_version": "1.0.5",
+  "variables": {
+    "aws_access_key": {
+      "value": "something"
+    },
+    "aws_region": {
+      "value": "eu-west-1"
+    },
+    "aws_secret_key": {
+      "value": "something"
+    },
+    "env": {
+      "value": "test"
+    },
+    "keypair_public": {
+      "value": "ssh-rsa"
+    },
+    "project": {
+      "value": "terracost"
+    }
+  },
+  "planned_values": {
+    "outputs": {
+      "nexus_admin_password": {
+        "sensitive": false,
+        "value": "changeme"
+      },
+      "nexus_ip": {
+        "sensitive": false
+      },
+      "nexus_os_user": {
+        "sensitive": false,
+        "value": "admin"
+      },
+      "nexus_port": {
+        "sensitive": false,
+        "value": "8888"
+      },
+      "nexus_sg": {
+        "sensitive": false
+      },
+      "vpc_id": {
+        "sensitive": false,
+        "value": "vpc-123456"
+      }
+    },
+    "root_module": {
+      "child_modules": [
+        {
+          "resources": [
+            {
+              "address": "module.nexus.aws_instance.nexus",
+              "mode": "managed",
+              "type": "aws_instance",
+              "name": "nexus",
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "ami": "ami-123456",
+                "associate_public_ip_address": true,
+                "credit_specification": [],
+                "disable_api_termination": false,
+                "get_password_data": false,
+                "hibernation": null,
+                "iam_instance_profile": null,
+                "instance_type": "t3a.medium",
+                "key_name": "nexus-key",
+                "launch_template": [],
+                "root_block_device": [
+                  {
+                    "delete_on_termination": true,
+                    "tags": null,
+                    "volume_size": 20
+                  }
+                ],
+                "source_dest_check": true,
+                "subnet_id": "subnet-123456",
+                "tags": null,
+                "tags_all": {},
+                "timeouts": null,
+                "volume_tags": null
+              },
+              "sensitive_values": {
+                "capacity_reservation_specification": [],
+                "credit_specification": [],
+                "ebs_block_device": [],
+                "enclave_options": [],
+                "ephemeral_block_device": [],
+                "ipv6_addresses": [],
+                "launch_template": [],
+                "metadata_options": [],
+                "network_interface": [],
+                "root_block_device": [
+                  {}
+                ],
+                "secondary_private_ips": [],
+                "security_groups": [],
+                "tags": {},
+                "tags_all": {},
+                "vpc_security_group_ids": []
+              }
+            },
+            {
+              "address": "module.nexus.aws_key_pair.nexus",
+              "mode": "managed",
+              "type": "aws_key_pair",
+              "name": "nexus",
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "key_name": "something",
+                "key_name_prefix": null,
+                "public_key": "ssh-rsa",
+                "tags": null
+              },
+              "sensitive_values": {
+                "tags_all": {}
+              }
+            },
+            {
+              "address": "module.nexus.aws_security_group.nexus",
+              "mode": "managed",
+              "type": "aws_security_group",
+              "name": "nexus",
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "description": "Allow accessing the Nexus Repository service from the internet.",
+                "egress": [
+                  {
+                    "cidr_blocks": [
+                      "0.0.0.0/0"
+                    ],
+                    "description": "",
+                    "from_port": 0,
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "protocol": "-1",
+                    "security_groups": [],
+                    "self": false,
+                    "to_port": 0
+                  }
+                ],
+                "ingress": [
+                  {
+                    "cidr_blocks": [
+                      "0.0.0.0/0"
+                    ],
+                    "description": "",
+                    "from_port": 22,
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "protocol": "tcp",
+                    "security_groups": [],
+                    "self": false,
+                    "to_port": 22
+                  },
+                  {
+                    "cidr_blocks": [
+                      "0.0.0.0/0"
+                    ],
+                    "description": "",
+                    "from_port": 8888,
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "protocol": "tcp",
+                    "security_groups": [],
+                    "self": false,
+                    "to_port": 8888
+                  }
+                ],
+                "name": "nexus",
+                "revoke_rules_on_delete": false,
+                "tags": {
+                  "Name": "nexus",
+                  "env": "test",
+                  "monitoring_discovery": "false",
+                  "project": "terracost"
+                },
+                "tags_all": {
+                  "env": "test",
+                  "monitoring_discovery": "false",
+                  "project": "terracost"
+                },
+                "timeouts": null,
+                "vpc_id": "vpc-123456"
+              },
+              "sensitive_values": {
+                "egress": [
+                  {
+                    "cidr_blocks": [
+                      false
+                    ],
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "security_groups": []
+                  }
+                ],
+                "ingress": [
+                  {
+                    "cidr_blocks": [
+                      false
+                    ],
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "security_groups": []
+                  },
+                  {
+                    "cidr_blocks": [
+                      false
+                    ],
+                    "ipv6_cidr_blocks": [],
+                    "prefix_list_ids": [],
+                    "security_groups": []
+                  }
+                ],
+                "tags": {},
+                "tags_all": {}
+              }
+            }
+          ],
+          "address": "module.nexus"
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "module.nexus.aws_instance.nexus",
+      "module_address": "module.nexus",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "nexus",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "ami": "ami-123456",
+          "associate_public_ip_address": true,
+          "credit_specification": [],
+          "disable_api_termination": false,
+          "get_password_data": false,
+          "hibernation": null,
+          "iam_instance_profile": null,
+          "instance_type": "t3a.medium",
+          "key_name": "terracost-test-nexus-key",
+          "launch_template": [],
+          "root_block_device": [
+            {
+              "delete_on_termination": true,
+              "tags": null,
+              "volume_size": 20
+            }
+          ],
+          "source_dest_check": true,
+          "subnet_id": "subnet-12345",
+          "tags": {
+            "Name": "terracost-test-nexus",
+            "env": "test",
+            "monitoring_discovery": "false",
+            "project": "terracost",
+            "role": "nexus"
+          },
+          "tags_all": {
+            "env": "test",
+            "monitoring_discovery": "false",
+            "project": "terracost",
+            "role": "nexus"
+          },
+          "timeouts": null,
+          "volume_tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "availability_zone": true,
+          "capacity_reservation_specification": true,
+          "cpu_core_count": true,
+          "cpu_threads_per_core": true,
+          "credit_specification": [],
+          "ebs_block_device": true,
+          "ebs_optimized": true,
+          "enclave_options": true,
+          "ephemeral_block_device": true,
+          "host_id": true,
+          "id": true,
+          "instance_initiated_shutdown_behavior": true,
+          "instance_state": true,
+          "ipv6_address_count": true,
+          "ipv6_addresses": true,
+          "launch_template": [],
+          "metadata_options": true,
+          "monitoring": true,
+          "network_interface": true,
+          "outpost_arn": true,
+          "password_data": true,
+          "placement_group": true,
+          "primary_network_interface_id": true,
+          "private_dns": true,
+          "private_ip": true,
+          "public_dns": true,
+          "public_ip": true,
+          "root_block_device": [
+            {
+              "device_name": true,
+              "encrypted": true,
+              "iops": true,
+              "kms_key_id": true,
+              "throughput": true,
+              "volume_id": true,
+              "volume_type": true
+            }
+          ],
+          "secondary_private_ips": true,
+          "security_groups": true,
+          "tags": {},
+          "tags_all": {},
+          "tenancy": true,
+          "user_data": true,
+          "user_data_base64": true,
+          "vpc_security_group_ids": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "capacity_reservation_specification": [],
+          "credit_specification": [],
+          "ebs_block_device": [],
+          "enclave_options": [],
+          "ephemeral_block_device": [],
+          "ipv6_addresses": [],
+          "launch_template": [],
+          "metadata_options": [],
+          "network_interface": [],
+          "root_block_device": [
+            {}
+          ],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "tags": {},
+          "tags_all": {},
+          "vpc_security_group_ids": []
+        }
+      }
+    },
+    {
+      "address": "module.nexus.aws_key_pair.nexus",
+      "module_address": "module.nexus",
+      "mode": "managed",
+      "type": "aws_key_pair",
+      "name": "nexus",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "key_name": "terracost-test-nexus-key",
+          "key_name_prefix": null,
+          "public_key": "ssh-rsa",
+          "tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "fingerprint": true,
+          "id": true,
+          "key_pair_id": true,
+          "tags_all": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "module.nexus.aws_security_group.nexus",
+      "module_address": "module.nexus",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "nexus",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": "Allow accessing the Nexus Repository service from the internet.",
+          "egress": [
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "",
+              "from_port": 0,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "-1",
+              "security_groups": [],
+              "self": false,
+              "to_port": 0
+            }
+          ],
+          "ingress": [
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "",
+              "from_port": 22,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "tcp",
+              "security_groups": [],
+              "self": false,
+              "to_port": 22
+            },
+            {
+              "cidr_blocks": [
+                "0.0.0.0/0"
+              ],
+              "description": "",
+              "from_port": 8888,
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "protocol": "tcp",
+              "security_groups": [],
+              "self": false,
+              "to_port": 8888
+            }
+          ],
+          "name": "terracost-test-nexus",
+          "revoke_rules_on_delete": false,
+          "tags": null,
+          "tags_all": {},
+          "timeouts": null,
+          "vpc_id": "vpc-123456"
+        },
+        "after_unknown": {
+          "arn": true,
+          "egress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "id": true,
+          "ingress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "name_prefix": true,
+          "owner_id": true,
+          "tags": null,
+          "tags_all": {}
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "egress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "ingress": [
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            },
+            {
+              "cidr_blocks": [
+                false
+              ],
+              "ipv6_cidr_blocks": [],
+              "prefix_list_ids": [],
+              "security_groups": []
+            }
+          ],
+          "tags": null,
+          "tags_all": {}
+        }
+      }
+    }
+  ],
+  "output_changes": {
+    "nexus_admin_password": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after": "changeme",
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "nexus_ip": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "nexus_os_user": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after": "admin",
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "nexus_port": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after": "8888",
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "nexus_sg": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after_unknown": true,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "vpc_id": {
+      "actions": [
+        "create"
+      ],
+      "before": null,
+      "after": "vpc-123456",
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    }
+  },
+  "prior_state": {
+    "format_version": "0.2",
+    "terraform_version": "1.0.5",
+    "values": {
+      "outputs": {
+        "nexus_admin_password": {
+          "sensitive": false,
+          "value": "changeme"
+        },
+        "nexus_os_user": {
+          "sensitive": false,
+          "value": "admin"
+        },
+        "nexus_port": {
+          "sensitive": false,
+          "value": "8888"
+        },
+        "vpc_id": {
+          "sensitive": false,
+          "value": "vpc-123456"
+        }
+      },
+      "root_module": {
+        "child_modules": [
+          {
+            "resources": [
+              {
+                "address": "module.nexus.data.aws_ami.debian",
+                "mode": "data",
+                "type": "aws_ami",
+                "name": "debian",
+                "provider_name": "registry.terraform.io/hashicorp/aws",
+                "schema_version": 0,
+                "values": {
+                  "architecture": "x86_64",
+                  "arn": "arn:aws:ec2:eu-west-1::image/ami-123456",
+                  "block_device_mappings": [
+                    {
+                      "device_name": "xvda",
+                      "ebs": {
+                        "delete_on_termination": "true",
+                        "encrypted": "false",
+                        "iops": "0",
+                        "snapshot_id": "snap-02b2a3a713eb9968d",
+                        "throughput": "0",
+                        "volume_size": "8",
+                        "volume_type": "gp2"
+                      },
+                      "no_device": "",
+                      "virtual_name": ""
+                    }
+                  ],
+                  "creation_date": "2021-07-21T18:33:07.000Z",
+                  "description": "FAI Debian Image",
+                  "ena_support": true,
+                  "executable_users": null,
+                  "filter": [
+                    {
+                      "name": "architecture",
+                      "values": [
+                        "x86_64"
+                      ]
+                    },
+                    {
+                      "name": "name",
+                      "values": [
+                        "debian-stretch-*"
+                      ]
+                    },
+                    {
+                      "name": "root-device-type",
+                      "values": [
+                        "ebs"
+                      ]
+                    },
+                    {
+                      "name": "virtualization-type",
+                      "values": [
+                        "hvm"
+                      ]
+                    }
+                  ],
+                  "hypervisor": "xen",
+                  "id": "ami-123456",
+                  "image_id": "ami-123456",
+                  "image_location": "123456/debian-stretch-hvm-x86_64-gp2",
+                  "image_owner_alias": null,
+                  "image_type": "machine",
+                  "kernel_id": null,
+                  "most_recent": true,
+                  "name": "debian-stretch-hvm-x86_64-gp2-2021-07-21-65742",
+                  "name_regex": null,
+                  "owner_id": "1234567890",
+                  "owners": [
+                    "1234567890"
+                  ],
+                  "platform": null,
+                  "platform_details": "Linux/UNIX",
+                  "product_codes": [],
+                  "public": true,
+                  "ramdisk_id": null,
+                  "root_device_name": "xvda",
+                  "root_device_type": "ebs",
+                  "root_snapshot_id": "snap-02b2a3a713eb9968d",
+                  "sriov_net_support": "simple",
+                  "state": "available",
+                  "state_reason": {
+                    "code": "UNSET",
+                    "message": "UNSET"
+                  },
+                  "tags": null,
+                  "usage_operation": "RunInstances",
+                  "virtualization_type": "hvm"
+                },
+                "sensitive_values": {
+                  "block_device_mappings": [
+                    {
+                      "ebs": {}
+                    }
+                  ],
+                  "filter": [
+                    {
+                      "values": [
+                        false
+                      ]
+                    },
+                    {
+                      "values": [
+                        false
+                      ]
+                    },
+                    {
+                      "values": [
+                        false
+                      ]
+                    },
+                    {
+                      "values": [
+                        false
+                      ]
+                    }
+                  ],
+                  "owners": [
+                    false
+                  ],
+                  "product_codes": [],
+                  "state_reason": {},
+                  "tags": null
+                }
+              },
+              {
+                "address": "module.nexus.data.aws_subnet.public",
+                "mode": "data",
+                "type": "aws_subnet",
+                "name": "public",
+                "provider_name": "registry.terraform.io/hashicorp/aws",
+                "schema_version": 0,
+                "values": {
+                  "arn": "arn:aws:ec2:eu-west-1:99999999999:subnet/subnet-12345",
+                  "assign_ipv6_address_on_creation": false,
+                  "availability_zone": "eu-west-1b",
+                  "availability_zone_id": "euw1-az3",
+                  "available_ip_address_count": 4091,
+                  "cidr_block": "172.31.32.0/20",
+                  "customer_owned_ipv4_pool": "",
+                  "default_for_az": true,
+                  "filter": null,
+                  "id": "subnet-12345",
+                  "ipv6_cidr_block": null,
+                  "ipv6_cidr_block_association_id": null,
+                  "map_customer_owned_ip_on_launch": false,
+                  "map_public_ip_on_launch": true,
+                  "outpost_arn": "",
+                  "owner_id": "99999999999",
+                  "state": "available",
+                  "tags": null,
+                  "vpc_id": "vpc-12345"
+                },
+                "sensitive_values": {
+                  "tags": null
+                }
+              },
+              {
+                "address": "module.nexus.data.aws_subnet_ids.public",
+                "mode": "data",
+                "type": "aws_subnet_ids",
+                "name": "public",
+                "provider_name": "registry.terraform.io/hashicorp/aws",
+                "schema_version": 0,
+                "values": {
+                  "filter": null,
+                  "id": "vpc-12345",
+                  "ids": [
+                    "subnet-123456",
+                    "subnet-1234567",
+                    "subnet-12345678"
+                  ],
+                  "tags": null,
+                  "vpc_id": "vpc-123456"
+                },
+                "sensitive_values": {
+                  "ids": [
+                    false,
+                    false,
+                    false
+                  ]
+                }
+              },
+              {
+                "address": "module.nexus.data.aws_vpc.vpc",
+                "mode": "data",
+                "type": "aws_vpc",
+                "name": "vpc",
+                "provider_name": "registry.terraform.io/hashicorp/aws",
+                "schema_version": 0,
+                "values": {
+                  "arn": "arn:aws:ec2:eu-west-1:99999999999:vpc/vpc-123456",
+                  "cidr_block": "172.31.0.0/16",
+                  "cidr_block_associations": [
+                    {
+                      "association_id": "vpc-cidr-assoc-2ca5ae47",
+                      "cidr_block": "172.31.0.0/16",
+                      "state": "associated"
+                    }
+                  ],
+                  "default": true,
+                  "dhcp_options_id": "dopt-1e6d3078",
+                  "enable_dns_hostnames": true,
+                  "enable_dns_support": true,
+                  "filter": null,
+                  "id": "vpc-123456",
+                  "instance_tenancy": "default",
+                  "ipv6_association_id": null,
+                  "ipv6_cidr_block": null,
+                  "main_route_table_id": "rtb-1234567",
+                  "owner_id": "99999999999",
+                  "state": "available",
+                  "tags": null
+                },
+                "sensitive_values": {
+                  "cidr_block_associations": [
+                    {}
+                  ],
+                  "tags": null
+                }
+              }
+            ],
+            "address": "module.nexus"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "version_constraint": "~> 3.0",
+        "expressions": {
+          "access_key": {
+            "references": [
+              "var.aws_access_key"
+            ]
+          },
+          "region": {
+            "references": [
+              "var.aws_region"
+            ]
+          },
+          "secret_key": {
+            "references": [
+              "var.aws_secret_key"
+            ]
+          }
+        }
+      }
+    },
+    "root_module": {
+      "outputs": {
+        "nexus_admin_password": {
+          "expression": {
+            "references": [
+              "module.nexus.nexus_admin_password",
+              "module.nexus"
+            ]
+          },
+          "description": "Initial admin password in case of first installation."
+        },
+        "nexus_ip": {
+          "expression": {
+            "references": [
+              "module.nexus.nexus_ip",
+              "module.nexus"
+            ]
+          },
+          "description": "The IP address the Nexus Repository server"
+        },
+        "nexus_os_user": {
+          "expression": {
+            "references": [
+              "module.nexus.nexus_os_user",
+              "module.nexus"
+            ]
+          },
+          "description": "The username to use to connect to the Nexus Repository instance via SSH."
+        },
+        "nexus_port": {
+          "expression": {
+            "references": [
+              "module.nexus.nexus_port",
+              "module.nexus"
+            ]
+          },
+          "description": "Port where Nexus Repository service is exposed"
+        },
+        "nexus_sg": {
+          "expression": {
+            "references": [
+              "module.nexus.nexus_sg",
+              "module.nexus"
+            ]
+          },
+          "description": "The Nexus Repository security group ID."
+        },
+        "vpc_id": {
+          "expression": {
+            "references": [
+              "module.nexus.vpc_id",
+              "module.nexus"
+            ]
+          },
+          "description": "The VPC ID for the VPC"
+        }
+      },
+      "module_calls": {
+        "nexus": {
+          "source": "./module-nexus",
+          "expressions": {
+            "customer": {
+              "references": [
+                "var.customer"
+              ]
+            },
+            "env": {
+              "references": [
+                "var.env"
+              ]
+            },
+            "extra_tags": {
+              "constant_value": {
+                "test": true,
+                "monitoring_discovery": false
+              }
+            },
+            "keypair_public": {
+              "references": [
+                "var.keypair_public"
+              ]
+            },
+            "nexus_admin_password": {
+              "constant_value": "changeme"
+            },
+            "nexus_disk_size": {
+              "constant_value": 20
+            },
+            "nexus_instance_type": {
+              "constant_value": "t3a.medium"
+            },
+            "nexus_port": {
+              "constant_value": "8888"
+            },
+            "project": {
+              "references": [
+                "var.project"
+              ]
+            },
+            "vpc_id": {
+              "constant_value": "vpc-123456"
+            }
+          },
+          "module": {
+            "outputs": {
+              "nexus_admin_password": {
+                "expression": {
+                  "references": [
+                    "var.nexus_admin_password"
+                  ]
+                },
+                "description": "Initial admin password in case of first installation"
+              },
+              "nexus_ip": {
+                "expression": {
+                  "references": [
+                    "aws_instance.nexus.public_ip",
+                    "aws_instance.nexus"
+                  ]
+                },
+                "description": "The IP address the Nexus Repository EC2 server"
+              },
+              "nexus_os_user": {
+                "expression": {
+                  "references": [
+                    "var.nexus_os_user"
+                  ]
+                },
+                "description": "Admin username to connect to instance via SSH"
+              },
+              "nexus_port": {
+                "expression": {
+                  "references": [
+                    "var.nexus_port"
+                  ]
+                },
+                "description": "Port where Nexus Repository service is exposed"
+              },
+              "nexus_sg": {
+                "expression": {
+                  "references": [
+                    "aws_security_group.nexus.id",
+                    "aws_security_group.nexus"
+                  ]
+                },
+                "description": "The Nexus Repository security group ID."
+              },
+              "vpc_id": {
+                "expression": {
+                  "references": [
+                    "data.aws_vpc.vpc.id",
+                    "data.aws_vpc.vpc"
+                  ]
+                },
+                "description": "The VPC ID for the VPC"
+              }
+            },
+            "resources": [
+              {
+                "address": "aws_instance.nexus",
+                "mode": "managed",
+                "type": "aws_instance",
+                "name": "nexus",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "ami": {
+                    "references": [
+                      "data.aws_ami.debian.id",
+                      "data.aws_ami.debian"
+                    ]
+                  },
+                  "associate_public_ip_address": {
+                    "constant_value": true
+                  },
+                  "disable_api_termination": {
+                    "constant_value": false
+                  },
+                  "instance_type": {
+                    "references": [
+                      "var.nexus_instance_type"
+                    ]
+                  },
+                  "key_name": {
+                    "references": [
+                      "aws_key_pair.nexus.key_name",
+                      "aws_key_pair.nexus"
+                    ]
+                  },
+                  "root_block_device": [
+                    {
+                      "delete_on_termination": {
+                        "constant_value": true
+                      },
+                      "volume_size": {
+                        "references": [
+                          "var.nexus_disk_size"
+                        ]
+                      }
+                    }
+                  ],
+                  "subnet_id": {
+                    "references": [
+                      "data.aws_subnet.public.id",
+                      "data.aws_subnet.public"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "local.merged_tags",
+                      "var.customer",
+                      "var.project",
+                      "var.env"
+                    ]
+                  },
+                  "vpc_security_group_ids": {
+                    "references": [
+                      "aws_security_group.nexus.id",
+                      "aws_security_group.nexus"
+                    ]
+                  }
+                },
+                "schema_version": 1
+              },
+              {
+                "address": "aws_key_pair.nexus",
+                "mode": "managed",
+                "type": "aws_key_pair",
+                "name": "nexus",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "key_name": {
+                    "references": [
+                      "var.customer",
+                      "var.project",
+                      "var.env"
+                    ]
+                  },
+                  "public_key": {
+                    "references": [
+                      "var.keypair_public"
+                    ]
+                  }
+                },
+                "schema_version": 1
+              },
+              {
+                "address": "aws_security_group.nexus",
+                "mode": "managed",
+                "type": "aws_security_group",
+                "name": "nexus",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "description": {
+                    "constant_value": "Allow accessing the Nexus Repository service from the internet."
+                  },
+                  "name": {
+                    "references": [
+                      "var.customer",
+                      "var.project",
+                      "var.env"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "local.merged_tags",
+                      "var.customer",
+                      "var.project",
+                      "var.env"
+                    ]
+                  },
+                  "vpc_id": {
+                    "references": [
+                      "data.aws_vpc.vpc.id",
+                      "data.aws_vpc.vpc"
+                    ]
+                  }
+                },
+                "schema_version": 1
+              },
+              {
+                "address": "data.aws_ami.debian",
+                "mode": "data",
+                "type": "aws_ami",
+                "name": "debian",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "filter": [
+                    {
+                      "name": {
+                        "constant_value": "name"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "debian-stretch-*"
+                        ]
+                      }
+                    },
+                    {
+                      "name": {
+                        "constant_value": "virtualization-type"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "hvm"
+                        ]
+                      }
+                    },
+                    {
+                      "name": {
+                        "constant_value": "architecture"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "x86_64"
+                        ]
+                      }
+                    },
+                    {
+                      "name": {
+                        "constant_value": "root-device-type"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "ebs"
+                        ]
+                      }
+                    }
+                  ],
+                  "most_recent": {
+                    "constant_value": true
+                  },
+                  "owners": {
+                    "constant_value": [
+                      "1234567890"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.aws_subnet.public",
+                "mode": "data",
+                "type": "aws_subnet",
+                "name": "public",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "id": {
+                    "references": [
+                      "data.aws_subnet_ids.public.ids",
+                      "data.aws_subnet_ids.public"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.aws_subnet_ids.public",
+                "mode": "data",
+                "type": "aws_subnet_ids",
+                "name": "public",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "vpc_id": {
+                    "references": [
+                      "var.vpc_id"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.aws_vpc.vpc",
+                "mode": "data",
+                "type": "aws_vpc",
+                "name": "vpc",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "id": {
+                    "references": [
+                      "var.vpc_id",
+                      "var.vpc_id",
+                      "data.aws_vpcs.test[0].ids",
+                      "data.aws_vpcs.test[0]",
+                      "data.aws_vpcs.test"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "data.aws_vpcs.test",
+                "mode": "data",
+                "type": "aws_vpcs",
+                "name": "test",
+                "provider_config_key": "nexus:aws",
+                "expressions": {
+                  "tags": {
+                    "constant_value": {
+                      "test": true
+                    }
+                  }
+                },
+                "schema_version": 0,
+                "count_expression": {
+                  "references": [
+                    "var.vpc_id"
+                  ]
+                }
+              }
+            ],
+            "variables": {
+              "customer": {},
+              "env": {},
+              "extra_tags": {
+                "default": {}
+              },
+              "keypair_public": {
+                "description": "The public SSH key, for SSH access to newly-created instances"
+              },
+              "nexus_admin_password": {
+                "default": "changeme",
+                "description": "Initial admin password in case of first installation."
+              },
+              "nexus_disk_size": {
+                "default": "20",
+                "description": "Disk size for the Nexus Repository (Go)"
+              },
+              "nexus_instance_type": {
+                "default": "t3.micro",
+                "description": "Instance type for the Nexus Repository"
+              },
+              "nexus_os_user": {
+                "default": "admin",
+                "description": "Admin username to connect to instance via SSH. Set to 'admin' because we use debian OS."
+              },
+              "nexus_port": {
+                "default": "8888",
+                "description": "Port where Nexus Repository service is exposed"
+              },
+              "project": {},
+              "vpc_id": {
+                "default": "",
+                "description": "The ID of the VPC."
+              }
+            }
+          }
+        }
+      },
+      "variables": {
+        "aws_access_key": {},
+        "aws_region": {
+          "default": "eu-west-1",
+          "description": "AWS region where to create servers."
+        },
+        "aws_secret_key": {},
+        "customer": {},
+        "env": {},
+        "keypair_public": {},
+        "project": {}
+      }
+    }
+  }
+}
