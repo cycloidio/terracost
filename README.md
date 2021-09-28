@@ -107,3 +107,15 @@ For Contributing Guide, please read [CONTIBUTING.md](CONTRIBUTING.md).
 ## License
 
 This project is licensed under the MIT license. Please see [LICENSE](LICENSE) for more details.
+
+## Meet Cycloid
+
+[Cycloid](https://www.cycloid.io/) is a hybrid cloud DevOps collaboration platform providing end-to-end frameworks to accelerate and industrialize software delivery.
+
+As of now, we have three open-source tools:
+
+* [TerraCognita](https://github.com/cycloidio/terracognita): Read from your existing cloud providers and generate IaC in Terraform 
+* [InfraMap](https://github.com/cycloidio/inframap): Reads .tfstate or HCL to generate a graph specific for each provider
+* [TerraCost](https://github.com/cycloidio/terracost): Cloud cost estimation for Terraform in the CLI
+
+...and the functionality of each is also embedded in our DevOps solution, which you can find out more about [here](https://www.cycloid.io/hybrid-cloud-devops-platform).
