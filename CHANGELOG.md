@@ -4,8 +4,10 @@
 
 - **[breaking]** Remove the repeated Backend and abstracted it to it's own package
   ([Pull #60](https://github.com/cycloidio/terracost/pull/59))
+- No cost returned when no prior exist in plan
+  ([Pull #61](https://github.com/cycloidio/terracost/pull/61))
 
-## [0.4.4] _2021-09-31_
+## [0.4.4] _2021-08-31_
 
 ### Fixed
 
