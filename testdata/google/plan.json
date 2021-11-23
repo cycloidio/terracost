@@ -1,0 +1,1133 @@
+{
+    "format_version": "0.2",
+    "terraform_version": "1.0.6",
+    "variables": {
+        "customer": {
+            "value": "cycloid-sandbox"
+        },
+        "env": {
+            "value": "gcp"
+        },
+        "gcp_project": {
+            "value": "cycloid-demo"
+        },
+        "gcp_region": {
+            "value": "europe-west1"
+        },
+        "gcp_zone": {
+            "value": "europe-west1-c"
+        },
+        "project": {
+            "value": "marco-compute"
+        }
+    },
+    "planned_values": {
+        "outputs": {
+            "ip_address": {
+                "sensitive": false
+            }
+        },
+        "root_module": {
+            "child_modules": [
+                {
+                    "resources": [
+                        {
+                            "address": "module.vm.google_compute_firewall.egress",
+                            "mode": "managed",
+                            "type": "google_compute_firewall",
+                            "name": "egress",
+                            "provider_name": "registry.terraform.io/hashicorp/google",
+                            "schema_version": 1,
+                            "values": {
+                                "allow": [
+                                    {
+                                        "ports": [],
+                                        "protocol": ""
+                                    }
+                                ],
+                                "deny": [],
+                                "description": null,
+                                "direction": "EGRESS",
+                                "disabled": true,
+                                "log_config": [],
+                                "name": "cycloid-sandbox-marco-compute-gcp-egress",
+                                "network": "default",
+                                "priority": 1000,
+                                "source_ranges": null,
+                                "source_service_accounts": null,
+                                "source_tags": null,
+                                "target_service_accounts": null,
+                                "target_tags": [
+                                    "cycloid-sandbox-marco-compute-gcp-network-tag"
+                                ],
+                                "timeouts": null
+                            },
+                            "sensitive_values": {
+                                "allow": [
+                                    {
+                                        "ports": []
+                                    }
+                                ],
+                                "deny": [],
+                                "destination_ranges": [],
+                                "log_config": [],
+                                "target_tags": [
+                                    false
+                                ]
+                            }
+                        },
+                        {
+                            "address": "module.vm.google_compute_firewall.ingress",
+                            "mode": "managed",
+                            "type": "google_compute_firewall",
+                            "name": "ingress",
+                            "provider_name": "registry.terraform.io/hashicorp/google",
+                            "schema_version": 1,
+                            "values": {
+                                "allow": [
+                                    {
+                                        "ports": [
+                                            "22"
+                                        ],
+                                        "protocol": "tcp"
+                                    }
+                                ],
+                                "deny": [],
+                                "description": "",
+                                "direction": "INGRESS",
+                                "disabled": false,
+                                "log_config": [],
+                                "name": "cycloid-sandbox-marco-compute-gcp-ingress",
+                                "network": "default",
+                                "priority": 1000,
+                                "source_ranges": null,
+                                "source_service_accounts": null,
+                                "source_tags": null,
+                                "target_service_accounts": null,
+                                "target_tags": [
+                                    "cycloid-sandbox-marco-compute-gcp-network-tag"
+                                ],
+                                "timeouts": null
+                            },
+                            "sensitive_values": {
+                                "allow": [
+                                    {
+                                        "ports": [
+                                            false
+                                        ]
+                                    }
+                                ],
+                                "deny": [],
+                                "destination_ranges": [],
+                                "log_config": [],
+                                "target_tags": [
+                                    false
+                                ]
+                            }
+                        },
+                        {
+                            "address": "module.vm.google_compute_instance.vm",
+                            "mode": "managed",
+                            "type": "google_compute_instance",
+                            "name": "vm",
+                            "provider_name": "registry.terraform.io/hashicorp/google",
+                            "schema_version": 6,
+                            "values": {
+                                "advanced_machine_features": [],
+                                "allow_stopping_for_update": true,
+                                "attached_disk": [],
+                                "boot_disk": [
+                                    {
+                                        "auto_delete": true,
+                                        "disk_encryption_key_raw": null,
+                                        "initialize_params": [
+                                            {
+                                                "image": "debian-cloud/debian-10",
+                                                "size": 5,
+                                                "type": "pd-standard"
+                                            }
+                                        ],
+                                        "mode": "READ_WRITE"
+                                    }
+                                ],
+                                "can_ip_forward": false,
+                                "deletion_protection": false,
+                                "description": "",
+                                "desired_status": null,
+                                "enable_display": null,
+                                "hostname": null,
+                                "labels": {
+                                    "client": "cycloid-sandbox",
+                                    "cycloid.io": "true",
+                                    "env": "gcp",
+                                    "organization": "cycloid-sandbox",
+                                    "project": "marco-compute"
+                                },
+                                "machine_type": "e2-small",
+                                "metadata": null,
+                                "metadata_startup_script": "",
+                                "name": "cycloid-sandbox-marco-compute-gcp-vm",
+                                "network_interface": [
+                                    {
+                                        "access_config": [
+                                            {
+                                                "public_ptr_domain_name": null
+                                            }
+                                        ],
+                                        "alias_ip_range": [],
+                                        "ipv6_access_config": [],
+                                        "network": "default",
+                                        "nic_type": null
+                                    }
+                                ],
+                                "resource_policies": null,
+                                "scratch_disk": [],
+                                "service_account": [],
+                                "shielded_instance_config": [],
+                                "tags": [
+                                    "cycloid-sandbox-marco-compute-gcp-network-tag"
+                                ],
+                                "timeouts": null
+                            },
+                            "sensitive_values": {
+                                "advanced_machine_features": [],
+                                "attached_disk": [],
+                                "boot_disk": [
+                                    {
+                                        "initialize_params": [
+                                            {
+                                                "labels": {}
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "confidential_instance_config": [],
+                                "guest_accelerator": [],
+                                "labels": {},
+                                "network_interface": [
+                                    {
+                                        "access_config": [
+                                            {}
+                                        ],
+                                        "alias_ip_range": [],
+                                        "ipv6_access_config": []
+                                    }
+                                ],
+                                "reservation_affinity": [],
+                                "scheduling": [],
+                                "scratch_disk": [],
+                                "service_account": [],
+                                "shielded_instance_config": [],
+                                "tags": [
+                                    false
+                                ]
+                            }
+                        }
+                    ],
+                    "address": "module.vm"
+                }
+            ]
+        }
+    },
+    "resource_changes": [
+        {
+            "address": "module.vm.google_compute_firewall.egress",
+            "module_address": "module.vm",
+            "mode": "managed",
+            "type": "google_compute_firewall",
+            "name": "egress",
+            "provider_name": "registry.terraform.io/hashicorp/google",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "allow": [
+                        {
+                            "ports": [],
+                            "protocol": ""
+                        }
+                    ],
+                    "deny": [],
+                    "description": null,
+                    "direction": "EGRESS",
+                    "disabled": true,
+                    "log_config": [],
+                    "name": "cycloid-sandbox-marco-compute-gcp-egress",
+                    "network": "default",
+                    "priority": 1000,
+                    "source_ranges": null,
+                    "source_service_accounts": null,
+                    "source_tags": null,
+                    "target_service_accounts": null,
+                    "target_tags": [
+                        "cycloid-sandbox-marco-compute-gcp-network-tag"
+                    ],
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "allow": [
+                        {
+                            "ports": []
+                        }
+                    ],
+                    "creation_timestamp": true,
+                    "deny": [],
+                    "destination_ranges": true,
+                    "enable_logging": true,
+                    "id": true,
+                    "log_config": [],
+                    "project": true,
+                    "self_link": true,
+                    "target_tags": [
+                        false
+                    ]
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "allow": [
+                        {
+                            "ports": []
+                        }
+                    ],
+                    "deny": [],
+                    "destination_ranges": [],
+                    "log_config": [],
+                    "target_tags": [
+                        false
+                    ]
+                }
+            }
+        },
+        {
+            "address": "module.vm.google_compute_firewall.ingress",
+            "module_address": "module.vm",
+            "mode": "managed",
+            "type": "google_compute_firewall",
+            "name": "ingress",
+            "provider_name": "registry.terraform.io/hashicorp/google",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "allow": [
+                        {
+                            "ports": [
+                                "22"
+                            ],
+                            "protocol": "tcp"
+                        }
+                    ],
+                    "deny": [],
+                    "description": "",
+                    "direction": "INGRESS",
+                    "disabled": false,
+                    "log_config": [],
+                    "name": "cycloid-sandbox-marco-compute-gcp-ingress",
+                    "network": "default",
+                    "priority": 1000,
+                    "source_ranges": null,
+                    "source_service_accounts": null,
+                    "source_tags": null,
+                    "target_service_accounts": null,
+                    "target_tags": [
+                        "cycloid-sandbox-marco-compute-gcp-network-tag"
+                    ],
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "allow": [
+                        {
+                            "ports": [
+                                false
+                            ]
+                        }
+                    ],
+                    "creation_timestamp": true,
+                    "deny": [],
+                    "destination_ranges": true,
+                    "enable_logging": true,
+                    "id": true,
+                    "log_config": [],
+                    "project": true,
+                    "self_link": true,
+                    "target_tags": [
+                        false
+                    ]
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "allow": [
+                        {
+                            "ports": [
+                                false
+                            ]
+                        }
+                    ],
+                    "deny": [],
+                    "destination_ranges": [],
+                    "log_config": [],
+                    "target_tags": [
+                        false
+                    ]
+                }
+            }
+        },
+        {
+            "address": "module.vm.google_compute_instance.vm",
+            "module_address": "module.vm",
+            "mode": "managed",
+            "type": "google_compute_instance",
+            "name": "vm",
+            "provider_name": "registry.terraform.io/hashicorp/google",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "advanced_machine_features": [],
+                    "allow_stopping_for_update": true,
+                    "attached_disk": [],
+                    "boot_disk": [
+                        {
+                            "auto_delete": true,
+                            "disk_encryption_key_raw": null,
+                            "initialize_params": [
+                                {
+                                    "image": "debian-cloud/debian-10",
+                                    "size": 5,
+                                    "type": "pd-standard"
+                                }
+                            ],
+                            "mode": "READ_WRITE"
+                        }
+                    ],
+                    "can_ip_forward": false,
+                    "deletion_protection": false,
+                    "description": "",
+                    "desired_status": null,
+                    "enable_display": null,
+                    "hostname": null,
+                    "labels": {
+                        "client": "cycloid-sandbox",
+                        "cycloid.io": "true",
+                        "env": "gcp",
+                        "organization": "cycloid-sandbox",
+                        "project": "marco-compute"
+                    },
+                    "machine_type": "e2-small",
+                    "metadata": null,
+                    "metadata_startup_script": "",
+                    "name": "cycloid-sandbox-marco-compute-gcp-vm",
+                    "network_interface": [
+                        {
+                            "access_config": [
+                                {
+                                    "public_ptr_domain_name": null
+                                }
+                            ],
+                            "alias_ip_range": [],
+                            "ipv6_access_config": [],
+                            "network": "default",
+                            "nic_type": null
+                        }
+                    ],
+                    "resource_policies": null,
+                    "scratch_disk": [],
+                    "service_account": [],
+                    "shielded_instance_config": [],
+                    "tags": [
+                        "cycloid-sandbox-marco-compute-gcp-network-tag"
+                    ],
+                    "timeouts": null
+                },
+                "after_unknown": {
+                    "advanced_machine_features": [],
+                    "attached_disk": [],
+                    "boot_disk": [
+                        {
+                            "device_name": true,
+                            "disk_encryption_key_sha256": true,
+                            "initialize_params": [
+                                {
+                                    "labels": true
+                                }
+                            ],
+                            "kms_key_self_link": true,
+                            "source": true
+                        }
+                    ],
+                    "confidential_instance_config": true,
+                    "cpu_platform": true,
+                    "current_status": true,
+                    "guest_accelerator": true,
+                    "id": true,
+                    "instance_id": true,
+                    "label_fingerprint": true,
+                    "labels": {},
+                    "metadata_fingerprint": true,
+                    "min_cpu_platform": true,
+                    "network_interface": [
+                        {
+                            "access_config": [
+                                {
+                                    "nat_ip": true,
+                                    "network_tier": true
+                                }
+                            ],
+                            "alias_ip_range": [],
+                            "ipv6_access_config": [],
+                            "ipv6_access_type": true,
+                            "name": true,
+                            "network_ip": true,
+                            "stack_type": true,
+                            "subnetwork": true,
+                            "subnetwork_project": true
+                        }
+                    ],
+                    "project": true,
+                    "reservation_affinity": true,
+                    "scheduling": true,
+                    "scratch_disk": [],
+                    "self_link": true,
+                    "service_account": [],
+                    "shielded_instance_config": [],
+                    "tags": [
+                        false
+                    ],
+                    "tags_fingerprint": true,
+                    "zone": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "advanced_machine_features": [],
+                    "attached_disk": [],
+                    "boot_disk": [
+                        {
+                            "disk_encryption_key_raw": true,
+                            "initialize_params": [
+                                {
+                                    "labels": {}
+                                }
+                            ]
+                        }
+                    ],
+                    "confidential_instance_config": [],
+                    "guest_accelerator": [],
+                    "labels": {},
+                    "network_interface": [
+                        {
+                            "access_config": [
+                                {}
+                            ],
+                            "alias_ip_range": [],
+                            "ipv6_access_config": []
+                        }
+                    ],
+                    "reservation_affinity": [],
+                    "scheduling": [],
+                    "scratch_disk": [],
+                    "service_account": [],
+                    "shielded_instance_config": [],
+                    "tags": [
+                        false
+                    ]
+                }
+            }
+        }
+    ],
+    "output_changes": {
+        "ip_address": {
+            "actions": [
+                "create"
+            ],
+            "before": null,
+            "after_unknown": true,
+            "before_sensitive": false,
+            "after_sensitive": false
+        }
+    },
+    "prior_state": {
+        "format_version": "0.2",
+        "terraform_version": "1.0.6",
+        "values": {
+            "root_module": {
+                "child_modules": [
+                    {
+                        "resources": [
+                            {
+                                "address": "module.vm.data.template_file.user_data",
+                                "mode": "data",
+                                "type": "template_file",
+                                "name": "user_data",
+                                "provider_name": "registry.terraform.io/hashicorp/template",
+                                "schema_version": 0,
+                                "values": {
+                                    "filename": null,
+                                    "id": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                                    "rendered": "",
+                                    "template": "${file_content}",
+                                    "vars": {
+                                        "file_content": ""
+                                    }
+                                },
+                                "sensitive_values": {
+                                    "vars": {}
+                                }
+                            }
+                        ],
+                        "address": "module.vm"
+                    }
+                ]
+            }
+        }
+    },
+    "configuration": {
+        "provider_config": {
+            "google": {
+                "name": "google",
+                "expressions": {
+                    "project": {
+                        "references": [
+                            "var.gcp_project"
+                        ]
+                    },
+                    "region": {
+                        "references": [
+                            "var.gcp_region"
+                        ]
+                    },
+                    "zone": {
+                        "references": [
+                            "var.gcp_zone"
+                        ]
+                    }
+                }
+            }
+        },
+        "root_module": {
+            "outputs": {
+                "ip_address": {
+                    "expression": {
+                        "references": [
+                            "module.vm.vm_public_ip_address",
+                            "module.vm"
+                        ]
+                    },
+                    "description": "IP of the VM"
+                }
+            },
+            "module_calls": {
+                "vm": {
+                    "source": "./module-gce",
+                    "expressions": {
+                        "allow_stopping_for_update": {
+                            "constant_value": true
+                        },
+                        "boot_disk_auto_delete": {
+                            "constant_value": true
+                        },
+                        "boot_disk_device_name": {
+                            "constant_value": ""
+                        },
+                        "boot_disk_image": {
+                            "constant_value": "debian-cloud/debian-10"
+                        },
+                        "boot_disk_size": {
+                            "constant_value": 5
+                        },
+                        "boot_disk_type": {
+                            "constant_value": "pd-standard"
+                        },
+                        "customer": {
+                            "references": [
+                                "var.customer"
+                            ]
+                        },
+                        "egress_allow_ports": {
+                            "constant_value": []
+                        },
+                        "egress_allow_protocol": {
+                            "constant_value": ""
+                        },
+                        "egress_destination_ranges": {
+                            "constant_value": []
+                        },
+                        "egress_disabled": {
+                            "constant_value": true
+                        },
+                        "egress_firewall_name": {
+                            "constant_value": ""
+                        },
+                        "env": {
+                            "references": [
+                                "var.env"
+                            ]
+                        },
+                        "file_content": {
+                            "constant_value": ""
+                        },
+                        "ingress_allow_ports": {
+                            "constant_value": [
+                                "22"
+                            ]
+                        },
+                        "ingress_allow_protocol": {
+                            "constant_value": "tcp"
+                        },
+                        "ingress_disabled": {
+                            "constant_value": false
+                        },
+                        "ingress_firewall_name": {
+                            "references": [
+                                "var.customer",
+                                "var.project",
+                                "var.env"
+                            ]
+                        },
+                        "ingress_source_ranges": {
+                            "constant_value": []
+                        },
+                        "ingress_source_tags": {
+                            "constant_value": []
+                        },
+                        "instance_extra_labels": {
+                            "constant_value": {}
+                        },
+                        "instance_name": {
+                            "references": [
+                                "var.customer",
+                                "var.project",
+                                "var.env"
+                            ]
+                        },
+                        "instance_tags": {
+                            "references": [
+                                "var.customer",
+                                "var.project",
+                                "var.env"
+                            ]
+                        },
+                        "machine_type": {
+                            "constant_value": "e2-small"
+                        },
+                        "network": {
+                            "constant_value": "default"
+                        },
+                        "network_ip": {
+                            "constant_value": ""
+                        },
+                        "project": {
+                            "references": [
+                                "var.project"
+                            ]
+                        }
+                    },
+                    "module": {
+                        "outputs": {
+                            "vm_instance_id": {
+                                "expression": {
+                                    "references": [
+                                        "google_compute_instance.vm.id",
+                                        "google_compute_instance.vm"
+                                    ]
+                                }
+                            },
+                            "vm_public_ip_address": {
+                                "expression": {
+                                    "references": [
+                                        "google_compute_instance.vm.network_interface[0].access_config[0].nat_ip",
+                                        "google_compute_instance.vm.network_interface[0].access_config[0]",
+                                        "google_compute_instance.vm.network_interface[0].access_config",
+                                        "google_compute_instance.vm.network_interface[0]",
+                                        "google_compute_instance.vm.network_interface",
+                                        "google_compute_instance.vm"
+                                    ]
+                                }
+                            },
+                            "vm_target_tags": {
+                                "expression": {
+                                    "references": [
+                                        "var.instance_tags"
+                                    ]
+                                }
+                            }
+                        },
+                        "resources": [
+                            {
+                                "address": "google_compute_firewall.egress",
+                                "mode": "managed",
+                                "type": "google_compute_firewall",
+                                "name": "egress",
+                                "provider_config_key": "vm:google",
+                                "expressions": {
+                                    "allow": [
+                                        {
+                                            "ports": {
+                                                "references": [
+                                                    "var.egress_allow_ports"
+                                                ]
+                                            },
+                                            "protocol": {
+                                                "references": [
+                                                    "var.egress_allow_protocol"
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "destination_ranges": {
+                                        "references": [
+                                            "var.egress_destination_ranges"
+                                        ]
+                                    },
+                                    "direction": {
+                                        "constant_value": "EGRESS"
+                                    },
+                                    "disabled": {
+                                        "references": [
+                                            "var.egress_disabled"
+                                        ]
+                                    },
+                                    "name": {
+                                        "references": [
+                                            "local.egress_name"
+                                        ]
+                                    },
+                                    "network": {
+                                        "references": [
+                                            "var.network"
+                                        ]
+                                    },
+                                    "target_tags": {
+                                        "references": [
+                                            "local.instance_tags"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 1
+                            },
+                            {
+                                "address": "google_compute_firewall.ingress",
+                                "mode": "managed",
+                                "type": "google_compute_firewall",
+                                "name": "ingress",
+                                "provider_config_key": "vm:google",
+                                "expressions": {
+                                    "allow": [
+                                        {
+                                            "ports": {
+                                                "references": [
+                                                    "var.ingress_allow_ports"
+                                                ]
+                                            },
+                                            "protocol": {
+                                                "references": [
+                                                    "var.ingress_allow_protocol"
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "description": {
+                                        "references": [
+                                            "var.ingress_firewall_description"
+                                        ]
+                                    },
+                                    "direction": {
+                                        "constant_value": "INGRESS"
+                                    },
+                                    "disabled": {
+                                        "references": [
+                                            "var.ingress_disabled"
+                                        ]
+                                    },
+                                    "name": {
+                                        "references": [
+                                            "local.ingress_name"
+                                        ]
+                                    },
+                                    "network": {
+                                        "references": [
+                                            "var.network"
+                                        ]
+                                    },
+                                    "source_ranges": {
+                                        "references": [
+                                            "var.ingress_source_ranges"
+                                        ]
+                                    },
+                                    "source_tags": {
+                                        "references": [
+                                            "var.ingress_source_tags"
+                                        ]
+                                    },
+                                    "target_tags": {
+                                        "references": [
+                                            "local.instance_tags"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 1
+                            },
+                            {
+                                "address": "google_compute_instance.vm",
+                                "mode": "managed",
+                                "type": "google_compute_instance",
+                                "name": "vm",
+                                "provider_config_key": "vm:google",
+                                "expressions": {
+                                    "allow_stopping_for_update": {
+                                        "references": [
+                                            "var.allow_stopping_for_update"
+                                        ]
+                                    },
+                                    "boot_disk": [
+                                        {
+                                            "auto_delete": {
+                                                "references": [
+                                                    "var.boot_disk_auto_delete"
+                                                ]
+                                            },
+                                            "device_name": {
+                                                "references": [
+                                                    "var.boot_disk_device_name"
+                                                ]
+                                            },
+                                            "initialize_params": [
+                                                {
+                                                    "image": {
+                                                        "references": [
+                                                            "var.boot_disk_image"
+                                                        ]
+                                                    },
+                                                    "size": {
+                                                        "references": [
+                                                            "var.boot_disk_size"
+                                                        ]
+                                                    },
+                                                    "type": {
+                                                        "references": [
+                                                            "var.boot_disk_type"
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "description": {
+                                        "references": [
+                                            "var.instance_description"
+                                        ]
+                                    },
+                                    "labels": {
+                                        "references": [
+                                            "local.instance_labels"
+                                        ]
+                                    },
+                                    "machine_type": {
+                                        "references": [
+                                            "var.machine_type"
+                                        ]
+                                    },
+                                    "metadata_startup_script": {
+                                        "references": [
+                                            "data.template_file.user_data.rendered",
+                                            "data.template_file.user_data"
+                                        ]
+                                    },
+                                    "name": {
+                                        "references": [
+                                            "local.instance_name"
+                                        ]
+                                    },
+                                    "network_interface": [
+                                        {
+                                            "access_config": [
+                                                {}
+                                            ],
+                                            "network": {
+                                                "references": [
+                                                    "var.network"
+                                                ]
+                                            },
+                                            "network_ip": {
+                                                "references": [
+                                                    "var.network_ip"
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "tags": {
+                                        "references": [
+                                            "local.instance_tags"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 6
+                            },
+                            {
+                                "address": "data.template_file.user_data",
+                                "mode": "data",
+                                "type": "template_file",
+                                "name": "user_data",
+                                "provider_config_key": "vm:template",
+                                "expressions": {
+                                    "template": {
+                                        "references": [
+                                            "path.module"
+                                        ]
+                                    },
+                                    "vars": {
+                                        "references": [
+                                            "var.file_content"
+                                        ]
+                                    }
+                                },
+                                "schema_version": 0
+                            }
+                        ],
+                        "variables": {
+                            "allow_stopping_for_update": {
+                                "default": true,
+                                "description": "Allows to stop the instance to update its properties."
+                            },
+                            "boot_disk_auto_delete": {
+                                "default": true,
+                                "description": "Eanbles disk deletion when the instance is deleted."
+                            },
+                            "boot_disk_device_name": {
+                                "default": "",
+                                "description": "Name with which attached disk will be accessible, as /dev/disk/by-id/google-{{device_name}}"
+                            },
+                            "boot_disk_image": {
+                                "default": "debian-cloud/debian-10",
+                                "description": "The image from which to initialize this disk."
+                            },
+                            "boot_disk_size": {
+                                "description": "The size of the boot disk image in gigabytes."
+                            },
+                            "boot_disk_type": {
+                                "default": "",
+                                "description": "The GCE disk type"
+                            },
+                            "customer": {
+                                "description": "Cycloid customer name."
+                            },
+                            "egress_allow_ports": {
+                                "default": [],
+                                "description": "An otional list of IP ports to which the egress allow rule applies."
+                            },
+                            "egress_allow_protocol": {
+                                "default": "",
+                                "description": "The IP protocol to which the egress allow rule applies. "
+                            },
+                            "egress_destination_ranges": {
+                                "default": [],
+                                "description": "Lists the destination IP address, as CIDR, to apply egress firewalls rules."
+                            },
+                            "egress_disabled": {
+                                "default": true,
+                                "description": "Denotes whether the firewall egress rule is disabled"
+                            },
+                            "egress_firewall_description": {
+                                "default": "",
+                                "description": "A brief description of the egress firewall."
+                            },
+                            "egress_firewall_name": {
+                                "description": "Name of the firewall egress resource."
+                            },
+                            "env": {
+                                "description": "Cycloid project name."
+                            },
+                            "file_content": {
+                                "description": "The content of the file to use if cloud init is used."
+                            },
+                            "ingress_allow_ports": {
+                                "default": [
+                                    "22"
+                                ],
+                                "description": "An otional list of IP ports to which the ingress allow rule applies."
+                            },
+                            "ingress_allow_protocol": {
+                                "default": "tcp",
+                                "description": "The IP protocol to which the ingress allow rule applies. "
+                            },
+                            "ingress_disabled": {
+                                "default": false,
+                                "description": "Denotes whether the firewall ingress rule is disabled."
+                            },
+                            "ingress_firewall_description": {
+                                "default": "",
+                                "description": "A brief description of the ingress firewall."
+                            },
+                            "ingress_firewall_name": {
+                                "description": "Name of the firewall ingress resource."
+                            },
+                            "ingress_source_ranges": {
+                                "default": [],
+                                "description": "If specified the firewall will only be applied to the source IP address in these ranges."
+                            },
+                            "ingress_source_tags": {
+                                "default": [],
+                                "description": "If source tags are specified, the firewall will apply only to traffic with source IP that belongs to a tag listed in source tags. "
+                            },
+                            "instance_description": {
+                                "default": "",
+                                "description": "A brief description of the instance."
+                            },
+                            "instance_extra_labels": {
+                                "default": {},
+                                "description": "A map of key/value label pairs to assign to the instance."
+                            },
+                            "instance_name": {
+                                "description": "The unique name for the instance."
+                            },
+                            "instance_tags": {
+                                "description": "A list of network tags to attach to the instance."
+                            },
+                            "machine_type": {
+                                "default": "e2-small",
+                                "description": "The machine type to create."
+                            },
+                            "network": {
+                                "description": "The name or self_link of the network to attach this interface to."
+                            },
+                            "network_ip": {
+                                "default": "",
+                                "description": "The private IP address to assign to the instance."
+                            },
+                            "project": {
+                                "description": "Cycloid environment name."
+                            }
+                        }
+                    }
+                }
+            },
+            "variables": {
+                "customer": {
+                    "description": "Cycloid customer name."
+                },
+                "env": {
+                    "description": "Cycloid environment name."
+                },
+                "gcp_project": {
+                    "description": "GCP project to launch vm."
+                },
+                "gcp_region": {
+                    "default": "europe-west1",
+                    "description": "GCP region to launch vm."
+                },
+                "gcp_zone": {
+                    "default": "europe-west1-c",
+                    "description": "GCP zone to launch vm."
+                },
+                "project": {
+                    "description": "Cycloid project name."
+                }
+            }
+        }
+    }
+}
