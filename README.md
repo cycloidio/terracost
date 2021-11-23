@@ -23,6 +23,10 @@ go get github.com/cycloidio/terracost
 
 Currently, Terracost supports only a few resources of the AWS provider, however we're actively working on adding more support. See the full list of supported resources [on this wiki page](https://github.com/cycloidio/terracost/wiki/Supported-Resources).
 
+### Google
+
+To be able to ingest the pricing data from Google the credentials needed have to have access to [Compute Engine API](https://console.cloud.google.com/apis/library/compute.googleapis.com) and have also billing enabled. This is needed to be able to fetch the Machine Types, for the SKUs we would only need an normal set of credentials (or even API Key) but as we need both we have to use the more complex one. If you do not know how to activate those permissions, just use the credentials and the import will fail and on the logs will inform of what is missing and how to activate it.
+
 ## Usage
 
 ### Migrating the database
