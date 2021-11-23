@@ -2,6 +2,7 @@ package price
 
 import (
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -23,6 +24,14 @@ type Price struct {
 	Attributes map[string]string
 }
 
+var (
+	// ErrMismatchingUnit when the unit of the 2 prices do not match when using Add
+	ErrMismatchingUnit = errors.New("the unit is not the same")
+
+	// ErrMismatchingCurrency when the currency of the 2 prices do not match when using Add
+	ErrMismatchingCurrency = errors.New("the currency is not the same")
+)
+
 // GenerateHash generates the Hash field of the Price, equal to the MD5 sum of its unique values.
 func (p *Price) GenerateHash() string {
 	values := make([]string, 0, len(p.Attributes)+2)
@@ -40,6 +49,24 @@ func (p *Price) GenerateHash() string {
 
 	data := []byte(strings.Join(values, "-"))
 	return fmt.Sprintf("%x", md5.Sum(data))
+}
+
+// Add checks that the 2 prices can be added together (unit/currency) and
+// then performs an addition and also joins the attributes and replacing repeated
+// ones for the new ones (pr)
+func (p *Price) Add(pr Price) error {
+	if p.Unit != pr.Unit {
+		return ErrMismatchingUnit
+	} else if p.Currency != pr.Currency {
+		return ErrMismatchingCurrency
+	}
+
+	p.Value = p.Value.Add(pr.Value)
+	for k, v := range pr.Attributes {
+		p.Attributes[k] = v
+	}
+
+	return nil
 }
 
 // WithProduct is an aggregation of a Price with a product.Product.
