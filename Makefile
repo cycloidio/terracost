@@ -25,8 +25,17 @@ test: lint down db-up db-migrate db-inject
 db-inject:
 	@zcat $(MYSQL_DUMP) | $(DOCKER_COMPOSE_CMD) exec -T database mysql -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MYSQL_DB)
 
+$(ENUMER):
+	@go install github.com/dmarkham/enumer
+
+$(GOLINT):
+	@go install golang.org/x/lint/golint
+
+$(GOIMPORTS):
+	@go install golang.org/x/tools/cmd/goimports
+
 .PHONY: lint
-lint:
+lint: $(GOLINT)
 	@golint -set_exit_status ./... && test -z "`$(GO_CMD) list -f {{.Dir}} ./... | xargs goimports -l | tee /dev/stderr`"
 
 .PHONY: db-up
@@ -49,7 +58,7 @@ db-cli:
 	@$(DOCKER_COMPOSE_CMD) exec database mysql -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MYSQL_DB)
 
 .PHONY: generate
-generate:
+generate: $(GOIMPORTS) $(ENUMER)
 	@rm -rf ./mock/
 	@$(GO_CMD) generate ./...
 	@goimports -w ./mock
