@@ -10,6 +10,13 @@ MYSQL_PASS := terracost
 MYSQL_DB := terracost_test
 MYSQL_DUMP ?= mysql/testdata/2021-08-12-pricing.sql.gz
 
+BIN_DIR := $(GOPATH)/bin
+
+GOLINT := $(BIN_DIR)/golinter
+GOIMPORTS := $(BIN_DIR)/goimports
+ENUMER := $(BIN_DIR)/enumer
+MOCKGEN := $(BIN_DIR)/mockgen
+
 # The ci rule is voluntarily simple because
 # the CI requires to run the command separately
 # and not all at once, otherwise it wouldn't work
@@ -25,8 +32,20 @@ test: lint down db-up db-migrate db-inject
 db-inject:
 	@zcat $(MYSQL_DUMP) | $(DOCKER_COMPOSE_CMD) exec -T database mysql -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MYSQL_DB)
 
+$(ENUMER):
+	@go install github.com/dmarkham/enumer
+
+$(GOLINT):
+	@go install golang.org/x/lint/golint
+
+$(GOIMPORTS):
+	@go install golang.org/x/tools/cmd/goimports
+
+$(MOCKGEN):
+	@go get -u github.com/golang/mock/mockgen
+
 .PHONY: lint
-lint:
+lint: $(GOLINT) $(GOIMPORTS)
 	@golint -set_exit_status ./... && test -z "`$(GO_CMD) list -f {{.Dir}} ./... | xargs goimports -l | tee /dev/stderr`"
 
 .PHONY: db-up
@@ -49,7 +68,7 @@ db-cli:
 	@$(DOCKER_COMPOSE_CMD) exec database mysql -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MYSQL_DB)
 
 .PHONY: generate
-generate:
+generate: $(GOIMPORTS) $(ENUMER) $(MOCKGEN)
 	@rm -rf ./mock/
 	@$(GO_CMD) generate ./...
 	@goimports -w ./mock

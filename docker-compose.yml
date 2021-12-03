@@ -1,7 +1,7 @@
 version: '3'
 services:
   terracost:
-    image: cycloid/golang:1.15.6
+    image: golang:1.17.3
     volumes:
       - .:/go/src/github.com/cycloidio/terracost
       - $GOPATH/pkg/mod:/go/pkg/mod

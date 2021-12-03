@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+### Added
+
+- Google simple implementation with support for `compute_instances`
+  ([Issue #2](https://github.com/cycloidio/terracost/issues/2))
+
 ### Changed
 
 - **[breaking]** Remove the repeated Backend and abstracted it to it's own package

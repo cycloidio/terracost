@@ -175,7 +175,10 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value) *hcl.EvalContext
 	}
 	for vk, vv := range mod.Variables {
 		if _, ok := vars[vk]; !ok {
-			vars[vk] = vv.Default
+			// If it has no value we do not set it
+			if !vv.Default.IsNull() {
+				vars[vk] = vv.Default
+			}
 		}
 	}
 
