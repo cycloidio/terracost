@@ -4,6 +4,8 @@
 
 - Google simple implementation with support for `compute_instances`
   ([Issue #2](https://github.com/cycloidio/terracost/issues/2))
+- AzureRM simple implementation with support for `virtual_machine`(just linux) and `linux_virtual_machine`
+  ([Issue #3](https://github.com/cycloidio/terracost/issues/3))
 
 ### Changed
 
