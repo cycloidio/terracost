@@ -1,5 +1,7 @@
 package terraform
 
+import "encoding/json"
+
 // ProviderConfigExpression is a single configuration variable of a ProviderConfig.
 type ProviderConfigExpression struct {
 	ConstantValue string   `json:"constant_value"`
@@ -11,6 +13,49 @@ type ProviderConfig struct {
 	Name        string                              `json:"name"`
 	Alias       string                              `json:"alias"`
 	Expressions map[string]ProviderConfigExpression `json:"expressions"`
+}
+
+// UnmarshalJSON handles the logic of Unmarshaling a ProviderConfig
+// as we have some edge cases we want to not unmarshal as they
+// are not standard/needed and would make things more complex
+func (cfg *ProviderConfig) UnmarshalJSON(b []byte) error {
+	var s struct {
+		Name        string                 `json:"name"`
+		Alias       string                 `json:"alias"`
+		Expressions map[string]interface{} `json:"expressions"`
+	}
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+
+	cfg.Name = s.Name
+	cfg.Alias = s.Alias
+	cfg.Expressions = make(map[string]ProviderConfigExpression)
+
+	// For now we only want the ones that are structs and
+	// not arrays if we need those later one we'll need
+	// to change the type from map to slice
+	for k, v := range s.Expressions {
+		switch val := v.(type) {
+		case []interface{}:
+			// Ignore the [] types
+			break
+		case map[string]interface{}:
+			// On the normal case we marshal and
+			// unmarshal again the struct to let
+			// json lib do the rest
+			bv, err := json.Marshal(val)
+			if err != nil {
+				return err
+			}
+
+			var e ProviderConfigExpression
+			json.Unmarshal(bv, &e)
+			cfg.Expressions[k] = e
+		}
+	}
+
+	return nil
 }
 
 // Values is a tree of modules and resources within.
