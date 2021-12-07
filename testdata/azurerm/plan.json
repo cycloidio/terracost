@@ -1,0 +1,1384 @@
+{
+	"format_version": "0.2",
+	"terraform_version": "1.0.6",
+	"variables": {
+		"azure_client_id": {
+			"value": "client_id"
+		},
+		"azure_client_secret": {
+			"value": "client_secret"
+		},
+		"azure_env": {
+			"value": "public"
+		},
+		"azure_location": {
+			"value": "France Central"
+		},
+		"azure_subscription_id": {
+			"value": "subscription_id"
+		},
+		"azure_tenant_id": {
+			"value": "tenant_id"
+		},
+		"customer": {
+			"value": "cycloid-sandbox"
+		},
+		"env": {
+			"value": "azure"
+		},
+		"project": {
+			"value": "marco-compute"
+		}
+	},
+	"planned_values": {
+		"outputs": {
+			"ip_address": {
+				"sensitive": false
+			}
+		},
+		"root_module": {
+			"child_modules": [
+				{
+					"resources": [
+						{
+							"address": "module.vm.azurerm_network_interface.vm_net_interface",
+							"mode": "managed",
+							"type": "azurerm_network_interface",
+							"name": "vm_net_interface",
+							"provider_name": "registry.terraform.io/hashicorp/azurerm",
+							"schema_version": 0,
+							"values": {
+								"enable_accelerated_networking": false,
+								"enable_ip_forwarding": false,
+								"ip_configuration": [
+									{
+										"name": "cycloid-sandbox-marco-compute-azure-ip_config",
+										"primary": true,
+										"private_ip_address_allocation": "dynamic",
+										"private_ip_address_version": "IPv4",
+										"subnet_id": ""
+									}
+								],
+								"location": "francecentral",
+								"name": "cycloid-sandbox-marco-compute-azure-nic",
+								"resource_group_name": "cycloid-terraform",
+								"tags": {
+									"client": "cycloid-sandbox",
+									"cycloid.io": "true",
+									"env": "azure",
+									"organization": "cycloid-sandbox",
+									"project": "marco-compute"
+								},
+								"timeouts": null
+							},
+							"sensitive_values": {
+								"applied_dns_servers": [],
+								"dns_servers": [],
+								"ip_configuration": [
+									{}
+								],
+								"private_ip_addresses": [],
+								"tags": {}
+							}
+						},
+						{
+							"address": "module.vm.azurerm_network_interface_security_group_association.vm_sg_assocation",
+							"mode": "managed",
+							"type": "azurerm_network_interface_security_group_association",
+							"name": "vm_sg_assocation",
+							"provider_name": "registry.terraform.io/hashicorp/azurerm",
+							"schema_version": 0,
+							"values": {
+								"timeouts": null
+							},
+							"sensitive_values": {}
+						},
+						{
+							"address": "module.vm.azurerm_network_security_group.vm_sg",
+							"mode": "managed",
+							"type": "azurerm_network_security_group",
+							"name": "vm_sg",
+							"provider_name": "registry.terraform.io/hashicorp/azurerm",
+							"schema_version": 0,
+							"values": {
+								"location": "francecentral",
+								"name": "cycloid-sandbox-marco-compute-azure-sg",
+								"resource_group_name": "cycloid-terraform",
+								"security_rule": [
+									{
+										"access": "Allow",
+										"description": "Enable SSH inbound traffic.",
+										"destination_address_prefix": "*",
+										"destination_address_prefixes": [],
+										"destination_application_security_group_ids": [],
+										"destination_port_range": "22",
+										"destination_port_ranges": [],
+										"direction": "Inbound",
+										"name": "SSH",
+										"priority": 1001,
+										"protocol": "Tcp",
+										"source_address_prefix": "*",
+										"source_address_prefixes": [],
+										"source_application_security_group_ids": [],
+										"source_port_range": "*",
+										"source_port_ranges": []
+									}
+								],
+								"tags": {
+									"client": "cycloid-sandbox",
+									"cycloid.io": "true",
+									"env": "azure",
+									"organization": "cycloid-sandbox",
+									"project": "marco-compute"
+								},
+								"timeouts": null
+							},
+							"sensitive_values": {
+								"security_rule": [
+									{
+										"destination_address_prefixes": [],
+										"destination_application_security_group_ids": [],
+										"destination_port_ranges": [],
+										"source_address_prefixes": [],
+										"source_application_security_group_ids": [],
+										"source_port_ranges": []
+									}
+								],
+								"tags": {}
+							}
+						},
+						{
+							"address": "module.vm.azurerm_public_ip.vm_pub_ip",
+							"mode": "managed",
+							"type": "azurerm_public_ip",
+							"name": "vm_pub_ip",
+							"provider_name": "registry.terraform.io/hashicorp/azurerm",
+							"schema_version": 0,
+							"values": {
+								"allocation_method": "Dynamic",
+								"domain_name_label": null,
+								"idle_timeout_in_minutes": 4,
+								"ip_tags": null,
+								"ip_version": "IPv4",
+								"location": "francecentral",
+								"name": "cycloid-sandbox-marco-compute-azure-public_ip",
+								"public_ip_prefix_id": null,
+								"resource_group_name": "cycloid-terraform",
+								"reverse_fqdn": null,
+								"sku": "Basic",
+								"sku_tier": "Regional",
+								"tags": {
+									"client": "cycloid-sandbox",
+									"cycloid.io": "true",
+									"env": "azure",
+									"organization": "cycloid-sandbox",
+									"project": "marco-compute"
+								},
+								"timeouts": null
+							},
+							"sensitive_values": {
+								"tags": {},
+								"zones": []
+							}
+						},
+						{
+							"address": "module.vm.azurerm_virtual_machine.main",
+							"mode": "managed",
+							"type": "azurerm_virtual_machine",
+							"name": "main",
+							"provider_name": "registry.terraform.io/hashicorp/azurerm",
+							"schema_version": 0,
+							"values": {
+								"additional_capabilities": [],
+								"boot_diagnostics": [],
+								"delete_data_disks_on_termination": false,
+								"delete_os_disk_on_termination": true,
+								"location": "francecentral",
+								"name": "cycloid-sandbox-marco-compute-azure-vm",
+								"os_profile": [
+									{
+										"admin_password": "basic_auth_marco-test-admin-key-gcp/password",
+										"admin_username": "basic_auth_marco-test-admin-key-gcp/username",
+										"computer_name": "cycloid",
+										"custom_data": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+									}
+								],
+								"os_profile_linux_config": [
+									{
+										"disable_password_authentication": false,
+										"ssh_keys": []
+									}
+								],
+								"os_profile_secrets": [],
+								"os_profile_windows_config": [],
+								"plan": [],
+								"primary_network_interface_id": null,
+								"proximity_placement_group_id": null,
+								"resource_group_name": "cycloid-terraform",
+								"storage_image_reference": [
+									{
+										"id": "",
+										"offer": "debian-10",
+										"publisher": "debian",
+										"sku": "10-cloudinit-gen2",
+										"version": "latest"
+									}
+								],
+								"storage_os_disk": [
+									{
+										"caching": "ReadWrite",
+										"create_option": "FromImage",
+										"disk_size_gb": 5,
+										"image_uri": null,
+										"managed_disk_type": "Standard_LRS",
+										"name": "cycloid-sandbox-marco-compute-azure-disk",
+										"vhd_uri": null,
+										"write_accelerator_enabled": false
+									}
+								],
+								"tags": {
+									"client": "cycloid-sandbox",
+									"cycloid.io": "true",
+									"env": "azure",
+									"organization": "cycloid-sandbox",
+									"project": "marco-compute"
+								},
+								"timeouts": null,
+								"vm_size": "Standard_DS1_v2",
+								"zones": null
+							},
+							"sensitive_values": {
+								"additional_capabilities": [],
+								"boot_diagnostics": [],
+								"identity": [],
+								"network_interface_ids": [],
+								"os_profile": [
+									{}
+								],
+								"os_profile_linux_config": [
+									{
+										"ssh_keys": []
+									}
+								],
+								"os_profile_secrets": [],
+								"os_profile_windows_config": [],
+								"plan": [],
+								"storage_data_disk": [],
+								"storage_image_reference": [
+									{}
+								],
+								"storage_os_disk": [
+									{}
+								],
+								"tags": {}
+							}
+						}
+					],
+					"address": "module.vm"
+				}
+			]
+		}
+	},
+	"resource_changes": [
+		{
+			"address": "module.vm.azurerm_network_interface.vm_net_interface",
+			"module_address": "module.vm",
+			"mode": "managed",
+			"type": "azurerm_network_interface",
+			"name": "vm_net_interface",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"enable_accelerated_networking": false,
+					"enable_ip_forwarding": false,
+					"ip_configuration": [
+						{
+							"name": "cycloid-sandbox-marco-compute-azure-ip_config",
+							"primary": true,
+							"private_ip_address_allocation": "dynamic",
+							"private_ip_address_version": "IPv4",
+							"subnet_id": ""
+						}
+					],
+					"location": "francecentral",
+					"name": "cycloid-sandbox-marco-compute-azure-nic",
+					"resource_group_name": "cycloid-terraform",
+					"tags": {
+						"client": "cycloid-sandbox",
+						"cycloid.io": "true",
+						"env": "azure",
+						"organization": "cycloid-sandbox",
+						"project": "marco-compute"
+					},
+					"timeouts": null
+				},
+				"after_unknown": {
+					"applied_dns_servers": true,
+					"dns_servers": true,
+					"id": true,
+					"internal_dns_name_label": true,
+					"internal_domain_name_suffix": true,
+					"ip_configuration": [
+						{
+							"gateway_load_balancer_frontend_ip_configuration_id": true,
+							"private_ip_address": true,
+							"public_ip_address_id": true
+						}
+					],
+					"mac_address": true,
+					"private_ip_address": true,
+					"private_ip_addresses": true,
+					"tags": {},
+					"virtual_machine_id": true
+				},
+				"before_sensitive": false,
+				"after_sensitive": {
+					"applied_dns_servers": [],
+					"dns_servers": [],
+					"ip_configuration": [
+						{}
+					],
+					"private_ip_addresses": [],
+					"tags": {}
+				}
+			}
+		},
+		{
+			"address": "module.vm.azurerm_network_interface_security_group_association.vm_sg_assocation",
+			"module_address": "module.vm",
+			"mode": "managed",
+			"type": "azurerm_network_interface_security_group_association",
+			"name": "vm_sg_assocation",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"timeouts": null
+				},
+				"after_unknown": {
+					"id": true,
+					"network_interface_id": true,
+					"network_security_group_id": true
+				},
+				"before_sensitive": false,
+				"after_sensitive": {}
+			}
+		},
+		{
+			"address": "module.vm.azurerm_network_security_group.vm_sg",
+			"module_address": "module.vm",
+			"mode": "managed",
+			"type": "azurerm_network_security_group",
+			"name": "vm_sg",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"location": "francecentral",
+					"name": "cycloid-sandbox-marco-compute-azure-sg",
+					"resource_group_name": "cycloid-terraform",
+					"security_rule": [
+						{
+							"access": "Allow",
+							"description": "Enable SSH inbound traffic.",
+							"destination_address_prefix": "*",
+							"destination_address_prefixes": [],
+							"destination_application_security_group_ids": [],
+							"destination_port_range": "22",
+							"destination_port_ranges": [],
+							"direction": "Inbound",
+							"name": "SSH",
+							"priority": 1001,
+							"protocol": "Tcp",
+							"source_address_prefix": "*",
+							"source_address_prefixes": [],
+							"source_application_security_group_ids": [],
+							"source_port_range": "*",
+							"source_port_ranges": []
+						}
+					],
+					"tags": {
+						"client": "cycloid-sandbox",
+						"cycloid.io": "true",
+						"env": "azure",
+						"organization": "cycloid-sandbox",
+						"project": "marco-compute"
+					},
+					"timeouts": null
+				},
+				"after_unknown": {
+					"id": true,
+					"security_rule": [
+						{
+							"destination_address_prefixes": [],
+							"destination_application_security_group_ids": [],
+							"destination_port_ranges": [],
+							"source_address_prefixes": [],
+							"source_application_security_group_ids": [],
+							"source_port_ranges": []
+						}
+					],
+					"tags": {}
+				},
+				"before_sensitive": false,
+				"after_sensitive": {
+					"security_rule": [
+						{
+							"destination_address_prefixes": [],
+							"destination_application_security_group_ids": [],
+							"destination_port_ranges": [],
+							"source_address_prefixes": [],
+							"source_application_security_group_ids": [],
+							"source_port_ranges": []
+						}
+					],
+					"tags": {}
+				}
+			}
+		},
+		{
+			"address": "module.vm.azurerm_public_ip.vm_pub_ip",
+			"module_address": "module.vm",
+			"mode": "managed",
+			"type": "azurerm_public_ip",
+			"name": "vm_pub_ip",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"allocation_method": "Dynamic",
+					"domain_name_label": null,
+					"idle_timeout_in_minutes": 4,
+					"ip_tags": null,
+					"ip_version": "IPv4",
+					"location": "francecentral",
+					"name": "cycloid-sandbox-marco-compute-azure-public_ip",
+					"public_ip_prefix_id": null,
+					"resource_group_name": "cycloid-terraform",
+					"reverse_fqdn": null,
+					"sku": "Basic",
+					"sku_tier": "Regional",
+					"tags": {
+						"client": "cycloid-sandbox",
+						"cycloid.io": "true",
+						"env": "azure",
+						"organization": "cycloid-sandbox",
+						"project": "marco-compute"
+					},
+					"timeouts": null
+				},
+				"after_unknown": {
+					"availability_zone": true,
+					"fqdn": true,
+					"id": true,
+					"ip_address": true,
+					"tags": {},
+					"zones": true
+				},
+				"before_sensitive": false,
+				"after_sensitive": {
+					"tags": {},
+					"zones": []
+				}
+			}
+		},
+		{
+			"address": "module.vm.azurerm_virtual_machine.main",
+			"module_address": "module.vm",
+			"mode": "managed",
+			"type": "azurerm_virtual_machine",
+			"name": "main",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"additional_capabilities": [],
+					"boot_diagnostics": [],
+					"delete_data_disks_on_termination": false,
+					"delete_os_disk_on_termination": true,
+					"location": "francecentral",
+					"name": "cycloid-sandbox-marco-compute-azure-vm",
+					"os_profile": [
+						{
+							"admin_password": "basic_auth_marco-test-admin-key-gcp/password",
+							"admin_username": "basic_auth_marco-test-admin-key-gcp/username",
+							"computer_name": "cycloid",
+							"custom_data": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+						}
+					],
+					"os_profile_linux_config": [
+						{
+							"disable_password_authentication": false,
+							"ssh_keys": []
+						}
+					],
+					"os_profile_secrets": [],
+					"os_profile_windows_config": [],
+					"plan": [],
+					"primary_network_interface_id": null,
+					"proximity_placement_group_id": null,
+					"resource_group_name": "cycloid-terraform",
+					"storage_image_reference": [
+						{
+							"id": "",
+							"offer": "debian-10",
+							"publisher": "debian",
+							"sku": "10-cloudinit-gen2",
+							"version": "latest"
+						}
+					],
+					"storage_os_disk": [
+						{
+							"caching": "ReadWrite",
+							"create_option": "FromImage",
+							"disk_size_gb": 5,
+							"image_uri": null,
+							"managed_disk_type": "Standard_LRS",
+							"name": "cycloid-sandbox-marco-compute-azure-disk",
+							"vhd_uri": null,
+							"write_accelerator_enabled": false
+						}
+					],
+					"tags": {
+						"client": "cycloid-sandbox",
+						"cycloid.io": "true",
+						"env": "azure",
+						"organization": "cycloid-sandbox",
+						"project": "marco-compute"
+					},
+					"timeouts": null,
+					"vm_size": "Standard_DS1_v2",
+					"zones": null
+				},
+				"after_unknown": {
+					"additional_capabilities": [],
+					"availability_set_id": true,
+					"boot_diagnostics": [],
+					"id": true,
+					"identity": true,
+					"license_type": true,
+					"network_interface_ids": true,
+					"os_profile": [
+						{}
+					],
+					"os_profile_linux_config": [
+						{
+							"ssh_keys": []
+						}
+					],
+					"os_profile_secrets": [],
+					"os_profile_windows_config": [],
+					"plan": [],
+					"storage_data_disk": true,
+					"storage_image_reference": [
+						{}
+					],
+					"storage_os_disk": [
+						{
+							"managed_disk_id": true,
+							"os_type": true
+						}
+					],
+					"tags": {}
+				},
+				"before_sensitive": false,
+				"after_sensitive": {
+					"additional_capabilities": [],
+					"boot_diagnostics": [],
+					"identity": [],
+					"network_interface_ids": [],
+					"os_profile": true,
+					"os_profile_linux_config": [
+						{
+							"ssh_keys": []
+						}
+					],
+					"os_profile_secrets": [],
+					"os_profile_windows_config": [],
+					"plan": [],
+					"storage_data_disk": [],
+					"storage_image_reference": [
+						{}
+					],
+					"storage_os_disk": [
+						{}
+					],
+					"tags": {}
+				}
+			}
+		}
+	],
+	"output_changes": {
+		"ip_address": {
+			"actions": [
+				"create"
+			],
+			"before": null,
+			"after_unknown": true,
+			"before_sensitive": false,
+			"after_sensitive": false
+		}
+	},
+	"prior_state": {
+		"format_version": "0.2",
+		"terraform_version": "1.0.6",
+		"values": {
+			"root_module": {
+				"child_modules": [
+					{
+						"resources": [
+							{
+								"address": "module.vm.data.template_file.user_data",
+								"mode": "data",
+								"type": "template_file",
+								"name": "user_data",
+								"provider_name": "registry.terraform.io/hashicorp/template",
+								"schema_version": 0,
+								"values": {
+									"filename": null,
+									"id": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+									"rendered": "",
+									"template": "${file_content}",
+									"vars": {
+										"file_content": ""
+									}
+								},
+								"sensitive_values": {
+									"vars": {}
+								}
+							}
+						],
+						"address": "module.vm"
+					}
+				]
+			}
+		}
+	},
+	"configuration": {
+		"provider_config": {
+			"azurerm": {
+				"name": "azurerm",
+				"expressions": {
+					"client_id": {
+						"references": [
+							"var.azure_client_id"
+						]
+					},
+					"client_secret": {
+						"references": [
+							"var.azure_client_secret"
+						]
+					},
+					"environment": {
+						"references": [
+							"var.azure_env"
+						]
+					},
+					"features": [
+						{}
+					],
+					"subscription_id": {
+						"references": [
+							"var.azure_subscription_id"
+						]
+					},
+					"tenant_id": {
+						"references": [
+							"var.azure_tenant_id"
+						]
+					}
+				}
+			}
+		},
+		"root_module": {
+			"outputs": {
+				"ip_address": {
+					"expression": {
+						"references": [
+							"module.vm.ip_address",
+							"module.vm"
+						]
+					},
+					"description": "IP of the VM"
+				}
+			},
+			"module_calls": {
+				"vm": {
+					"source": "./module-vm-linux",
+					"expressions": {
+						"azure_location": {
+							"references": [
+								"var.azure_location"
+							]
+						},
+						"customer": {
+							"references": [
+								"var.customer"
+							]
+						},
+						"delete_os_disk_on_termination": {
+							"constant_value": true
+						},
+						"disable_linux_password_authentification": {
+							"constant_value": false
+						},
+						"disk_managed_type": {
+							"constant_value": "Standard_LRS"
+						},
+						"disk_name": {
+							"references": [
+								"var.customer",
+								"var.project",
+								"var.env"
+							]
+						},
+						"disk_size": {
+							"constant_value": 5
+						},
+						"env": {
+							"references": [
+								"var.env"
+							]
+						},
+						"file_content": {
+							"constant_value": ""
+						},
+						"image_id": {
+							"constant_value": ""
+						},
+						"image_offer": {
+							"constant_value": "debian-10"
+						},
+						"image_publisher": {
+							"constant_value": "debian"
+						},
+						"image_sku": {
+							"constant_value": "10-cloudinit-gen2"
+						},
+						"image_version": {
+							"constant_value": "latest"
+						},
+						"instance_extra_tags": {
+							"constant_value": {}
+						},
+						"instance_name": {
+							"references": [
+								"var.customer",
+								"var.project",
+								"var.env"
+							]
+						},
+						"ip_config_name": {
+							"references": [
+								"var.customer",
+								"var.project",
+								"var.env"
+							]
+						},
+						"network_extra_tags": {
+							"constant_value": {}
+						},
+						"network_interface_name": {
+							"references": [
+								"var.customer",
+								"var.project",
+								"var.env"
+							]
+						},
+						"network_security_group_name": {
+							"references": [
+								"var.customer",
+								"var.project",
+								"var.env"
+							]
+						},
+						"os_admin_password": {
+							"constant_value": "basic_auth_marco-test-admin-key-gcp/password"
+						},
+						"os_admin_username": {
+							"constant_value": "basic_auth_marco-test-admin-key-gcp/username"
+						},
+						"os_computer_name": {
+							"constant_value": "cycloid"
+						},
+						"project": {
+							"references": [
+								"var.project"
+							]
+						},
+						"public_ip_name": {
+							"references": [
+								"var.customer",
+								"var.project",
+								"var.env"
+							]
+						},
+						"resource_group_name": {
+							"constant_value": "cycloid-terraform"
+						},
+						"security_rule_access": {
+							"constant_value": "Allow"
+						},
+						"security_rule_description": {
+							"constant_value": "Enable SSH inbound traffic."
+						},
+						"security_rule_destination_address_prefix": {
+							"constant_value": "*"
+						},
+						"security_rule_destination_port_range": {
+							"constant_value": "22"
+						},
+						"security_rule_direction": {
+							"constant_value": "Inbound"
+						},
+						"security_rule_name": {
+							"constant_value": "SSH"
+						},
+						"security_rule_priority": {
+							"constant_value": 1001
+						},
+						"security_rule_protocol": {
+							"constant_value": "Tcp"
+						},
+						"security_rule_source_address_prefix": {
+							"constant_value": "*"
+						},
+						"security_rule_source_port_range": {
+							"constant_value": "*"
+						},
+						"sg_extra_tags": {
+							"constant_value": {}
+						},
+						"subnet_id": {
+							"constant_value": ""
+						},
+						"vm_size": {
+							"constant_value": "Standard_DS1_v2"
+						}
+					},
+					"module": {
+						"outputs": {
+							"ip_address": {
+								"expression": {
+									"references": [
+										"azurerm_public_ip.vm_pub_ip.ip_address",
+										"azurerm_public_ip.vm_pub_ip"
+									]
+								}
+							},
+							"network_security_group_name": {
+								"expression": {
+									"references": [
+										"local.network_security_group_name"
+									]
+								},
+								"description": "Specifies the name of the Application Security Group."
+							},
+							"resource_group_name": {
+								"expression": {
+									"references": [
+										"var.resource_group_name"
+									]
+								},
+								"description": "The name of the resource group to use for the creation of resources."
+							}
+						},
+						"resources": [
+							{
+								"address": "azurerm_network_interface.vm_net_interface",
+								"mode": "managed",
+								"type": "azurerm_network_interface",
+								"name": "vm_net_interface",
+								"provider_config_key": "vm:azurerm",
+								"expressions": {
+									"ip_configuration": [
+										{
+											"name": {
+												"references": [
+													"local.ip_config_name"
+												]
+											},
+											"primary": {
+												"constant_value": true
+											},
+											"private_ip_address_allocation": {
+												"constant_value": "Dynamic"
+											},
+											"public_ip_address_id": {
+												"references": [
+													"azurerm_public_ip.vm_pub_ip.id",
+													"azurerm_public_ip.vm_pub_ip"
+												]
+											},
+											"subnet_id": {
+												"references": [
+													"var.subnet_id"
+												]
+											}
+										}
+									],
+									"location": {
+										"references": [
+											"var.azure_location"
+										]
+									},
+									"name": {
+										"references": [
+											"local.network_interface_name"
+										]
+									},
+									"resource_group_name": {
+										"references": [
+											"var.resource_group_name"
+										]
+									},
+									"tags": {
+										"references": [
+											"local.network_tags"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "azurerm_network_interface_security_group_association.vm_sg_assocation",
+								"mode": "managed",
+								"type": "azurerm_network_interface_security_group_association",
+								"name": "vm_sg_assocation",
+								"provider_config_key": "vm:azurerm",
+								"expressions": {
+									"network_interface_id": {
+										"references": [
+											"azurerm_network_interface.vm_net_interface.id",
+											"azurerm_network_interface.vm_net_interface"
+										]
+									},
+									"network_security_group_id": {
+										"references": [
+											"azurerm_network_security_group.vm_sg.id",
+											"azurerm_network_security_group.vm_sg"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "azurerm_network_security_group.vm_sg",
+								"mode": "managed",
+								"type": "azurerm_network_security_group",
+								"name": "vm_sg",
+								"provider_config_key": "vm:azurerm",
+								"expressions": {
+									"location": {
+										"references": [
+											"var.azure_location"
+										]
+									},
+									"name": {
+										"references": [
+											"local.network_security_group_name"
+										]
+									},
+									"resource_group_name": {
+										"references": [
+											"var.resource_group_name"
+										]
+									},
+									"tags": {
+										"references": [
+											"local.sg_tags"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "azurerm_public_ip.vm_pub_ip",
+								"mode": "managed",
+								"type": "azurerm_public_ip",
+								"name": "vm_pub_ip",
+								"provider_config_key": "vm:azurerm",
+								"expressions": {
+									"allocation_method": {
+										"constant_value": "Dynamic"
+									},
+									"location": {
+										"references": [
+											"var.azure_location"
+										]
+									},
+									"name": {
+										"references": [
+											"local.public_ip_name"
+										]
+									},
+									"resource_group_name": {
+										"references": [
+											"var.resource_group_name"
+										]
+									},
+									"tags": {
+										"references": [
+											"local.network_tags"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "azurerm_virtual_machine.main",
+								"mode": "managed",
+								"type": "azurerm_virtual_machine",
+								"name": "main",
+								"provider_config_key": "vm:azurerm",
+								"expressions": {
+									"delete_os_disk_on_termination": {
+										"references": [
+											"var.delete_os_disk_on_termination"
+										]
+									},
+									"location": {
+										"references": [
+											"var.azure_location"
+										]
+									},
+									"name": {
+										"references": [
+											"local.instance_name"
+										]
+									},
+									"network_interface_ids": {
+										"references": [
+											"azurerm_network_interface.vm_net_interface.id",
+											"azurerm_network_interface.vm_net_interface"
+										]
+									},
+									"os_profile": [
+										{
+											"admin_password": {
+												"references": [
+													"var.os_admin_password"
+												]
+											},
+											"admin_username": {
+												"references": [
+													"var.os_admin_username"
+												]
+											},
+											"computer_name": {
+												"references": [
+													"var.os_computer_name"
+												]
+											},
+											"custom_data": {
+												"references": [
+													"data.template_file.user_data.rendered",
+													"data.template_file.user_data"
+												]
+											}
+										}
+									],
+									"os_profile_linux_config": [
+										{
+											"disable_password_authentication": {
+												"references": [
+													"var.disable_linux_password_authentification"
+												]
+											}
+										}
+									],
+									"resource_group_name": {
+										"references": [
+											"var.resource_group_name"
+										]
+									},
+									"storage_image_reference": [
+										{
+											"id": {
+												"references": [
+													"var.image_id"
+												]
+											},
+											"offer": {
+												"references": [
+													"var.image_offer"
+												]
+											},
+											"publisher": {
+												"references": [
+													"var.image_publisher"
+												]
+											},
+											"sku": {
+												"references": [
+													"var.image_sku"
+												]
+											},
+											"version": {
+												"references": [
+													"var.image_version"
+												]
+											}
+										}
+									],
+									"storage_os_disk": [
+										{
+											"caching": {
+												"constant_value": "ReadWrite"
+											},
+											"create_option": {
+												"constant_value": "FromImage"
+											},
+											"disk_size_gb": {
+												"references": [
+													"var.disk_size"
+												]
+											},
+											"managed_disk_type": {
+												"references": [
+													"var.disk_managed_type"
+												]
+											},
+											"name": {
+												"references": [
+													"local.disk_name"
+												]
+											}
+										}
+									],
+									"tags": {
+										"references": [
+											"local.instance_tags"
+										]
+									},
+									"vm_size": {
+										"references": [
+											"var.vm_size"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "data.template_file.user_data",
+								"mode": "data",
+								"type": "template_file",
+								"name": "user_data",
+								"provider_config_key": "vm:template",
+								"expressions": {
+									"template": {
+										"references": [
+											"path.module"
+										]
+									},
+									"vars": {
+										"references": [
+											"var.file_content"
+										]
+									}
+								},
+								"schema_version": 0
+							}
+						],
+						"variables": {
+							"azure_location": {
+								"description": "Specifies the supported Azure location where the resources exist."
+							},
+							"customer": {
+								"description": "Cycloid customer name."
+							},
+							"delete_os_disk_on_termination": {
+								"default": "true",
+								"description": "Enables deleting the OS disk automatically when deleting the VM."
+							},
+							"disable_linux_password_authentification": {
+								"default": "false",
+								"description": "Specifies whether password authentication should be disabled."
+							},
+							"disk_managed_type": {
+								"default": "Standard_LRS",
+								"description": "Specifies the type of Managed Disk which should be created."
+							},
+							"disk_name": {
+								"default": "",
+								"description": "Specifies the name of the OS Disk."
+							},
+							"disk_size": {
+								"description": "Specifies the name of the OS Disk size in gigabytes."
+							},
+							"env": {
+								"description": "Cycloid project name."
+							},
+							"file_content": {
+								"description": "The content of the file to use if cloud init is used."
+							},
+							"image_id": {
+								"default": "",
+								"description": "Specifies the ID of the Custom Image which the Virtual Machine should be created from"
+							},
+							"image_offer": {
+								"default": "debian-10",
+								"description": "Specifies the offer of the image used to create the virtual machine."
+							},
+							"image_publisher": {
+								"default": "debian",
+								"description": "Specifies the publisher of the image used to create the virtual machine."
+							},
+							"image_sku": {
+								"default": "10-cloudinit-gen2",
+								"description": "Specifies the SKU of the image used to create the virtual machine."
+							},
+							"image_version": {
+								"default": "latest",
+								"description": "Specifies the version of the image used to create the virtual machine."
+							},
+							"instance_extra_tags": {
+								"default": {},
+								"description": "A map of tags to assign to the resource."
+							},
+							"instance_name": {
+								"default": "",
+								"description": "Specifies the name of the Virtual Machine."
+							},
+							"ip_config_name": {
+								"default": "",
+								"description": "A name used for the IP Configuration in the network interface."
+							},
+							"network_extra_tags": {
+								"default": {},
+								"description": "A map of tags to assign to the network resources."
+							},
+							"network_interface_name": {
+								"default": "",
+								"description": "The name of the Network Interface."
+							},
+							"network_security_group_name": {
+								"default": "",
+								"description": "Specifies the name of the Application Security Group."
+							},
+							"os_admin_password": {
+								"description": "The password associated with the local admin account. Must be [6-72] and contain uppercase + lowercase + number + special caracter"
+							},
+							"os_admin_username": {
+								"default": "admin",
+								"description": "Specifies the name of the local admin account."
+							},
+							"os_computer_name": {
+								"default": "cycloid",
+								"description": "Specifies the name of the Virtual Machine."
+							},
+							"project": {
+								"description": "Cycloid environment name."
+							},
+							"public_ip_name": {
+								"default": "",
+								"description": "Specifies the name of the Public IP resource."
+							},
+							"resource_group_name": {
+								"description": "The name of the resource group to use for the creation of resources."
+							},
+							"security_rule_access": {
+								"default": "Allow",
+								"description": "Specifies whether network traffic is allowed or denied by default rule."
+							},
+							"security_rule_description": {
+								"default": "Enable SSH inbound traffic.",
+								"description": "A description of the default rule."
+							},
+							"security_rule_destination_address_prefix": {
+								"default": "*",
+								"description": "Lists of destination address prefixes to match in the default rule."
+							},
+							"security_rule_destination_port_range": {
+								"default": "22",
+								"description": "Default rule destination port or range."
+							},
+							"security_rule_direction": {
+								"default": "Inbound",
+								"description": " Specifies if default rule will be evaluated on incoming or outgoing traffic."
+							},
+							"security_rule_name": {
+								"default": "SSH",
+								"description": "The name of the default security rule."
+							},
+							"security_rule_priority": {
+								"default": 1001,
+								"description": "Specifies the priority of the default rule."
+							},
+							"security_rule_protocol": {
+								"default": "Tcp",
+								"description": "Network protocol that default rule applies to."
+							},
+							"security_rule_source_address_prefix": {
+								"default": "*",
+								"description": "Default rule, CIDR or source IP range or * to match any IP."
+							},
+							"security_rule_source_port_range": {
+								"default": "*",
+								"description": "Default rule source port or range."
+							},
+							"sg_extra_tags": {
+								"default": {},
+								"description": "A map of tags to assign to the security_group resources."
+							},
+							"subnet_id": {
+								"description": "The ID of the Subnet where this Network Interface should be located in."
+							},
+							"vm_size": {
+								"default": "Standard_DS1_v2",
+								"description": "Specifies the size of the Virtual Machine."
+							}
+						}
+					}
+				}
+			},
+			"variables": {
+				"azure_client_id": {
+					"description": "Azure client ID to use."
+				},
+				"azure_client_secret": {
+					"description": "Azure client Secret to use."
+				},
+				"azure_env": {
+					"default": "public",
+					"description": "Azure environment to use. Can be either `public`, `usgovernment`, `german` or `china`."
+				},
+				"azure_location": {
+					"default": "West Europe",
+					"description": "Azure location to use."
+				},
+				"azure_subscription_id": {
+					"description": "Azure subscription ID to use."
+				},
+				"azure_tenant_id": {
+					"description": "Azure tenant ID to use."
+				},
+				"customer": {
+					"description": "Cycloid customer name."
+				},
+				"env": {
+					"description": "Cycloid environment name."
+				},
+				"project": {
+					"description": "Cycloid project name."
+				}
+			}
+		}
+	}
+}
