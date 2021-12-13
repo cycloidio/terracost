@@ -91,7 +91,7 @@ func (r *ProductRepository) Filter(ctx context.Context, filter *product.Filter) 
 }
 
 // FindByVendorAndSKU returns a single product.Product of the given vendor and sku.
-func (r *ProductRepository) FindByVendorAndSKU(ctx context.Context, vendor string, sku string) (*product.Product, error) {
+func (r *ProductRepository) FindByVendorAndSKU(ctx context.Context, vendor, sku string) (*product.Product, error) {
 	q := `
 		SELECT id, provider, sku, service, family, location, attributes
 		FROM pricing_products
