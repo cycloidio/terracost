@@ -26,24 +26,25 @@ func TestIngester(t *testing.T) {
 	t.Run("SuccessIngestAll", func(t *testing.T) {
 		i, err := google.NewIngester(ctx, cred, google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()))
 		require.NoError(t, err)
-		require.NoError(t, i.Err())
 
 		var count int
 		for _ = range i.Ingest(ctx, 10) {
 			count++
 		}
+
+		require.NoError(t, i.Err())
 		assert.Equal(t, 1777, count)
 	})
 	t.Run("SuccessMinimal", func(t *testing.T) {
 		i, err := google.NewIngester(ctx, []byte(`{"type": "service_account"}`), google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(google.MinimalFilter))
 		require.NoError(t, err)
-		require.NoError(t, i.Err())
 
 		pwps := make([]*price.WithProduct, 0, 215)
 		for pwp := range i.Ingest(ctx, 10) {
 			pwps = append(pwps, pwp)
 		}
 		assert.Equal(t, 215, len(pwps))
+		require.NoError(t, i.Err())
 	})
 	t.Run("SuccessIngestSubset", func(t *testing.T) {
 		i, err := google.NewIngester(ctx, []byte(`{"type": "service_account"}`), google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(func(pp *price.WithProduct) bool {
@@ -58,13 +59,13 @@ func TestIngester(t *testing.T) {
 			return false
 		}))
 		require.NoError(t, err)
-		require.NoError(t, i.Err())
 
 		pwps := make([]*price.WithProduct, 0, 3)
 		for pwp := range i.Ingest(ctx, 10) {
 			pwps = append(pwps, pwp)
 		}
 
+		require.NoError(t, i.Err())
 		assert.Equal(t, 3, len(pwps))
 		assert.Equal(t, "0.05441892", pwps[2].Price.Value.String())
 	})
