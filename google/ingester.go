@@ -29,12 +29,6 @@ var (
 	// ErrNotSupportedService reports that the service is not supported
 	ErrNotSupportedService = errors.New("not supported service")
 
-	// The ID of the service was manually fetched from
-	// https://cloud.google.com/billing/v1/how-tos/catalog-api#listing_public_services_from_the_catalog
-	services = map[string]string{
-		ComputeEngine.String(): "6F81-5844-456A",
-	}
-
 	// machineFamilies is the list of all the machine families
 	// there are out there
 	machineFamilies = map[string]struct{}{

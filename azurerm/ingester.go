@@ -18,12 +18,6 @@ import (
 const ProviderName = "azurerm"
 
 var (
-	// The list of all services is https://azure.microsoft.com/en-us/services/, the left side is
-	// the Family and the main content is the Services
-	services = map[string]struct{}{
-		VirtualMachines.String(): struct{}{},
-	}
-
 	// ErrNotSupportedService reports that the service is not supported
 	ErrNotSupportedService = errors.New("not supported service")
 )
