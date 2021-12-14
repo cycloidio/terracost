@@ -9,3 +9,11 @@ type Service uint8
 const (
 	ComputeEngine Service = iota // Compute Engine
 )
+
+var (
+	// The ID of the service was manually fetched from
+	// https://cloud.google.com/billing/v1/how-tos/catalog-api#listing_public_services_from_the_catalog
+	services = map[string]string{
+		ComputeEngine.String(): "6F81-5844-456A",
+	}
+)
