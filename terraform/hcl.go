@@ -42,7 +42,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 }
 
 // extractHCLModule returns the resources found in the provided module.
-func extractHCLModule(providers map[string]Provider, parser *configs.Parser, modPath string, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
+func extractHCLModule(providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
 
 	for rk, rv := range mod.ManagedResources {
