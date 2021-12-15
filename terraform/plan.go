@@ -102,7 +102,7 @@ func (p *Plan) extractQueries(values Values, providers map[string]Provider) []qu
 //   - providers - map of provider name to Provider.
 //   - resourceProviders - used as an output of this function, it's a map of resource addresses to their assigned
 //     Provider. This map should be passed empty and not nil.
-func (p *Plan) extractModuleConfiguration(prefix string, module *ConfigurationModule, providers map[string]Provider, resourceProviders map[string]Provider) {
+func (p *Plan) extractModuleConfiguration(prefix string, module *ConfigurationModule, providers, resourceProviders map[string]Provider) {
 	for _, res := range module.Resources {
 		key := res.ProviderConfigKey
 		if strings.Contains(key, ":") {
