@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _FieldName = "SKUOfferTermCodeRateCodeTermTypePriceDescriptionEffectiveDateStartingRangeEndingRangeUnitPricePerUnitCurrencyLeaseContractLengthPurchaseOptionOfferingClassProduct FamilyserviceCodeLocationInstance TypeStorage MediaVolume TypeTenancyOperating SystemusageTypeCapacityStatusPre Installed S/WVolume API NameDatabase EngineDatabase EditionLicense ModelDeployment Option"
+const _FieldName = "SKUCapacityStatusGroupInstance TypeLocationOperating SystemPre Installed S/WProduct FamilyserviceCodeTenancyusageTypeVolume API NameVolume TypeCache EngineDatabase EngineDatabase EditionDeployment OptionLicense ModelCurrencyPricePerUnitStartingRangeTermTypeUnit"
 
-var _FieldIndex = [...]uint16{0, 3, 16, 24, 32, 48, 61, 74, 85, 89, 101, 109, 128, 142, 155, 169, 180, 188, 201, 214, 225, 232, 248, 257, 271, 288, 303, 318, 334, 347, 364}
+var _FieldIndex = [...]uint16{0, 3, 17, 22, 35, 43, 59, 76, 90, 101, 108, 117, 132, 143, 155, 170, 186, 203, 216, 224, 236, 249, 257, 261}
 
-const _FieldLowerName = "skuoffertermcoderatecodetermtypepricedescriptioneffectivedatestartingrangeendingrangeunitpriceperunitcurrencyleasecontractlengthpurchaseoptionofferingclassproduct familyservicecodelocationinstance typestorage mediavolume typetenancyoperating systemusagetypecapacitystatuspre installed s/wvolume api namedatabase enginedatabase editionlicense modeldeployment option"
+const _FieldLowerName = "skucapacitystatusgroupinstance typelocationoperating systempre installed s/wproduct familyservicecodetenancyusagetypevolume api namevolume typecache enginedatabase enginedatabase editiondeployment optionlicense modelcurrencypriceperunitstartingrangetermtypeunit"
 
 func (i Field) String() string {
 	if i >= Field(len(_FieldIndex)-1) {
@@ -25,133 +25,105 @@ func (i Field) String() string {
 func _FieldNoOp() {
 	var x [1]struct{}
 	_ = x[SKU-(0)]
-	_ = x[OfferTermCode-(1)]
-	_ = x[RateCode-(2)]
-	_ = x[PurchaseOption-(3)]
-	_ = x[PriceDescription-(4)]
-	_ = x[EffectiveDate-(5)]
-	_ = x[StartingRange-(6)]
-	_ = x[EndingRange-(7)]
-	_ = x[Unit-(8)]
-	_ = x[PricePerUnit-(9)]
-	_ = x[Currency-(10)]
-	_ = x[TermLength-(11)]
-	_ = x[TermPurchaseOption-(12)]
-	_ = x[TermOfferingClass-(13)]
-	_ = x[ProductFamily-(14)]
-	_ = x[ServiceCode-(15)]
-	_ = x[Location-(16)]
-	_ = x[InstanceType-(17)]
-	_ = x[StorageMedia-(18)]
-	_ = x[VolumeType-(19)]
-	_ = x[Tenancy-(20)]
-	_ = x[OperatingSystem-(21)]
-	_ = x[UsageType-(22)]
-	_ = x[CapacityStatus-(23)]
-	_ = x[PreInstalledSW-(24)]
-	_ = x[VolumeAPIName-(25)]
-	_ = x[DatabaseEngine-(26)]
-	_ = x[DatabaseEdition-(27)]
-	_ = x[LicenseModel-(28)]
-	_ = x[DeploymentOption-(29)]
+	_ = x[CapacityStatus-(1)]
+	_ = x[Group-(2)]
+	_ = x[InstanceType-(3)]
+	_ = x[Location-(4)]
+	_ = x[OperatingSystem-(5)]
+	_ = x[PreInstalledSW-(6)]
+	_ = x[ProductFamily-(7)]
+	_ = x[ServiceCode-(8)]
+	_ = x[Tenancy-(9)]
+	_ = x[UsageType-(10)]
+	_ = x[VolumeAPIName-(11)]
+	_ = x[VolumeType-(12)]
+	_ = x[CacheEngine-(13)]
+	_ = x[DatabaseEngine-(14)]
+	_ = x[DatabaseEdition-(15)]
+	_ = x[DeploymentOption-(16)]
+	_ = x[LicenseModel-(17)]
+	_ = x[Currency-(18)]
+	_ = x[PricePerUnit-(19)]
+	_ = x[StartingRange-(20)]
+	_ = x[TermType-(21)]
+	_ = x[Unit-(22)]
 }
 
-var _FieldValues = []Field{SKU, OfferTermCode, RateCode, PurchaseOption, PriceDescription, EffectiveDate, StartingRange, EndingRange, Unit, PricePerUnit, Currency, TermLength, TermPurchaseOption, TermOfferingClass, ProductFamily, ServiceCode, Location, InstanceType, StorageMedia, VolumeType, Tenancy, OperatingSystem, UsageType, CapacityStatus, PreInstalledSW, VolumeAPIName, DatabaseEngine, DatabaseEdition, LicenseModel, DeploymentOption}
+var _FieldValues = []Field{SKU, CapacityStatus, Group, InstanceType, Location, OperatingSystem, PreInstalledSW, ProductFamily, ServiceCode, Tenancy, UsageType, VolumeAPIName, VolumeType, CacheEngine, DatabaseEngine, DatabaseEdition, DeploymentOption, LicenseModel, Currency, PricePerUnit, StartingRange, TermType, Unit}
 
 var _FieldNameToValueMap = map[string]Field{
 	_FieldName[0:3]:          SKU,
 	_FieldLowerName[0:3]:     SKU,
-	_FieldName[3:16]:         OfferTermCode,
-	_FieldLowerName[3:16]:    OfferTermCode,
-	_FieldName[16:24]:        RateCode,
-	_FieldLowerName[16:24]:   RateCode,
-	_FieldName[24:32]:        PurchaseOption,
-	_FieldLowerName[24:32]:   PurchaseOption,
-	_FieldName[32:48]:        PriceDescription,
-	_FieldLowerName[32:48]:   PriceDescription,
-	_FieldName[48:61]:        EffectiveDate,
-	_FieldLowerName[48:61]:   EffectiveDate,
-	_FieldName[61:74]:        StartingRange,
-	_FieldLowerName[61:74]:   StartingRange,
-	_FieldName[74:85]:        EndingRange,
-	_FieldLowerName[74:85]:   EndingRange,
-	_FieldName[85:89]:        Unit,
-	_FieldLowerName[85:89]:   Unit,
-	_FieldName[89:101]:       PricePerUnit,
-	_FieldLowerName[89:101]:  PricePerUnit,
-	_FieldName[101:109]:      Currency,
-	_FieldLowerName[101:109]: Currency,
-	_FieldName[109:128]:      TermLength,
-	_FieldLowerName[109:128]: TermLength,
-	_FieldName[128:142]:      TermPurchaseOption,
-	_FieldLowerName[128:142]: TermPurchaseOption,
-	_FieldName[142:155]:      TermOfferingClass,
-	_FieldLowerName[142:155]: TermOfferingClass,
-	_FieldName[155:169]:      ProductFamily,
-	_FieldLowerName[155:169]: ProductFamily,
-	_FieldName[169:180]:      ServiceCode,
-	_FieldLowerName[169:180]: ServiceCode,
-	_FieldName[180:188]:      Location,
-	_FieldLowerName[180:188]: Location,
-	_FieldName[188:201]:      InstanceType,
-	_FieldLowerName[188:201]: InstanceType,
-	_FieldName[201:214]:      StorageMedia,
-	_FieldLowerName[201:214]: StorageMedia,
-	_FieldName[214:225]:      VolumeType,
-	_FieldLowerName[214:225]: VolumeType,
-	_FieldName[225:232]:      Tenancy,
-	_FieldLowerName[225:232]: Tenancy,
-	_FieldName[232:248]:      OperatingSystem,
-	_FieldLowerName[232:248]: OperatingSystem,
-	_FieldName[248:257]:      UsageType,
-	_FieldLowerName[248:257]: UsageType,
-	_FieldName[257:271]:      CapacityStatus,
-	_FieldLowerName[257:271]: CapacityStatus,
-	_FieldName[271:288]:      PreInstalledSW,
-	_FieldLowerName[271:288]: PreInstalledSW,
-	_FieldName[288:303]:      VolumeAPIName,
-	_FieldLowerName[288:303]: VolumeAPIName,
-	_FieldName[303:318]:      DatabaseEngine,
-	_FieldLowerName[303:318]: DatabaseEngine,
-	_FieldName[318:334]:      DatabaseEdition,
-	_FieldLowerName[318:334]: DatabaseEdition,
-	_FieldName[334:347]:      LicenseModel,
-	_FieldLowerName[334:347]: LicenseModel,
-	_FieldName[347:364]:      DeploymentOption,
-	_FieldLowerName[347:364]: DeploymentOption,
+	_FieldName[3:17]:         CapacityStatus,
+	_FieldLowerName[3:17]:    CapacityStatus,
+	_FieldName[17:22]:        Group,
+	_FieldLowerName[17:22]:   Group,
+	_FieldName[22:35]:        InstanceType,
+	_FieldLowerName[22:35]:   InstanceType,
+	_FieldName[35:43]:        Location,
+	_FieldLowerName[35:43]:   Location,
+	_FieldName[43:59]:        OperatingSystem,
+	_FieldLowerName[43:59]:   OperatingSystem,
+	_FieldName[59:76]:        PreInstalledSW,
+	_FieldLowerName[59:76]:   PreInstalledSW,
+	_FieldName[76:90]:        ProductFamily,
+	_FieldLowerName[76:90]:   ProductFamily,
+	_FieldName[90:101]:       ServiceCode,
+	_FieldLowerName[90:101]:  ServiceCode,
+	_FieldName[101:108]:      Tenancy,
+	_FieldLowerName[101:108]: Tenancy,
+	_FieldName[108:117]:      UsageType,
+	_FieldLowerName[108:117]: UsageType,
+	_FieldName[117:132]:      VolumeAPIName,
+	_FieldLowerName[117:132]: VolumeAPIName,
+	_FieldName[132:143]:      VolumeType,
+	_FieldLowerName[132:143]: VolumeType,
+	_FieldName[143:155]:      CacheEngine,
+	_FieldLowerName[143:155]: CacheEngine,
+	_FieldName[155:170]:      DatabaseEngine,
+	_FieldLowerName[155:170]: DatabaseEngine,
+	_FieldName[170:186]:      DatabaseEdition,
+	_FieldLowerName[170:186]: DatabaseEdition,
+	_FieldName[186:203]:      DeploymentOption,
+	_FieldLowerName[186:203]: DeploymentOption,
+	_FieldName[203:216]:      LicenseModel,
+	_FieldLowerName[203:216]: LicenseModel,
+	_FieldName[216:224]:      Currency,
+	_FieldLowerName[216:224]: Currency,
+	_FieldName[224:236]:      PricePerUnit,
+	_FieldLowerName[224:236]: PricePerUnit,
+	_FieldName[236:249]:      StartingRange,
+	_FieldLowerName[236:249]: StartingRange,
+	_FieldName[249:257]:      TermType,
+	_FieldLowerName[249:257]: TermType,
+	_FieldName[257:261]:      Unit,
+	_FieldLowerName[257:261]: Unit,
 }
 
 var _FieldNames = []string{
 	_FieldName[0:3],
-	_FieldName[3:16],
-	_FieldName[16:24],
-	_FieldName[24:32],
-	_FieldName[32:48],
-	_FieldName[48:61],
-	_FieldName[61:74],
-	_FieldName[74:85],
-	_FieldName[85:89],
-	_FieldName[89:101],
-	_FieldName[101:109],
-	_FieldName[109:128],
-	_FieldName[128:142],
-	_FieldName[142:155],
-	_FieldName[155:169],
-	_FieldName[169:180],
-	_FieldName[180:188],
-	_FieldName[188:201],
-	_FieldName[201:214],
-	_FieldName[214:225],
-	_FieldName[225:232],
-	_FieldName[232:248],
-	_FieldName[248:257],
-	_FieldName[257:271],
-	_FieldName[271:288],
-	_FieldName[288:303],
-	_FieldName[303:318],
-	_FieldName[318:334],
-	_FieldName[334:347],
-	_FieldName[347:364],
+	_FieldName[3:17],
+	_FieldName[17:22],
+	_FieldName[22:35],
+	_FieldName[35:43],
+	_FieldName[43:59],
+	_FieldName[59:76],
+	_FieldName[76:90],
+	_FieldName[90:101],
+	_FieldName[101:108],
+	_FieldName[108:117],
+	_FieldName[117:132],
+	_FieldName[132:143],
+	_FieldName[143:155],
+	_FieldName[155:170],
+	_FieldName[170:186],
+	_FieldName[186:203],
+	_FieldName[203:216],
+	_FieldName[216:224],
+	_FieldName[224:236],
+	_FieldName[236:249],
+	_FieldName[249:257],
+	_FieldName[257:261],
 }
 
 // FieldString retrieves an enum value from the enum constants string name.
@@ -160,8 +132,8 @@ func FieldString(s string) (Field, error) {
 	if val, ok := _FieldNameToValueMap[s]; ok {
 		return val, nil
 	}
-
-	if val, ok := _FieldNameToValueMap[strings.ToLower(s)]; ok {
+	s = strings.ToLower(s)
+	if val, ok := _FieldNameToValueMap[s]; ok {
 		return val, nil
 	}
 	return 0, fmt.Errorf("%s does not belong to Field values", s)
