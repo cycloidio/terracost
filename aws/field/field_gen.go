@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _FieldName = "SKUOfferTermCodeRateCodeTermTypePriceDescriptionEffectiveDateStartingRangeEndingRangeUnitPricePerUnitCurrencyLeaseContractLengthPurchaseOptionOfferingClassProduct FamilyserviceCodeLocationInstance TypeStorage MediaVolume TypeTenancyOperating SystemusageTypeCapacityStatusPre Installed S/WVolume API NameDatabase EngineDatabase EditionLicense ModelDeployment Option"
+const _FieldName = "SKUOfferTermCodeRateCodeTermTypePriceDescriptionEffectiveDateStartingRangeEndingRangeUnitPricePerUnitCurrencyLeaseContractLengthPurchaseOptionOfferingClassProduct FamilyserviceCodeLocationEndpoint TypeTransfer TypeGroupFrom LocationTo LocationInstance TypeStorage MediaVolume TypeTenancyOperating SystemusageTypeCapacityStatusPre Installed S/WVolume API NameDatabase EngineDatabase EditionLicense ModelDeployment Option"
 
-var _FieldIndex = [...]uint16{0, 3, 16, 24, 32, 48, 61, 74, 85, 89, 101, 109, 128, 142, 155, 169, 180, 188, 201, 214, 225, 232, 248, 257, 271, 288, 303, 318, 334, 347, 364}
+var _FieldIndex = [...]uint16{0, 3, 16, 24, 32, 48, 61, 74, 85, 89, 101, 109, 128, 142, 155, 169, 180, 188, 201, 214, 219, 232, 243, 256, 269, 280, 287, 303, 312, 326, 343, 358, 373, 389, 402, 419}
 
-const _FieldLowerName = "skuoffertermcoderatecodetermtypepricedescriptioneffectivedatestartingrangeendingrangeunitpriceperunitcurrencyleasecontractlengthpurchaseoptionofferingclassproduct familyservicecodelocationinstance typestorage mediavolume typetenancyoperating systemusagetypecapacitystatuspre installed s/wvolume api namedatabase enginedatabase editionlicense modeldeployment option"
+const _FieldLowerName = "skuoffertermcoderatecodetermtypepricedescriptioneffectivedatestartingrangeendingrangeunitpriceperunitcurrencyleasecontractlengthpurchaseoptionofferingclassproduct familyservicecodelocationendpoint typetransfer typegroupfrom locationto locationinstance typestorage mediavolume typetenancyoperating systemusagetypecapacitystatuspre installed s/wvolume api namedatabase enginedatabase editionlicense modeldeployment option"
 
 func (i Field) String() string {
 	if i >= Field(len(_FieldIndex)-1) {
@@ -41,22 +41,27 @@ func _FieldNoOp() {
 	_ = x[ProductFamily-(14)]
 	_ = x[ServiceCode-(15)]
 	_ = x[Location-(16)]
-	_ = x[InstanceType-(17)]
-	_ = x[StorageMedia-(18)]
-	_ = x[VolumeType-(19)]
-	_ = x[Tenancy-(20)]
-	_ = x[OperatingSystem-(21)]
-	_ = x[UsageType-(22)]
-	_ = x[CapacityStatus-(23)]
-	_ = x[PreInstalledSW-(24)]
-	_ = x[VolumeAPIName-(25)]
-	_ = x[DatabaseEngine-(26)]
-	_ = x[DatabaseEdition-(27)]
-	_ = x[LicenseModel-(28)]
-	_ = x[DeploymentOption-(29)]
+	_ = x[EndpointType-(17)]
+	_ = x[TransferType-(18)]
+	_ = x[Group-(19)]
+	_ = x[FromLocation-(20)]
+	_ = x[ToLocation-(21)]
+	_ = x[InstanceType-(22)]
+	_ = x[StorageMedia-(23)]
+	_ = x[VolumeType-(24)]
+	_ = x[Tenancy-(25)]
+	_ = x[OperatingSystem-(26)]
+	_ = x[UsageType-(27)]
+	_ = x[CapacityStatus-(28)]
+	_ = x[PreInstalledSW-(29)]
+	_ = x[VolumeAPIName-(30)]
+	_ = x[DatabaseEngine-(31)]
+	_ = x[DatabaseEdition-(32)]
+	_ = x[LicenseModel-(33)]
+	_ = x[DeploymentOption-(34)]
 }
 
-var _FieldValues = []Field{SKU, OfferTermCode, RateCode, PurchaseOption, PriceDescription, EffectiveDate, StartingRange, EndingRange, Unit, PricePerUnit, Currency, TermLength, TermPurchaseOption, TermOfferingClass, ProductFamily, ServiceCode, Location, InstanceType, StorageMedia, VolumeType, Tenancy, OperatingSystem, UsageType, CapacityStatus, PreInstalledSW, VolumeAPIName, DatabaseEngine, DatabaseEdition, LicenseModel, DeploymentOption}
+var _FieldValues = []Field{SKU, OfferTermCode, RateCode, PurchaseOption, PriceDescription, EffectiveDate, StartingRange, EndingRange, Unit, PricePerUnit, Currency, TermLength, TermPurchaseOption, TermOfferingClass, ProductFamily, ServiceCode, Location, EndpointType, TransferType, Group, FromLocation, ToLocation, InstanceType, StorageMedia, VolumeType, Tenancy, OperatingSystem, UsageType, CapacityStatus, PreInstalledSW, VolumeAPIName, DatabaseEngine, DatabaseEdition, LicenseModel, DeploymentOption}
 
 var _FieldNameToValueMap = map[string]Field{
 	_FieldName[0:3]:          SKU,
@@ -93,32 +98,42 @@ var _FieldNameToValueMap = map[string]Field{
 	_FieldLowerName[169:180]: ServiceCode,
 	_FieldName[180:188]:      Location,
 	_FieldLowerName[180:188]: Location,
-	_FieldName[188:201]:      InstanceType,
-	_FieldLowerName[188:201]: InstanceType,
-	_FieldName[201:214]:      StorageMedia,
-	_FieldLowerName[201:214]: StorageMedia,
-	_FieldName[214:225]:      VolumeType,
-	_FieldLowerName[214:225]: VolumeType,
-	_FieldName[225:232]:      Tenancy,
-	_FieldLowerName[225:232]: Tenancy,
-	_FieldName[232:248]:      OperatingSystem,
-	_FieldLowerName[232:248]: OperatingSystem,
-	_FieldName[248:257]:      UsageType,
-	_FieldLowerName[248:257]: UsageType,
-	_FieldName[257:271]:      CapacityStatus,
-	_FieldLowerName[257:271]: CapacityStatus,
-	_FieldName[271:288]:      PreInstalledSW,
-	_FieldLowerName[271:288]: PreInstalledSW,
-	_FieldName[288:303]:      VolumeAPIName,
-	_FieldLowerName[288:303]: VolumeAPIName,
-	_FieldName[303:318]:      DatabaseEngine,
-	_FieldLowerName[303:318]: DatabaseEngine,
-	_FieldName[318:334]:      DatabaseEdition,
-	_FieldLowerName[318:334]: DatabaseEdition,
-	_FieldName[334:347]:      LicenseModel,
-	_FieldLowerName[334:347]: LicenseModel,
-	_FieldName[347:364]:      DeploymentOption,
-	_FieldLowerName[347:364]: DeploymentOption,
+	_FieldName[188:201]:      EndpointType,
+	_FieldLowerName[188:201]: EndpointType,
+	_FieldName[201:214]:      TransferType,
+	_FieldLowerName[201:214]: TransferType,
+	_FieldName[214:219]:      Group,
+	_FieldLowerName[214:219]: Group,
+	_FieldName[219:232]:      FromLocation,
+	_FieldLowerName[219:232]: FromLocation,
+	_FieldName[232:243]:      ToLocation,
+	_FieldLowerName[232:243]: ToLocation,
+	_FieldName[243:256]:      InstanceType,
+	_FieldLowerName[243:256]: InstanceType,
+	_FieldName[256:269]:      StorageMedia,
+	_FieldLowerName[256:269]: StorageMedia,
+	_FieldName[269:280]:      VolumeType,
+	_FieldLowerName[269:280]: VolumeType,
+	_FieldName[280:287]:      Tenancy,
+	_FieldLowerName[280:287]: Tenancy,
+	_FieldName[287:303]:      OperatingSystem,
+	_FieldLowerName[287:303]: OperatingSystem,
+	_FieldName[303:312]:      UsageType,
+	_FieldLowerName[303:312]: UsageType,
+	_FieldName[312:326]:      CapacityStatus,
+	_FieldLowerName[312:326]: CapacityStatus,
+	_FieldName[326:343]:      PreInstalledSW,
+	_FieldLowerName[326:343]: PreInstalledSW,
+	_FieldName[343:358]:      VolumeAPIName,
+	_FieldLowerName[343:358]: VolumeAPIName,
+	_FieldName[358:373]:      DatabaseEngine,
+	_FieldLowerName[358:373]: DatabaseEngine,
+	_FieldName[373:389]:      DatabaseEdition,
+	_FieldLowerName[373:389]: DatabaseEdition,
+	_FieldName[389:402]:      LicenseModel,
+	_FieldLowerName[389:402]: LicenseModel,
+	_FieldName[402:419]:      DeploymentOption,
+	_FieldLowerName[402:419]: DeploymentOption,
 }
 
 var _FieldNames = []string{
@@ -141,17 +156,22 @@ var _FieldNames = []string{
 	_FieldName[180:188],
 	_FieldName[188:201],
 	_FieldName[201:214],
-	_FieldName[214:225],
-	_FieldName[225:232],
-	_FieldName[232:248],
-	_FieldName[248:257],
-	_FieldName[257:271],
-	_FieldName[271:288],
-	_FieldName[288:303],
-	_FieldName[303:318],
-	_FieldName[318:334],
-	_FieldName[334:347],
-	_FieldName[347:364],
+	_FieldName[214:219],
+	_FieldName[219:232],
+	_FieldName[232:243],
+	_FieldName[243:256],
+	_FieldName[256:269],
+	_FieldName[269:280],
+	_FieldName[280:287],
+	_FieldName[287:303],
+	_FieldName[303:312],
+	_FieldName[312:326],
+	_FieldName[326:343],
+	_FieldName[343:358],
+	_FieldName[358:373],
+	_FieldName[373:389],
+	_FieldName[389:402],
+	_FieldName[402:419],
 }
 
 // FieldString retrieves an enum value from the enum constants string name.

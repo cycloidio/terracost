@@ -24,6 +24,11 @@ const (
 	ProductFamily                   // Product Family
 	ServiceCode                     // serviceCode
 	Location                        // Location
+	EndpointType                    // Endpoint Type
+	TransferType                    // Transfer Type
+	Group                           // Group
+	FromLocation                    // From Location
+	ToLocation                      // To Location
 	InstanceType                    // Instance Type
 	StorageMedia                    // Storage Media
 	VolumeType                      // Volume Type
