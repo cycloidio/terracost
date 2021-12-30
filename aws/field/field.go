@@ -35,8 +35,8 @@ const (
 	VolumeType                      // Volume Type
 
 	// ElastiCache
-	CacheEngine     //Cache Engine
-	StorageSnapshot //Storage Snapshot
+	CacheEngine     // Cache Engine
+	StorageSnapshot // Storage Snapshot
 
 	// RDS fields
 	DatabaseEngine   // Database Engine
