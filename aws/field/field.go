@@ -12,6 +12,7 @@ const (
 	Currency                        // Currency
 	EffectiveDate                   // EffectiveDate
 	EndingRange                     // EndingRange
+	Group                           // Group
 	InstanceType                    // Instance Type
 	Location                        // Location
 	OfferTermCode                   // OfferTermCode
