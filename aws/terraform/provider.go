@@ -47,6 +47,12 @@ func (p *Provider) ResourceComponents(tfRes terraform.Resource) []query.Componen
 			return nil
 		}
 		return p.newElastiCache(vals).Components()
+	case "aws_elasticache_replication_group":
+		vals, err := decodeElastiCacheReplicationValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newElastiCacheReplication(vals).Components()
 	case "aws_eip":
 		vals, err := decodeElasticIPValues(tfRes.Values)
 		if err != nil {

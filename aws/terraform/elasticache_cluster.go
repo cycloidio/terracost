@@ -95,7 +95,7 @@ func (inst *ElastiCache) elastiCacheInstanceComponent() query.Component {
 	instClass := inst.cacheEngine
 	attrFilters := []*product.AttributeFilter{
 		{Key: "instanceType", Value: util.StringPtr(inst.instanceType)},
-		{Key: "elastiCacheEngine", Value: util.StringPtr(inst.cacheEngine)},
+		{Key: "cacheEngine", Value: util.StringPtr(inst.cacheEngine)},
 	}
 
 	return query.Component{

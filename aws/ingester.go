@@ -205,6 +205,10 @@ var columnToAttribute = map[field.Field]string{
 	field.LicenseModel:     "licenseModel",
 	field.DatabaseEdition:  "databaseEdition",
 	field.DatabaseEngine:   "databaseEngine",
+
+	// ElastiCache
+	field.CacheEngine:     "cacheEngine",
+	field.StorageSnapshot: "storageSnapshot",
 }
 
 // columnToPriceAttribute is a mapping from column title to the price.Price attribute name under which the value will

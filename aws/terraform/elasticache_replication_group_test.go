@@ -14,20 +14,21 @@ import (
 	"github.com/cycloidio/terracost/util"
 )
 
-func TestElastiCache_Components(t *testing.T) {
+func TestElastiCacheReplication_Components(t *testing.T) {
 	p, err := NewProvider("aws", "us-east-1")
 	require.NoError(t, err)
 
-	t.Run("RedisEngine", func(t *testing.T) {
+	//1 group 1 node
+	t.Run("RedisEngineDefault", func(t *testing.T) {
 		tfres := terraform.Resource{
-			Address:      "aws_elasticache_cluster.test",
-			Type:         "aws_elasticache_cluster",
+			Address:      "aws_elasticache_replication_group.test",
+			Type:         "aws_elasticache_replication_group",
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"node_type":       "cache.m4.large",
-				"engine":          "redis",
-				"num_cache_nodes": 1,
+				"node_type":             "cache.m4.large",
+				"number_cache_clusters": 1,
+				"availability_zones":    []string{"us-east-1a", "us-east-1b"},
 			},
 		}
 
@@ -59,16 +60,35 @@ func TestElastiCache_Components(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
+	t.Run("RedisEngineGlobalReplicationGroupID", func(t *testing.T) {
+		tfres := terraform.Resource{
+			Address:      "aws_elasticache_replication_group.test",
+			Type:         "aws_elasticache_replication_group",
+			Name:         "test",
+			ProviderName: "aws",
+			Values: map[string]interface{}{
+				"number_cache_clusters":       1,
+				"availability_zones":          []string{"us-east-1a", "us-east-1b"},
+				"global_replication_group_id": "global-replication-group-1",
+			},
+		}
+
+		expected := []query.Component{}
+
+		actual := p.ResourceComponents(tfres)
+		assert.Equal(t, expected, actual)
+	})
+
 	t.Run("RedisSnapShotRetentionLimit", func(t *testing.T) {
 		tfres := terraform.Resource{
-			Address:      "aws_elasticache_cluster.test",
-			Type:         "aws_elasticache_cluster",
+			Address:      "aws_elasticache_replication_group.test",
+			Type:         "aws_elasticache_replication_group",
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
 				"node_type":                "cache.m4.large",
 				"engine":                   "redis",
-				"num_cache_nodes":          1,
+				"number_cache_clusters":    1,
 				"snapshot_retention_limit": 5,
 			},
 		}
@@ -118,76 +138,16 @@ func TestElastiCache_Components(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
-	t.Run("RedisReplicationGroupID", func(t *testing.T) {
+	t.Run("RedisEngineNumCacheNodes", func(t *testing.T) {
 		tfres := terraform.Resource{
-			Address:      "aws_elasticache_cluster.test",
-			Type:         "aws_elasticache_cluster",
+			Address:      "aws_elasticache_replication_group.test",
+			Type:         "aws_elasticache_replication_group",
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"node_type":            "cache.m4.large",
-				"engine":               "redis",
-				"replication_group_id": "replication-group-1",
-			},
-		}
-
-		expected := []query.Component{}
-
-		actual := p.ResourceComponents(tfres)
-		assert.Equal(t, expected, actual)
-	})
-
-	t.Run("MemcacheEngine", func(t *testing.T) {
-		tfres := terraform.Resource{
-			Address:      "aws_elasticache_cluster.test",
-			Type:         "aws_elasticache_cluster",
-			Name:         "test",
-			ProviderName: "aws",
-			Values: map[string]interface{}{
-				"node_type":       "cache.m4.large",
-				"engine":          "memcached",
-				"num_cache_nodes": 1,
-			},
-		}
-
-		expected := []query.Component{
-			{
-				Name:           "Cache instance",
-				HourlyQuantity: decimal.NewFromInt(1),
-				Details:        []string{"Memcached"},
-				ProductFilter: &product.Filter{
-					Provider: util.StringPtr("aws"),
-					Service:  util.StringPtr("AmazonElastiCache"),
-					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
-					AttributeFilters: []*product.AttributeFilter{
-						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
-						{Key: "cacheEngine", Value: util.StringPtr("Memcached")},
-					},
-				},
-				PriceFilter: &price.Filter{
-					Unit: util.StringPtr("Hrs"),
-					AttributeFilters: []*price.AttributeFilter{
-						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
-					},
-				},
-			},
-		}
-
-		actual := p.ResourceComponents(tfres)
-		assert.Equal(t, expected, actual)
-	})
-
-	t.Run("MemcacheNumCacheNodes", func(t *testing.T) {
-		tfres := terraform.Resource{
-			Address:      "aws_elasticache_cluster.test",
-			Type:         "aws_elasticache_cluster",
-			Name:         "test",
-			ProviderName: "aws",
-			Values: map[string]interface{}{
-				"node_type":       "cache.m4.large",
-				"engine":          "memcached",
-				"num_cache_nodes": 2,
+				"node_type":             "cache.m4.large",
+				"engine":                "redis",
+				"number_cache_clusters": 2,
 			},
 		}
 
@@ -195,7 +155,7 @@ func TestElastiCache_Components(t *testing.T) {
 			{
 				Name:           "Cache instance",
 				HourlyQuantity: decimal.NewFromInt(2),
-				Details:        []string{"Memcached"},
+				Details:        []string{"Redis"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
@@ -203,7 +163,7 @@ func TestElastiCache_Components(t *testing.T) {
 					Location: util.StringPtr("us-east-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
-						{Key: "cacheEngine", Value: util.StringPtr("Memcached")},
+						{Key: "cacheEngine", Value: util.StringPtr("Redis")},
 					},
 				},
 				PriceFilter: &price.Filter{
@@ -218,4 +178,51 @@ func TestElastiCache_Components(t *testing.T) {
 		actual := p.ResourceComponents(tfres)
 		assert.Equal(t, expected, actual)
 	})
+
+	t.Run("RedisEngineClusterMode", func(t *testing.T) {
+		tfres := terraform.Resource{
+			Address:      "aws_elasticache_replication_group.test",
+			Type:         "aws_elasticache_replication_group",
+			Name:         "test",
+			ProviderName: "aws",
+			Values: map[string]interface{}{
+				"node_type": "cache.m4.large",
+				"engine":    "redis",
+				"cluster_mode": []map[string]int{
+					map[string]int{
+						"replicas_per_node_group": 3,
+						"num_node_groups":         2,
+					},
+				},
+			},
+		}
+
+		expected := []query.Component{
+			{
+				Name:           "Cache instance",
+				HourlyQuantity: decimal.NewFromInt(8),
+				Details:        []string{"Redis"},
+				ProductFilter: &product.Filter{
+					Provider: util.StringPtr("aws"),
+					Service:  util.StringPtr("AmazonElastiCache"),
+					Family:   util.StringPtr("Cache Instance"),
+					Location: util.StringPtr("us-east-1"),
+					AttributeFilters: []*product.AttributeFilter{
+						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
+						{Key: "cacheEngine", Value: util.StringPtr("Redis")},
+					},
+				},
+				PriceFilter: &price.Filter{
+					Unit: util.StringPtr("Hrs"),
+					AttributeFilters: []*price.AttributeFilter{
+						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+					},
+				},
+			},
+		}
+
+		actual := p.ResourceComponents(tfres)
+		assert.Equal(t, expected, actual)
+	})
+
 }
