@@ -132,7 +132,7 @@ func (inst *Instance) computeComponent() query.Component {
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("Hrs"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+				{Key: "termType", Value: util.StringPtr("on_demand")},
 			},
 		},
 	}

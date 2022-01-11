@@ -7,33 +7,33 @@ type Field uint8
 
 // List of fields used by the AWS pricing offer file (CSV).
 const (
-	SKU                Field = iota // SKU
-	CapacityStatus                  // CapacityStatus
-	Currency                        // Currency
-	EffectiveDate                   // EffectiveDate
-	EndingRange                     // EndingRange
-	Group                           // Group
-	InstanceType                    // Instance Type
-	Location                        // Location
-	OfferTermCode                   // OfferTermCode
-	OperatingSystem                 // Operating System
-	PreInstalledSW                  // Pre Installed S/W
-	PriceDescription                // PriceDescription
-	PricePerUnit                    // PricePerUnit
-	ProductFamily                   // Product Family
-	PurchaseOption                  // TermType
-	RateCode                        // RateCode
-	ServiceCode                     // serviceCode
-	StartingRange                   // StartingRange
-	StorageMedia                    // Storage Media
-	Tenancy                         // Tenancy
-	TermLength                      // LeaseContractLength
-	TermOfferingClass               // OfferingClass
-	TermPurchaseOption              // PurchaseOption
-	Unit                            // Unit
-	UsageType                       // usageType
-	VolumeAPIName                   // Volume API Name
-	VolumeType                      // Volume Type
+	SKU               Field = iota // SKU
+	CapacityStatus                 // CapacityStatus
+	Currency                       // Currency
+	EffectiveDate                  // EffectiveDate
+	EndingRange                    // EndingRange
+	Group                          // Group
+	InstanceType                   // Instance Type
+	Location                       // Location
+	OfferTermCode                  // OfferTermCode
+	OperatingSystem                // Operating System
+	PreInstalledSW                 // Pre Installed S/W
+	PriceDescription               // PriceDescription
+	PricePerUnit                   // PricePerUnit
+	ProductFamily                  // Product Family
+	PurchaseOption                 // PurchaseOption
+	RateCode                       // RateCode
+	ServiceCode                    // serviceCode
+	StartingRange                  // StartingRange
+	StorageMedia                   // Storage Media
+	Tenancy                        // Tenancy
+	TermLength                     // LeaseContractLength
+	TermOfferingClass              // OfferingClass
+	TermType                       // TermType
+	Unit                           // Unit
+	UsageType                      // usageType
+	VolumeAPIName                  // Volume API Name
+	VolumeType                     // Volume Type
 
 	// ElastiCache
 	CacheEngine     // Cache Engine

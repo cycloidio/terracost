@@ -49,7 +49,7 @@ func TestElastiCache_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+						{Key: "termType", Value: util.StringPtr("on_demand")},
 					},
 				},
 			},
@@ -91,7 +91,7 @@ func TestElastiCache_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+						{Key: "termType", Value: util.StringPtr("on_demand")},
 					},
 				},
 			},
@@ -108,7 +108,7 @@ func TestElastiCache_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("GB-Mo"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+						{Key: "termType", Value: util.StringPtr("on_demand")},
 					},
 				},
 			},
@@ -168,7 +168,7 @@ func TestElastiCache_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+						{Key: "termType", Value: util.StringPtr("on_demand")},
 					},
 				},
 			},
@@ -209,7 +209,7 @@ func TestElastiCache_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+						{Key: "termType", Value: util.StringPtr("on_demand")},
 					},
 				},
 			},

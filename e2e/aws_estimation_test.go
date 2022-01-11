@@ -119,7 +119,7 @@ func TestAWSEstimation(t *testing.T) {
 				Currency: "USD",
 				Value:    decimal.NewFromFloat(0.12),
 				Attributes: map[string]string{
-					"purchaseOption": "on_demand",
+					"termType": "on_demand",
 				},
 			},
 		},
@@ -130,7 +130,7 @@ func TestAWSEstimation(t *testing.T) {
 				Currency: "USD",
 				Value:    decimal.NewFromFloat(1.23),
 				Attributes: map[string]string{
-					"purchaseOption": "on_demand",
+					"termType": "on_demand",
 				},
 			},
 		},
@@ -141,7 +141,7 @@ func TestAWSEstimation(t *testing.T) {
 				Currency: "USD",
 				Value:    decimal.NewFromFloat(0.45),
 				Attributes: map[string]string{
-					"purchaseOption": "on_demand",
+					"termType": "on_demand",
 				},
 			},
 		},

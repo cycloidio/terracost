@@ -214,17 +214,17 @@ var columnToAttribute = map[field.Field]string{
 // columnToPriceAttribute is a mapping from column title to the price.Price attribute name under which the value will
 // be stored.
 var columnToPriceAttribute = map[field.Field]string{
-	field.PriceDescription:   "description",
-	field.StartingRange:      "startUsageAmount",
-	field.EndingRange:        "endUsageAmount",
-	field.TermLength:         "termLength",
-	field.TermPurchaseOption: "termPurchaseOption",
-	field.TermOfferingClass:  "termOfferingClass",
-	field.EffectiveDate:      "effectiveDateStart",
+	field.PriceDescription:  "description",
+	field.StartingRange:     "startingRange",
+	field.EndingRange:       "endUsageAmount",
+	field.TermLength:        "termLength",
+	field.TermType:          "termType",
+	field.TermOfferingClass: "termOfferingClass",
+	field.EffectiveDate:     "effectiveDateStart",
 }
 
-// purchaseOptions is a mapping from the values used in the CSV file to the expected values.
-var purchaseOptions = map[string]string{
+// termTypes is a mapping from the values used in the CSV file to the expected values.
+var termTypes = map[string]string{
 	"OnDemand": "on_demand",
 	"Reserved": "reserved",
 }
@@ -238,7 +238,7 @@ func newPriceWithProduct(values map[field.Field]string) (*price.WithProduct, err
 	}
 
 	priceAttrs := map[string]string{
-		"purchaseOption": purchaseOptions[values[field.PurchaseOption]],
+		"termType": termTypes[values[field.TermType]],
 	}
 	for col, attr := range columnToPriceAttribute {
 		if values[col] != "" {

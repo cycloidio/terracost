@@ -69,7 +69,7 @@ func TestIngester_Ingest(t *testing.T) {
 					Unit:       "Hrs",
 					Currency:   "USD",
 					Value:      decimal.RequireFromString("1.234"),
-					Attributes: map[string]string{"purchaseOption": "on_demand"},
+					Attributes: map[string]string{"termType": "on_demand"},
 				},
 			},
 			{
@@ -78,7 +78,7 @@ func TestIngester_Ingest(t *testing.T) {
 					Unit:       "Hrs",
 					Currency:   "USD",
 					Value:      decimal.RequireFromString("0.987"),
-					Attributes: map[string]string{"purchaseOption": "reserved"},
+					Attributes: map[string]string{"termType": "reserved"},
 				},
 			},
 			{
@@ -96,7 +96,7 @@ func TestIngester_Ingest(t *testing.T) {
 					Unit:       "GB-Mo",
 					Currency:   "USD",
 					Value:      decimal.RequireFromString("0.456"),
-					Attributes: map[string]string{"purchaseOption": "on_demand"},
+					Attributes: map[string]string{"termType": "on_demand"},
 				},
 			},
 		}

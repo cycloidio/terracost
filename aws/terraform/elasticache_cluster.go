@@ -112,7 +112,7 @@ func (inst *ElastiCache) elastiCacheInstanceComponent() query.Component {
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("Hrs"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+				{Key: "termType", Value: util.StringPtr("on_demand")},
 			},
 		},
 	}
@@ -138,7 +138,7 @@ func (inst *ElastiCache) backupStorageComponent() query.Component {
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("GB-Mo"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "purchaseOption", Value: util.StringPtr("on_demand")},
+				{Key: "termType", Value: util.StringPtr("on_demand")},
 			},
 		},
 	}
