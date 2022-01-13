@@ -94,8 +94,8 @@ func (inst *ElastiCache) Components() []query.Component {
 func (inst *ElastiCache) elastiCacheInstanceComponent() query.Component {
 	instClass := inst.cacheEngine
 	attrFilters := []*product.AttributeFilter{
-		{Key: "instanceType", Value: util.StringPtr(inst.instanceType)},
-		{Key: "cacheEngine", Value: util.StringPtr(inst.cacheEngine)},
+		{Key: "InstanceType", Value: util.StringPtr(inst.instanceType)},
+		{Key: "CacheEngine", Value: util.StringPtr(inst.cacheEngine)},
 	}
 
 	return query.Component{
@@ -112,7 +112,7 @@ func (inst *ElastiCache) elastiCacheInstanceComponent() query.Component {
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("Hrs"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "termType", Value: util.StringPtr("on_demand")},
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
 			},
 		},
 	}
@@ -138,7 +138,7 @@ func (inst *ElastiCache) backupStorageComponent() query.Component {
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("GB-Mo"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "termType", Value: util.StringPtr("on_demand")},
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
 			},
 		},
 	}

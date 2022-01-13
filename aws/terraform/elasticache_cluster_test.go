@@ -42,14 +42,14 @@ func TestElastiCache_Components(t *testing.T) {
 					Family:   util.StringPtr("Cache Instance"),
 					Location: util.StringPtr("us-east-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
-						{Key: "cacheEngine", Value: util.StringPtr("Redis")},
+						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
+						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
 					},
 				},
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "termType", Value: util.StringPtr("on_demand")},
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
 					},
 				},
 			},
@@ -84,14 +84,14 @@ func TestElastiCache_Components(t *testing.T) {
 					Family:   util.StringPtr("Cache Instance"),
 					Location: util.StringPtr("us-east-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
-						{Key: "cacheEngine", Value: util.StringPtr("Redis")},
+						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
+						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
 					},
 				},
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "termType", Value: util.StringPtr("on_demand")},
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
 					},
 				},
 			},
@@ -108,7 +108,7 @@ func TestElastiCache_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("GB-Mo"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "termType", Value: util.StringPtr("on_demand")},
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
 					},
 				},
 			},
@@ -161,14 +161,14 @@ func TestElastiCache_Components(t *testing.T) {
 					Family:   util.StringPtr("Cache Instance"),
 					Location: util.StringPtr("us-east-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
-						{Key: "cacheEngine", Value: util.StringPtr("Memcached")},
+						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
+						{Key: "CacheEngine", Value: util.StringPtr("Memcached")},
 					},
 				},
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "termType", Value: util.StringPtr("on_demand")},
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
 					},
 				},
 			},
@@ -202,14 +202,14 @@ func TestElastiCache_Components(t *testing.T) {
 					Family:   util.StringPtr("Cache Instance"),
 					Location: util.StringPtr("us-east-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "instanceType", Value: util.StringPtr("cache.m4.large")},
-						{Key: "cacheEngine", Value: util.StringPtr("Memcached")},
+						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
+						{Key: "CacheEngine", Value: util.StringPtr("Memcached")},
 					},
 				},
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "termType", Value: util.StringPtr("on_demand")},
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
 					},
 				},
 			},

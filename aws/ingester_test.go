@@ -56,9 +56,9 @@ func TestIngester_Ingest(t *testing.T) {
 			Family:   "Compute Instance",
 			Location: "eu-west-3",
 			Attributes: map[string]string{
-				"instanceType":    "m5.xlarge",
-				"operatingSystem": "Linux",
-				"tenancy":         "Shared",
+				"InstanceType":    "m5.xlarge",
+				"OperatingSystem": "Linux",
+				"Tenancy":         "Shared",
 			},
 		}
 
@@ -69,7 +69,7 @@ func TestIngester_Ingest(t *testing.T) {
 					Unit:       "Hrs",
 					Currency:   "USD",
 					Value:      decimal.RequireFromString("1.234"),
-					Attributes: map[string]string{"termType": "on_demand"},
+					Attributes: map[string]string{"TermType": "OnDemand"},
 				},
 			},
 			{
@@ -78,7 +78,7 @@ func TestIngester_Ingest(t *testing.T) {
 					Unit:       "Hrs",
 					Currency:   "USD",
 					Value:      decimal.RequireFromString("0.987"),
-					Attributes: map[string]string{"termType": "reserved"},
+					Attributes: map[string]string{"TermType": "Reserved"},
 				},
 			},
 			{
@@ -89,14 +89,14 @@ func TestIngester_Ingest(t *testing.T) {
 					Family:   "Storage",
 					Location: "eu-west-3",
 					Attributes: map[string]string{
-						"volumeApiName": "gp2",
+						"VolumeAPIName": "gp2",
 					},
 				},
 				Price: price.Price{
 					Unit:       "GB-Mo",
 					Currency:   "USD",
 					Value:      decimal.RequireFromString("0.456"),
-					Attributes: map[string]string{"termType": "on_demand"},
+					Attributes: map[string]string{"TermType": "OnDemand"},
 				},
 			},
 		}

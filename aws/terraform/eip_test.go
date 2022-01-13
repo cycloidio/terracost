@@ -46,8 +46,8 @@ func TestElasticIP_Components(t *testing.T) {
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("Hrs"),
 					AttributeFilters: []*price.AttributeFilter{
-						{Key: "termType", Value: util.StringPtr("on_demand")},
-						{Key: "startingRange", Value: util.StringPtr("1")},
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
+						{Key: "StartingRange", Value: util.StringPtr("1")},
 					},
 				},
 			},

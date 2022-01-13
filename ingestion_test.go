@@ -32,7 +32,7 @@ func TestIngestPricing(t *testing.T) {
 				Unit:       "Hrs",
 				Currency:   "USD",
 				Value:      decimal.RequireFromString("1.23"),
-				Attributes: map[string]string{"termType": "on_demand"},
+				Attributes: map[string]string{"TermType": "OnDemand"},
 			},
 		},
 		{
@@ -41,7 +41,7 @@ func TestIngestPricing(t *testing.T) {
 				Unit:       "Hrs",
 				Currency:   "USD",
 				Value:      decimal.RequireFromString("0.98"),
-				Attributes: map[string]string{"termType": "reserved"},
+				Attributes: map[string]string{"TermType": "Reserved"},
 			},
 		},
 	}

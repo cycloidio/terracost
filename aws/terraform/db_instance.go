@@ -129,18 +129,18 @@ func (inst *DBInstance) Components() []query.Component {
 func (inst *DBInstance) databaseInstanceComponent() query.Component {
 	instClass := inst.instanceType
 	attrFilters := []*product.AttributeFilter{
-		{Key: "instanceType", Value: util.StringPtr(inst.instanceType)},
-		{Key: "deploymentOption", Value: util.StringPtr(inst.deploymentOption)},
-		{Key: "databaseEngine", Value: util.StringPtr(inst.databaseEngine)},
+		{Key: "InstanceType", Value: util.StringPtr(inst.instanceType)},
+		{Key: "DeploymentOption", Value: util.StringPtr(inst.deploymentOption)},
+		{Key: "DatabaseEngine", Value: util.StringPtr(inst.databaseEngine)},
 	}
 
 	if inst.databaseEdition != "" {
-		f := &product.AttributeFilter{Key: "databaseEdition", Value: util.StringPtr(inst.databaseEdition)}
+		f := &product.AttributeFilter{Key: "DatabaseEdition", Value: util.StringPtr(inst.databaseEdition)}
 		attrFilters = append(attrFilters, f)
 	}
 
 	if inst.licenseModel != "" {
-		f := &product.AttributeFilter{Key: "licenseModel", Value: util.StringPtr(inst.licenseModel)}
+		f := &product.AttributeFilter{Key: "LicenseModel", Value: util.StringPtr(inst.licenseModel)}
 		attrFilters = append(attrFilters, f)
 	}
 
@@ -158,7 +158,7 @@ func (inst *DBInstance) databaseInstanceComponent() query.Component {
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("Hrs"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "termType", Value: util.StringPtr("on_demand")},
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
 			},
 		},
 	}
@@ -186,8 +186,8 @@ func (inst *DBInstance) storageComponent() query.Component {
 			Family:   util.StringPtr("Database Storage"),
 			Location: util.StringPtr(inst.region.String()),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "deploymentOption", Value: util.StringPtr(inst.deploymentOption)},
-				{Key: "volumeType", Value: util.StringPtr(volumeType)},
+				{Key: "DeploymentOption", Value: util.StringPtr(inst.deploymentOption)},
+				{Key: "VolumeType", Value: util.StringPtr(volumeType)},
 			},
 		},
 	}
@@ -204,7 +204,7 @@ func (inst *DBInstance) iopsComponent() query.Component {
 			Family:   util.StringPtr("Provisioned IOPS"),
 			Location: util.StringPtr(inst.region.String()),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "deploymentOption", Value: util.StringPtr(inst.deploymentOption)},
+				{Key: "DeploymentOption", Value: util.StringPtr(inst.deploymentOption)},
 			},
 		},
 	}

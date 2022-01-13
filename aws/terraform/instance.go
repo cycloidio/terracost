@@ -122,17 +122,17 @@ func (inst *Instance) computeComponent() query.Component {
 			Family:   util.StringPtr("Compute Instance"),
 			Location: util.StringPtr(inst.region.String()),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "capacitystatus", Value: util.StringPtr(inst.capacityStatus)},
-				{Key: "instanceType", Value: util.StringPtr(inst.instanceType)},
-				{Key: "tenancy", Value: util.StringPtr(inst.tenancy)},
-				{Key: "operatingSystem", Value: util.StringPtr(inst.operatingSystem)},
-				{Key: "preInstalledSw", Value: util.StringPtr(inst.preInstalledSW)},
+				{Key: "CapacityStatus", Value: util.StringPtr(inst.capacityStatus)},
+				{Key: "InstanceType", Value: util.StringPtr(inst.instanceType)},
+				{Key: "Tenancy", Value: util.StringPtr(inst.tenancy)},
+				{Key: "OperatingSystem", Value: util.StringPtr(inst.operatingSystem)},
+				{Key: "PreInstalledSW", Value: util.StringPtr(inst.preInstalledSW)},
 			},
 		},
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("Hrs"),
 			AttributeFilters: []*price.AttributeFilter{
-				{Key: "termType", Value: util.StringPtr("on_demand")},
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
 			},
 		},
 	}
