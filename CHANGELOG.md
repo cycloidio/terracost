@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.0] _2022-01-18_
+
 ### Added
 
 - Google simple implementation with support for `compute_instances`
