@@ -18,8 +18,11 @@ use for AWS has [this](https://docs.aws.amazon.com/cur/latest/userguide/product-
 ## List of supported resources and attributes
 
 * [`aws_instance`](#aws_instance)
-* [`aws_db_instance`](#aws_db_instance)
 * [`aws_ebs_volume`](#aws_ebs_volume)
+* [`aws_elasticache_cluster`](#aws_elasticache_cluster)
+* [`aws_elasticache_replication_group`](#aws_elasticache_replication_group)
+* [`aws_eip`](#aws_eip)
+* [`aws_db_instance`](#aws_db_instance)
 * [`aws_lb/aws_alb`](#aws_lb--aws_alb)
 * [`aws_elb`](#aws_elb)
 
@@ -67,6 +70,36 @@ use for AWS has [this](https://docs.aws.amazon.com/cur/latest/userguide/product-
 * Volume size - 8GB by default
 * Provisioned IOPS - only for "io1" and "io2" volume types; 100 by default
 
+### `aws_elasticache_cluster`
+
+#### Cost factors
+
+* Location
+* InstanceType
+* CacheEngine - "Memcached" or "Redis"
+
+#### Additional notes
+
+* HourlyQuantity is incresed regarding the number of cache nodes
+
+### `aws_elasticache_replication_group`
+
+#### Cost factors
+
+* Location
+* InstanceType
+* CacheEngine - "Memcached" or "Redis"
+
+#### Additional notes
+
+* HourlyQuantity is incresed regarding the number of cache nodes
+
+### `aws_eip`
+
+#### Cost factors
+
+* Group - IdleAddress by default
+* StartingRange - 1 by default
 
 ### `aws_lb` / `aws_alb`
 
