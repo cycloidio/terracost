@@ -7,7 +7,7 @@ use for AWS has [this](https://docs.aws.amazon.com/cur/latest/userguide/product-
 
 1. Familiarize yourself with the official AWS pricing page for the service as well as the Terraform documentation for the resource you want to add. Note all factors that influence the cost.
 2. Download and familiarize yourself with the pricing data CSV. This can be done by first checking the [index.json](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/index.json), finding the respective service under the `offers` key and downloading the file at the URL under the `currentVersionUrl` (replace `json` with `csv`).
-3. Find the names of all columns that contain relevant cost factors and check that the `aws/field/field.go` file contains them - add them if this is not the case and also to the `aws/ingester.go` so it's categorized to the right entity. The constant name should be a correct Go identifier, while the comment should contain the name as it appears in the CSV file.
+3. Find the names of all columns that contain relevant cost factors and check that the `aws/field/field.go` file contains them - add them if this is not the case and also to the `aws/ingester.go` so it's categorized to the right entity (Price or Product). The constant name should be a correct Go identifier, while the comment should contain the variable name as it appears in `aws/field/field.go`.
 4. Run `make generate` to regenerate the field list.
 5. Create a new file in the `aws/terraform` directory with the name of the Terraform resource (without the `aws` prefix), e.g. for `aws_db_instance` it would be `db_instance.go`. It should include two new structs: `Resource` (that is an intermediate struct containing only the relevant cost factors) and `resourceValues` (that directly represents the values from the Terraform resource.) Additionally, the `Resource` struct must implement the `Components` method that returns `[]query.Component`. See the other existing resources for inspiration.
 6. Add the terraform resource to the `aws/terraform/provider.go`  on the `ResourceComponents`
@@ -18,8 +18,11 @@ use for AWS has [this](https://docs.aws.amazon.com/cur/latest/userguide/product-
 ## List of supported resources and attributes
 
 * [`aws_instance`](#aws_instance)
-* [`aws_db_instance`](#aws_db_instance)
 * [`aws_ebs_volume`](#aws_ebs_volume)
+* [`aws_elasticache_cluster`](#aws_elasticache_cluster)
+* [`aws_elasticache_replication_group`](#aws_elasticache_replication_group)
+* [`aws_eip`](#aws_eip)
+* [`aws_db_instance`](#aws_db_instance)
 * [`aws_lb/aws_alb`](#aws_lb--aws_alb)
 * [`aws_elb`](#aws_elb)
 
@@ -67,6 +70,36 @@ use for AWS has [this](https://docs.aws.amazon.com/cur/latest/userguide/product-
 * Volume size - 8GB by default
 * Provisioned IOPS - only for "io1" and "io2" volume types; 100 by default
 
+### `aws_elasticache_cluster`
+
+#### Cost factors
+
+* Location
+* InstanceType
+* CacheEngine - "Memcached" or "Redis"
+
+#### Additional notes
+
+* HourlyQuantity is incresed regarding the number of cache nodes
+
+### `aws_elasticache_replication_group`
+
+#### Cost factors
+
+* Location
+* InstanceType
+* CacheEngine - "Memcached" or "Redis"
+
+#### Additional notes
+
+* HourlyQuantity is incresed regarding the number of cache nodes
+
+### `aws_eip`
+
+#### Cost factors
+
+* Group - IdleAddress by default
+* StartingRange - 1 by default
 
 ### `aws_lb` / `aws_alb`
 

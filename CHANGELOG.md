@@ -1,5 +1,15 @@
 ## [Unreleased]
 
+### Added
+
+- AWS support for `aws_eip`, `aws_aws_elasticache_cluster`, `aws_elasticache_replication_group`
+  ([Pull #68](https://github.com/cycloidio/terracost/pull/68))
+
+### Changed
+
+- AWS ingester change to keep consistency between name from CSV
+  ([Pull #68](https://github.com/cycloidio/terracost/pull/68))
+
 ## [0.5.0] _2022-01-18_
 
 ### Added

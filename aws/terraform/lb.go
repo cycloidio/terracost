@@ -76,7 +76,7 @@ func (lb *LB) loadBalancerComponent() query.Component {
 			Family:   util.StringPtr(family),
 			Location: util.StringPtr(lb.region.String()),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "usagetype", ValueRegex: util.StringPtr("LoadBalancerUsage")},
+				{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 			},
 		},
 		PriceFilter: &price.Filter{

@@ -101,7 +101,10 @@ file, err := os.Open("path/to/tfplan.json")
 plan, err := terracost.EstimateTerraformPlan(ctx, backend, file)
 
 for _, res := range plan.ResourceDifferences() {
-    fmt.Printf("%s: %s -> %s\n", res.Address, res.PriorCost().String(), res.PlannedCost().String())
+  priorCost, err := res.PriorCost()
+  plannedCost, err := res.PlannedCost()
+
+  fmt.Printf("%s: %s -> %s\n", res.Address, priorCost, plannedCost)
 }
 ```
 

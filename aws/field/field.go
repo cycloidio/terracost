@@ -7,36 +7,34 @@ type Field uint8
 
 // List of fields used by the AWS pricing offer file (CSV).
 const (
-	SKU                Field = iota // SKU
-	OfferTermCode                   // OfferTermCode
-	RateCode                        // RateCode
-	PurchaseOption                  // TermType
-	PriceDescription                // PriceDescription
-	EffectiveDate                   // EffectiveDate
-	StartingRange                   // StartingRange
-	EndingRange                     // EndingRange
-	Unit                            // Unit
-	PricePerUnit                    // PricePerUnit
-	Currency                        // Currency
-	TermLength                      // LeaseContractLength
-	TermPurchaseOption              // PurchaseOption
-	TermOfferingClass               // OfferingClass
-	ProductFamily                   // Product Family
-	ServiceCode                     // serviceCode
-	Location                        // Location
-	InstanceType                    // Instance Type
-	StorageMedia                    // Storage Media
-	VolumeType                      // Volume Type
-	Tenancy                         // Tenancy
-	OperatingSystem                 // Operating System
-	UsageType                       // usageType
-	CapacityStatus                  // CapacityStatus
-	PreInstalledSW                  // Pre Installed S/W
-	VolumeAPIName                   // Volume API Name
+	///// Product Attributes /////
+	SKU             Field = iota // SKU
+	CapacityStatus               // CapacityStatus
+	Group                        // Group
+	InstanceType                 // Instance Type
+	Location                     // Location
+	OperatingSystem              // Operating System
+	PreInstalledSW               // Pre Installed S/W
+	ProductFamily                // Product Family
+	ServiceCode                  // serviceCode
+	Tenancy                      // Tenancy
+	UsageType                    // usageType
+	VolumeAPIName                // Volume API Name
+	VolumeType                   // Volume Type
+
+	// ElastiCache
+	CacheEngine // Cache Engine
 
 	// RDS fields
 	DatabaseEngine   // Database Engine
 	DatabaseEdition  // Database Edition
-	LicenseModel     // License Model
 	DeploymentOption // Deployment Option
+	LicenseModel     // License Model
+
+	///// Price Attributes /////
+	Currency      // Currency
+	PricePerUnit  // PricePerUnit
+	StartingRange // StartingRange
+	TermType      // TermType
+	Unit          // Unit
 )

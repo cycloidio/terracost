@@ -37,7 +37,7 @@ func TestLB_Components(t *testing.T) {
 					Family:   util.StringPtr("Load Balancer-Application"),
 					Location: util.StringPtr("eu-west-3"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "usagetype", ValueRegex: util.StringPtr("LoadBalancerUsage")},
+						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
 				},
 				PriceFilter: &price.Filter{
@@ -70,7 +70,7 @@ func TestLB_Components(t *testing.T) {
 					Family:   util.StringPtr("Load Balancer-Network"),
 					Location: util.StringPtr("eu-west-3"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "usagetype", ValueRegex: util.StringPtr("LoadBalancerUsage")},
+						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
 				},
 				PriceFilter: &price.Filter{
@@ -103,7 +103,7 @@ func TestLB_Components(t *testing.T) {
 					Family:   util.StringPtr("Load Balancer-Gateway"),
 					Location: util.StringPtr("eu-west-3"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "usagetype", ValueRegex: util.StringPtr("LoadBalancerUsage")},
+						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
 				},
 				PriceFilter: &price.Filter{
@@ -134,7 +134,7 @@ func TestLB_Components(t *testing.T) {
 					Family:   util.StringPtr("Load Balancer"),
 					Location: util.StringPtr("eu-west-3"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "usagetype", ValueRegex: util.StringPtr("LoadBalancerUsage")},
+						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
 				},
 				PriceFilter: &price.Filter{
