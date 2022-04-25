@@ -35,23 +35,23 @@ To be able to ingest the pricing data from Google the credentials needed have to
 ### Migrating the database
 
 ```go
-db, err := sql.Open("mysql", "...")
+db, err := sql.Open("mysql", "root:password@tcp(IP:3306)/databasename?multiStatements=true")
 
 // Can be called on every start of your program, it does nothing if the migrations
 // have been executed already.
-err := mysql.Migrate(ctx, db, "pricing_migrations")
+err = mysql.Migrate(context.Background(), db, "pricing_migrations")
 ```
 
 ### Ingesting pricing data
 
 ```go
-db, err := sql.Open("mysql", "...")
+db, err := sql.Open("mysql", "root:password@tcp(IP:3306)/databasename?multiStatements=true")
 backend := mysql.NewBackend(db)
 
 // service can be "AmazonEC2" or "AmazonRDS"
 // region is any AWS region, e.g. "us-east-1" or "eu-west-3"
 ingester, err := aws.NewIngester(service, region)
-err = terracost.IngestPricing(ctx, backend, ingester)
+err = terracost.IngestPricing(context.Background(), backend, ingester)
 ```
 
 ### Tracking ingestion progress
@@ -98,7 +98,7 @@ db, err := db.Open("mysql", "...")
 backend := mysql.NewBackend(db)
 
 file, err := os.Open("path/to/tfplan.json")
-plan, err := terracost.EstimateTerraformPlan(ctx, backend, file)
+plan, err := terracost.EstimateTerraformPlan(context.Background(), backend, file)
 
 for _, res := range plan.ResourceDifferences() {
   priorCost, err := res.PriorCost()
@@ -109,6 +109,10 @@ for _, res := range plan.ResourceDifferences() {
 ```
 
 Check the documentation for all available fields.
+
+## Samples
+
+For more examples, please check [examples](examples/README.md).
 
 ## Contributing
 
@@ -124,7 +128,7 @@ This project is licensed under the MIT license. Please see [LICENSE](LICENSE) fo
 
 As of now, we have three open-source tools:
 
-* [TerraCognita](https://github.com/cycloidio/terracognita): Read from your existing cloud providers and generate IaC in Terraform 
+* [TerraCognita](https://github.com/cycloidio/terracognita): Read from your existing cloud providers and generate IaC in Terraform
 * [InfraMap](https://github.com/cycloidio/inframap): Reads .tfstate or HCL to generate a graph specific for each provider
 * [TerraCost](https://github.com/cycloidio/terracost): Cloud cost estimation for Terraform in the CLI
 

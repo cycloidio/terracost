@@ -1,6 +1,6 @@
-# TerraCost samples
+# TerraCost examples
 
-Samples are only example to help you understand how to test Terracost.
+Examples help you to understand how to test Terracost.
 
 ## Requirements
 
