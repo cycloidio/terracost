@@ -1,0 +1,981 @@
+{
+  "format_version": "0.1",
+  "terraform_version": "0.15.3",
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_instance.example",
+          "mode": "managed",
+          "type": "aws_instance",
+          "name": "example",
+          "provider_name": "registry.terraform.io/hashicorp/aws",
+          "schema_version": 1,
+          "values": {
+            "ami": "some-ami",
+            "credit_specification": [],
+            "get_password_data": false,
+            "hibernation": null,
+            "iam_instance_profile": null,
+            "instance_type": "t2.micro",
+            "launch_template": [],
+            "source_dest_check": true,
+            "tags": null,
+            "timeouts": null,
+            "user_data_replace_on_change": false,
+            "volume_tags": null
+          }
+        }
+      ],
+      "child_modules": [
+        {
+          "resources": [
+            {
+              "address": "module.ec2.aws_elb.front",
+              "mode": "managed",
+              "type": "aws_elb",
+              "name": "front",
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 0,
+              "values": {
+                "access_logs": [],
+                "connection_draining": false,
+                "connection_draining_timeout": 300,
+                "cross_zone_load_balancing": true,
+                "desync_mitigation_mode": "defensive",
+                "idle_timeout": 60,
+                "listener": [
+                  {
+                    "instance_port": 80,
+                    "instance_protocol": "tcp",
+                    "lb_port": 80,
+                    "lb_protocol": "tcp",
+                    "ssl_certificate_id": ""
+                  }
+                ],
+                "name_prefix": null,
+                "tags": null
+              }
+            },
+            {
+              "address": "module.ec2.aws_instance.front[0]",
+              "mode": "managed",
+              "type": "aws_instance",
+              "name": "front",
+              "index": 0,
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "ami": "ami-043c379c7b2d08729",
+                "credit_specification": [],
+                "get_password_data": false,
+                "hibernation": null,
+                "iam_instance_profile": null,
+                "instance_type": "t3.small",
+                "launch_template": [],
+                "root_block_device": [
+                  {
+                    "delete_on_termination": true,
+                    "tags": null,
+                    "volume_size": 123,
+                    "volume_type": "gp2"
+                  }
+                ],
+                "source_dest_check": true,
+                "tags": null,
+                "timeouts": null,
+                "user_data_replace_on_change": false,
+                "volume_tags": null
+              }
+            }
+          ],
+          "address": "module.ec2",
+          "child_modules": [
+            {
+              "resources": [
+                {
+                  "address": "module.ec2.module.ebs.aws_ebs_volume.volume",
+                  "mode": "managed",
+                  "type": "aws_ebs_volume",
+                  "name": "volume",
+                  "provider_name": "registry.terraform.io/hashicorp/aws",
+                  "schema_version": 0,
+                  "values": {
+                    "multi_attach_enabled": null,
+                    "outpost_arn": null,
+                    "size": 20,
+                    "tags": null,
+                    "type": "gp2"
+                  }
+                }
+              ],
+              "address": "module.ec2.module.ebs"
+            }
+          ]
+        },
+        {
+          "resources": [
+            {
+              "address": "module.rds.aws_db_instance.db",
+              "mode": "managed",
+              "type": "aws_db_instance",
+              "name": "db",
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "allocated_storage": 10,
+                "allow_major_version_upgrade": null,
+                "auto_minor_version_upgrade": true,
+                "copy_tags_to_snapshot": false,
+                "customer_owned_ip_enabled": null,
+                "delete_automated_backups": true,
+                "deletion_protection": null,
+                "domain": null,
+                "domain_iam_role_name": null,
+                "enabled_cloudwatch_logs_exports": null,
+                "engine": "mysql",
+                "final_snapshot_identifier": null,
+                "iam_database_authentication_enabled": null,
+                "instance_class": "db.t3.small",
+                "iops": null,
+                "max_allocated_storage": null,
+                "monitoring_interval": 0,
+                "multi_az": true,
+                "password": null,
+                "performance_insights_enabled": false,
+                "publicly_accessible": false,
+                "replicate_source_db": null,
+                "restore_to_point_in_time": [],
+                "s3_import": [],
+                "security_group_names": null,
+                "skip_final_snapshot": false,
+                "storage_encrypted": null,
+                "storage_type": "gp2",
+                "tags": null,
+                "timeouts": null
+              }
+            }
+          ],
+          "address": "module.rds"
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "aws_instance.example",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "example",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "ami": "some-ami",
+          "credit_specification": [],
+          "get_password_data": false,
+          "hibernation": null,
+          "iam_instance_profile": null,
+          "instance_type": "t2.micro",
+          "launch_template": [],
+          "source_dest_check": true,
+          "tags": null,
+          "timeouts": null,
+          "user_data_replace_on_change": false,
+          "volume_tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "associate_public_ip_address": true,
+          "availability_zone": true,
+          "capacity_reservation_specification": true,
+          "cpu_core_count": true,
+          "cpu_threads_per_core": true,
+          "credit_specification": [],
+          "disable_api_termination": true,
+          "ebs_block_device": true,
+          "ebs_optimized": true,
+          "enclave_options": true,
+          "ephemeral_block_device": true,
+          "host_id": true,
+          "id": true,
+          "instance_initiated_shutdown_behavior": true,
+          "instance_state": true,
+          "ipv6_address_count": true,
+          "ipv6_addresses": true,
+          "key_name": true,
+          "launch_template": [],
+          "metadata_options": true,
+          "monitoring": true,
+          "network_interface": true,
+          "outpost_arn": true,
+          "password_data": true,
+          "placement_group": true,
+          "placement_partition_number": true,
+          "primary_network_interface_id": true,
+          "private_dns": true,
+          "private_ip": true,
+          "public_dns": true,
+          "public_ip": true,
+          "root_block_device": true,
+          "secondary_private_ips": true,
+          "security_groups": true,
+          "subnet_id": true,
+          "tags_all": true,
+          "tenancy": true,
+          "user_data": true,
+          "user_data_base64": true,
+          "vpc_security_group_ids": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "capacity_reservation_specification": [],
+          "credit_specification": [],
+          "ebs_block_device": [],
+          "enclave_options": [],
+          "ephemeral_block_device": [],
+          "ipv6_addresses": [],
+          "launch_template": [],
+          "metadata_options": [],
+          "network_interface": [],
+          "root_block_device": [],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "tags_all": {},
+          "vpc_security_group_ids": []
+        }
+      }
+    },
+    {
+      "address": "module.ec2.aws_elb.front",
+      "module_address": "module.ec2",
+      "mode": "managed",
+      "type": "aws_elb",
+      "name": "front",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "access_logs": [],
+          "connection_draining": false,
+          "connection_draining_timeout": 300,
+          "cross_zone_load_balancing": true,
+          "desync_mitigation_mode": "defensive",
+          "idle_timeout": 60,
+          "listener": [
+            {
+              "instance_port": 80,
+              "instance_protocol": "tcp",
+              "lb_port": 80,
+              "lb_protocol": "tcp",
+              "ssl_certificate_id": ""
+            }
+          ],
+          "name_prefix": null,
+          "tags": null
+        },
+        "after_unknown": {
+          "access_logs": [],
+          "arn": true,
+          "availability_zones": true,
+          "dns_name": true,
+          "health_check": true,
+          "id": true,
+          "instances": true,
+          "internal": true,
+          "listener": [
+            {}
+          ],
+          "name": true,
+          "security_groups": true,
+          "source_security_group": true,
+          "source_security_group_id": true,
+          "subnets": true,
+          "tags_all": true,
+          "zone_id": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "access_logs": [],
+          "availability_zones": [],
+          "health_check": [],
+          "instances": [],
+          "listener": [
+            {}
+          ],
+          "security_groups": [],
+          "subnets": [],
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "module.ec2.aws_instance.front[0]",
+      "module_address": "module.ec2",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "front",
+      "index": 0,
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "ami": "ami-043c379c7b2d08729",
+          "credit_specification": [],
+          "get_password_data": false,
+          "hibernation": null,
+          "iam_instance_profile": null,
+          "instance_type": "t3.small",
+          "launch_template": [],
+          "root_block_device": [
+            {
+              "delete_on_termination": true,
+              "tags": null,
+              "volume_size": 123,
+              "volume_type": "gp2"
+            }
+          ],
+          "source_dest_check": true,
+          "tags": null,
+          "timeouts": null,
+          "user_data_replace_on_change": false,
+          "volume_tags": null
+        },
+        "after_unknown": {
+          "arn": true,
+          "associate_public_ip_address": true,
+          "availability_zone": true,
+          "capacity_reservation_specification": true,
+          "cpu_core_count": true,
+          "cpu_threads_per_core": true,
+          "credit_specification": [],
+          "disable_api_termination": true,
+          "ebs_block_device": true,
+          "ebs_optimized": true,
+          "enclave_options": true,
+          "ephemeral_block_device": true,
+          "host_id": true,
+          "id": true,
+          "instance_initiated_shutdown_behavior": true,
+          "instance_state": true,
+          "ipv6_address_count": true,
+          "ipv6_addresses": true,
+          "key_name": true,
+          "launch_template": [],
+          "metadata_options": true,
+          "monitoring": true,
+          "network_interface": true,
+          "outpost_arn": true,
+          "password_data": true,
+          "placement_group": true,
+          "placement_partition_number": true,
+          "primary_network_interface_id": true,
+          "private_dns": true,
+          "private_ip": true,
+          "public_dns": true,
+          "public_ip": true,
+          "root_block_device": [
+            {
+              "device_name": true,
+              "encrypted": true,
+              "iops": true,
+              "kms_key_id": true,
+              "throughput": true,
+              "volume_id": true
+            }
+          ],
+          "secondary_private_ips": true,
+          "security_groups": true,
+          "subnet_id": true,
+          "tags_all": true,
+          "tenancy": true,
+          "user_data": true,
+          "user_data_base64": true,
+          "vpc_security_group_ids": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "capacity_reservation_specification": [],
+          "credit_specification": [],
+          "ebs_block_device": [],
+          "enclave_options": [],
+          "ephemeral_block_device": [],
+          "ipv6_addresses": [],
+          "launch_template": [],
+          "metadata_options": [],
+          "network_interface": [],
+          "root_block_device": [
+            {}
+          ],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "tags_all": {},
+          "vpc_security_group_ids": []
+        }
+      }
+    },
+    {
+      "address": "module.ec2.module.ebs.aws_ebs_volume.volume",
+      "module_address": "module.ec2.module.ebs",
+      "mode": "managed",
+      "type": "aws_ebs_volume",
+      "name": "volume",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "multi_attach_enabled": null,
+          "outpost_arn": null,
+          "size": 20,
+          "tags": null,
+          "type": "gp2"
+        },
+        "after_unknown": {
+          "arn": true,
+          "availability_zone": true,
+          "encrypted": true,
+          "id": true,
+          "iops": true,
+          "kms_key_id": true,
+          "snapshot_id": true,
+          "tags_all": true,
+          "throughput": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "tags_all": {}
+        }
+      }
+    },
+    {
+      "address": "module.rds.aws_db_instance.db",
+      "module_address": "module.rds",
+      "mode": "managed",
+      "type": "aws_db_instance",
+      "name": "db",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "allocated_storage": 10,
+          "allow_major_version_upgrade": null,
+          "auto_minor_version_upgrade": true,
+          "copy_tags_to_snapshot": false,
+          "customer_owned_ip_enabled": null,
+          "delete_automated_backups": true,
+          "deletion_protection": null,
+          "domain": null,
+          "domain_iam_role_name": null,
+          "enabled_cloudwatch_logs_exports": null,
+          "engine": "mysql",
+          "final_snapshot_identifier": null,
+          "iam_database_authentication_enabled": null,
+          "instance_class": "db.t3.small",
+          "iops": null,
+          "max_allocated_storage": null,
+          "monitoring_interval": 0,
+          "multi_az": true,
+          "password": null,
+          "performance_insights_enabled": false,
+          "publicly_accessible": false,
+          "replicate_source_db": null,
+          "restore_to_point_in_time": [],
+          "s3_import": [],
+          "security_group_names": null,
+          "skip_final_snapshot": false,
+          "storage_encrypted": null,
+          "storage_type": "gp2",
+          "tags": null,
+          "timeouts": null
+        },
+        "after_unknown": {
+          "address": true,
+          "apply_immediately": true,
+          "arn": true,
+          "availability_zone": true,
+          "backup_retention_period": true,
+          "backup_window": true,
+          "ca_cert_identifier": true,
+          "character_set_name": true,
+          "db_name": true,
+          "db_subnet_group_name": true,
+          "endpoint": true,
+          "engine_version": true,
+          "engine_version_actual": true,
+          "hosted_zone_id": true,
+          "id": true,
+          "identifier": true,
+          "identifier_prefix": true,
+          "kms_key_id": true,
+          "latest_restorable_time": true,
+          "license_model": true,
+          "maintenance_window": true,
+          "monitoring_role_arn": true,
+          "name": true,
+          "nchar_character_set_name": true,
+          "option_group_name": true,
+          "parameter_group_name": true,
+          "performance_insights_kms_key_id": true,
+          "performance_insights_retention_period": true,
+          "port": true,
+          "replica_mode": true,
+          "replicas": true,
+          "resource_id": true,
+          "restore_to_point_in_time": [],
+          "s3_import": [],
+          "snapshot_identifier": true,
+          "status": true,
+          "tags_all": true,
+          "timezone": true,
+          "username": true,
+          "vpc_security_group_ids": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "password": true,
+          "replicas": [],
+          "restore_to_point_in_time": [],
+          "s3_import": [],
+          "tags_all": {},
+          "vpc_security_group_ids": []
+        }
+      }
+    }
+  ],
+  "prior_state": {
+    "format_version": "0.1",
+    "terraform_version": "0.15.3",
+    "values": {
+      "root_module": {
+        "child_modules": [
+          {
+            "resources": [
+              {
+                "address": "module.ec2.data.aws_ami.debian",
+                "mode": "data",
+                "type": "aws_ami",
+                "name": "debian",
+                "provider_name": "registry.terraform.io/hashicorp/aws",
+                "schema_version": 0,
+                "values": {
+                  "architecture": "x86_64",
+                  "arn": "arn:aws:ec2:eu-west-1::image/ami-043c379c7b2d08729",
+                  "block_device_mappings": [
+                    {
+                      "device_name": "xvda",
+                      "ebs": {
+                        "delete_on_termination": "true",
+                        "encrypted": "false",
+                        "iops": "0",
+                        "snapshot_id": "snap-0a4f13c7c51956424",
+                        "throughput": "0",
+                        "volume_size": "8",
+                        "volume_type": "gp2"
+                      },
+                      "no_device": "",
+                      "virtual_name": ""
+                    }
+                  ],
+                  "boot_mode": "",
+                  "creation_date": "2022-03-25T16:25:57.000Z",
+                  "description": "FAI Debian Image",
+                  "ena_support": true,
+                  "executable_users": null,
+                  "filter": [
+                    {
+                      "name": "architecture",
+                      "values": [
+                        "x86_64"
+                      ]
+                    },
+                    {
+                      "name": "name",
+                      "values": [
+                        "debian-stretch-*"
+                      ]
+                    },
+                    {
+                      "name": "root-device-type",
+                      "values": [
+                        "ebs"
+                      ]
+                    },
+                    {
+                      "name": "virtualization-type",
+                      "values": [
+                        "hvm"
+                      ]
+                    }
+                  ],
+                  "hypervisor": "xen",
+                  "id": "ami-043c379c7b2d08729",
+                  "image_id": "ami-043c379c7b2d08729",
+                  "image_location": "379101102735/debian-stretch-hvm-x86_64-gp2-2022-03-25-58319",
+                  "image_owner_alias": null,
+                  "image_type": "machine",
+                  "kernel_id": null,
+                  "most_recent": true,
+                  "name": "debian-stretch-hvm-x86_64-gp2-2022-03-25-58319",
+                  "name_regex": null,
+                  "owner_id": "379101102735",
+                  "owners": [
+                    "379101102735"
+                  ],
+                  "platform": null,
+                  "platform_details": "Linux/UNIX",
+                  "product_codes": [],
+                  "public": true,
+                  "ramdisk_id": null,
+                  "root_device_name": "xvda",
+                  "root_device_type": "ebs",
+                  "root_snapshot_id": "snap-0a4f13c7c51956424",
+                  "sriov_net_support": "simple",
+                  "state": "available",
+                  "state_reason": {
+                    "code": "UNSET",
+                    "message": "UNSET"
+                  },
+                  "tags": {},
+                  "usage_operation": "RunInstances",
+                  "virtualization_type": "hvm"
+                }
+              }
+            ],
+            "address": "module.ec2"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "expressions": {
+          "region": {
+            "constant_value": "eu-west-1"
+          }
+        }
+      },
+      "aws.paris": {
+        "name": "aws",
+        "alias": "paris",
+        "expressions": {
+          "region": {
+            "constant_value": "eu-west-3"
+          }
+        }
+      }
+    },
+    "root_module": {
+      "resources": [
+        {
+          "address": "aws_instance.example",
+          "mode": "managed",
+          "type": "aws_instance",
+          "name": "example",
+          "provider_config_key": "aws.paris",
+          "expressions": {
+            "ami": {
+              "constant_value": "some-ami"
+            },
+            "instance_type": {
+              "constant_value": "t2.micro"
+            }
+          },
+          "schema_version": 1
+        }
+      ],
+      "module_calls": {
+        "ec2": {
+          "source": "./module-ec2",
+          "expressions": {
+            "disk_size": {
+              "constant_value": 123
+            }
+          },
+          "module": {
+            "resources": [
+              {
+                "address": "aws_elb.front",
+                "mode": "managed",
+                "type": "aws_elb",
+                "name": "front",
+                "provider_config_key": "ec2:aws",
+                "expressions": {
+                  "instances": {
+                    "references": [
+                      "aws_instance.front[0]"
+                    ]
+                  },
+                  "listener": [
+                    {
+                      "instance_port": {
+                        "constant_value": 80
+                      },
+                      "instance_protocol": {
+                        "constant_value": "tcp"
+                      },
+                      "lb_port": {
+                        "constant_value": 80
+                      },
+                      "lb_protocol": {
+                        "constant_value": "tcp"
+                      }
+                    }
+                  ]
+                },
+                "schema_version": 0
+              },
+              {
+                "address": "aws_instance.front",
+                "mode": "managed",
+                "type": "aws_instance",
+                "name": "front",
+                "provider_config_key": "ec2:aws",
+                "expressions": {
+                  "ami": {
+                    "references": [
+                      "data.aws_ami.debian"
+                    ]
+                  },
+                  "instance_type": {
+                    "references": [
+                      "var.instance_type"
+                    ]
+                  },
+                  "root_block_device": [
+                    {
+                      "delete_on_termination": {
+                        "constant_value": true
+                      },
+                      "volume_size": {
+                        "references": [
+                          "var.disk_size"
+                        ]
+                      },
+                      "volume_type": {
+                        "references": [
+                          "var.disk_type"
+                        ]
+                      }
+                    }
+                  ]
+                },
+                "schema_version": 1,
+                "count_expression": {
+                  "references": [
+                    "var.instance_count"
+                  ]
+                }
+              },
+              {
+                "address": "data.aws_ami.debian",
+                "mode": "data",
+                "type": "aws_ami",
+                "name": "debian",
+                "provider_config_key": "ec2:aws",
+                "expressions": {
+                  "filter": [
+                    {
+                      "name": {
+                        "constant_value": "name"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "debian-stretch-*"
+                        ]
+                      }
+                    },
+                    {
+                      "name": {
+                        "constant_value": "virtualization-type"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "hvm"
+                        ]
+                      }
+                    },
+                    {
+                      "name": {
+                        "constant_value": "architecture"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "x86_64"
+                        ]
+                      }
+                    },
+                    {
+                      "name": {
+                        "constant_value": "root-device-type"
+                      },
+                      "values": {
+                        "constant_value": [
+                          "ebs"
+                        ]
+                      }
+                    }
+                  ],
+                  "most_recent": {
+                    "constant_value": true
+                  },
+                  "owners": {
+                    "constant_value": [
+                      "379101102735"
+                    ]
+                  }
+                },
+                "schema_version": 0
+              }
+            ],
+            "module_calls": {
+              "ebs": {
+                "source": "./module-ebs",
+                "expressions": {
+                  "availability_zone": {
+                    "references": [
+                      "aws_instance.front[0]"
+                    ]
+                  }
+                },
+                "module": {
+                  "resources": [
+                    {
+                      "address": "aws_ebs_volume.volume",
+                      "mode": "managed",
+                      "type": "aws_ebs_volume",
+                      "name": "volume",
+                      "provider_config_key": "ebs:aws",
+                      "expressions": {
+                        "availability_zone": {
+                          "references": [
+                            "var.availability_zone"
+                          ]
+                        },
+                        "size": {
+                          "references": [
+                            "var.size"
+                          ]
+                        },
+                        "type": {
+                          "references": [
+                            "var.type"
+                          ]
+                        }
+                      },
+                      "schema_version": 0
+                    }
+                  ],
+                  "variables": {
+                    "availability_zone": {},
+                    "size": {
+                      "default": 20
+                    },
+                    "type": {
+                      "default": "gp2"
+                    }
+                  }
+                }
+              }
+            },
+            "variables": {
+              "disk_size": {
+                "default": 60
+              },
+              "disk_type": {
+                "default": "gp2"
+              },
+              "instance_count": {
+                "default": 1
+              },
+              "instance_type": {
+                "default": "t3.small"
+              }
+            }
+          }
+        },
+        "rds": {
+          "source": "./module-rds",
+          "expressions": {
+            "multi_az": {
+              "constant_value": true
+            }
+          },
+          "module": {
+            "resources": [
+              {
+                "address": "aws_db_instance.db",
+                "mode": "managed",
+                "type": "aws_db_instance",
+                "name": "db",
+                "provider_config_key": "rds:aws",
+                "expressions": {
+                  "allocated_storage": {
+                    "references": [
+                      "var.storage_size"
+                    ]
+                  },
+                  "engine": {
+                    "references": [
+                      "var.rds_engine"
+                    ]
+                  },
+                  "instance_class": {
+                    "references": [
+                      "var.instance_class"
+                    ]
+                  },
+                  "multi_az": {
+                    "references": [
+                      "var.multi_az"
+                    ]
+                  },
+                  "storage_type": {
+                    "references": [
+                      "var.storage_type"
+                    ]
+                  }
+                },
+                "schema_version": 1
+              }
+            ],
+            "variables": {
+              "instance_class": {
+                "default": "db.t3.small"
+              },
+              "multi_az": {
+                "default": false
+              },
+              "rds_engine": {
+                "default": "mysql"
+              },
+              "storage_size": {
+                "default": 10
+              },
+              "storage_type": {
+                "default": "gp2"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
