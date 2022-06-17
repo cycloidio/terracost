@@ -103,7 +103,7 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 
 	// Recursively extract resources from all child module calls.
 	for mk, mv := range mod.ModuleCalls {
-		p := joinPath(modPath, mv.SourceAddr)
+		p := joinPath(modPath, mv.SourceAddr.String())
 
 		// Try to load a module from a config directory. Only local modules are supported, other types of modules
 		// will be skipped.
