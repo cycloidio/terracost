@@ -45,7 +45,7 @@ To estimate a terraform plan, you need to first generate it as json format
 ```
 terraform init
 terraform plan -out update.tfplan
-terraform show -json update.tfplan > tfplan.json
+terraform show -json update.tfplan > terraform-plan.json
 ```
 
 Then run the estimation by specifying your json plan file path.
