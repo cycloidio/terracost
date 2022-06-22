@@ -110,7 +110,7 @@ for _, res := range plan.ResourceDifferences() {
 
 Check the documentation for all available fields.
 
-## Samples
+## Examples
 
 For more examples, please check [examples](examples/README.md).
 
