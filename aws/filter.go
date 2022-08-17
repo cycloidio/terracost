@@ -32,10 +32,10 @@ func minimalFilterEC2(pp *price.WithProduct) bool {
 	switch pp.Product.Family {
 	case "Compute Instance":
 		allowedProductAttrs := map[string][]string{
-			"capacitystatus":  {"Used"},
-			"operatingSystem": {"Linux"},
-			"preInstalledSw":  {"NA"},
-			"tenancy":         {"Shared", "Dedicated"},
+			"CapacityStatus":  {"Used"},
+			"OperatingSystem": {"Linux"},
+			"PreInstalledSW":  {"NA"},
+			"Tenancy":         {"Shared", "Dedicated"},
 		}
 		for k, vals := range allowedProductAttrs {
 			if !isValueAllowed(pp.Product.Attributes[k], vals) {
