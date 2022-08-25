@@ -3,7 +3,7 @@ module github.com/cycloidio/terracost/samples
 go 1.17
 
 require (
-	github.com/cycloidio/terracost v0.5.0
+	github.com/cycloidio/terracost v0.5.1-0.20220622141548-20e6cf3c421b
 	github.com/go-sql-driver/mysql v1.6.0
 )
 
