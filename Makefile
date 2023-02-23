@@ -8,7 +8,7 @@ GO_RUN_CMD := $(GO_CMD) run
 MYSQL_USER := root
 MYSQL_PASS := terracost
 MYSQL_DB := terracost_test
-MYSQL_DUMP ?= mysql/testdata/2021-08-12-pricing.sql.gz
+MYSQL_DUMP ?= mysql/testdata/2023-02-23-pricing.sql.gz
 
 BIN_DIR := $(GOPATH)/bin
 

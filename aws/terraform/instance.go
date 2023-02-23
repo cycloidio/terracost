@@ -1,6 +1,9 @@
 package terraform
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/mitchellh/mapstructure"
 	"github.com/shopspring/decimal"
 
@@ -37,6 +40,16 @@ type Instance struct {
 	// Note: only "NA" (no pre-installed software) is supported at the moment.
 	preInstalledSW string
 
+	// Credit option for CPU usage. Valid values include standard or unlimited
+	cpuCredits bool
+
+	ebsOptimized     bool
+	enableMonitoring bool
+
+	// instanceCount number of instance provisionned.
+	// Currently used by ASG
+	instanceCount decimal.Decimal
+
 	rootVolume *Volume
 }
 
@@ -45,6 +58,12 @@ type instanceValues struct {
 	InstanceType     string `mapstructure:"instance_type"`
 	Tenancy          string `mapstructure:"tenancy"`
 	AvailabilityZone string `mapstructure:"availability_zone"`
+
+	EBSOptimized        bool `mapstructure:"ebs_optimized"`
+	EnableMonitoring    bool `mapstructure:"monitoring"`
+	CreditSpecification []struct {
+		CPUCredits string `mapstructure:"cpu_credits"`
+	} `mapstructure:"credit_specification"`
 
 	RootBlockDevice []struct {
 		VolumeType string  `mapstructure:"volume_type"`
@@ -73,6 +92,7 @@ func (p *Provider) newInstance(vals instanceValues) *Instance {
 		operatingSystem: "Linux",
 		capacityStatus:  "Used",
 		preInstalledSW:  "NA",
+		instanceCount:   decimal.NewFromInt(1),
 
 		instanceType: vals.InstanceType,
 	}
@@ -83,6 +103,21 @@ func (p *Provider) newInstance(vals instanceValues) *Instance {
 
 	if vals.Tenancy == "dedicated" {
 		inst.tenancy = "Dedicated"
+	}
+
+	if vals.EBSOptimized {
+		inst.ebsOptimized = true
+	}
+
+	if len(vals.CreditSpecification) > 0 {
+		creditspec := vals.CreditSpecification[0]
+		if creditspec.CPUCredits == "unlimited" {
+			inst.cpuCredits = true
+		}
+	}
+
+	if vals.EnableMonitoring {
+		inst.enableMonitoring = true
 	}
 
 	volVals := volumeValues{AvailabilityZone: vals.AvailabilityZone}
@@ -108,14 +143,105 @@ func (inst *Instance) Components() []query.Component {
 		}
 	}
 
+	if inst.cpuCredits {
+		components = append(components, inst.cpuCreditCostComponent())
+	}
+
+	if inst.enableMonitoring {
+		components = append(components, inst.detailedMonitoringCostComponent())
+	}
+
+	if inst.ebsOptimized {
+		components = append(components, inst.ebsOptimizedCostComponent())
+	}
+
 	return components
+}
+
+func (inst *Instance) cpuCreditCostComponent() query.Component {
+
+	// Used to generate the UsageType
+	region := strings.ToUpper(strings.Split(inst.region.String(), "-")[0])
+	instType := strings.Split(inst.instanceType, ".")[0]
+
+	return query.Component{
+		Name:           "CPUCreditCost",
+		Details:        []string{"Linux", "on-demand", inst.instanceType},
+		HourlyQuantity: inst.instanceCount,
+		ProductFilter: &product.Filter{
+			Provider: util.StringPtr(inst.provider.key),
+			Service:  util.StringPtr("AmazonEC2"),
+			Family:   util.StringPtr("CPU Credits"),
+			Location: util.StringPtr(inst.region.String()),
+			AttributeFilters: []*product.AttributeFilter{
+				{Key: "OperatingSystem", Value: util.StringPtr(inst.operatingSystem)},
+				{Key: "UsageType", Value: util.StringPtr(fmt.Sprintf("%s-CPUCredits:%s", region, instType))},
+			},
+		},
+		PriceFilter: &price.Filter{
+			Unit: util.StringPtr("vCPU-Hours"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
+			},
+		},
+	}
+}
+
+func (inst *Instance) detailedMonitoringCostComponent() query.Component {
+	var defaultEC2InstanceMetricCount = 7
+	return query.Component{
+		Name:            "EC2 detailed monitoring",
+		Details:         []string{"on-demand", "monitoring"},
+		MonthlyQuantity: decimal.NewFromInt(int64(defaultEC2InstanceMetricCount)),
+		ProductFilter: &product.Filter{
+			Provider:         util.StringPtr(inst.provider.key),
+			Service:          util.StringPtr("AmazonCloudWatch"),
+			Family:           util.StringPtr("Metric"),
+			Location:         util.StringPtr(inst.region.String()),
+			AttributeFilters: []*product.AttributeFilter{},
+		},
+		PriceFilter: &price.Filter{
+			Unit: util.StringPtr("Metrics"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
+				{Key: "StartingRange", Value: util.StringPtr("0")},
+			},
+		},
+	}
+}
+
+func (inst *Instance) ebsOptimizedCostComponent() query.Component {
+
+	// Used to generate the UsageType
+	region := strings.ToUpper(strings.Split(inst.region.String(), "-")[0])
+	return query.Component{
+		Name:           "EBS-optimized usage",
+		Details:        []string{"EBS", "Optimizes", inst.instanceType},
+		HourlyQuantity: inst.instanceCount,
+		ProductFilter: &product.Filter{
+			Provider: util.StringPtr(inst.provider.key),
+			Service:  util.StringPtr("AmazonEC2"),
+			Family:   util.StringPtr("Compute Instance"),
+			Location: util.StringPtr(inst.region.String()),
+			AttributeFilters: []*product.AttributeFilter{
+				{Key: "InstanceType", Value: util.StringPtr(inst.instanceType)},
+				{Key: "UsageType", Value: util.StringPtr(fmt.Sprintf("%s-EBSOptimized:%s", region, inst.instanceType))},
+			},
+		},
+		PriceFilter: &price.Filter{
+			Unit: util.StringPtr("Hrs"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "TermType", Value: util.StringPtr("OnDemand")},
+			},
+		},
+	}
 }
 
 func (inst *Instance) computeComponent() query.Component {
 	return query.Component{
 		Name:           "Compute",
 		Details:        []string{"Linux", "on-demand", inst.instanceType},
-		HourlyQuantity: decimal.NewFromInt(1),
+		HourlyQuantity: inst.instanceCount,
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(inst.provider.key),
 			Service:  util.StringPtr("AmazonEC2"),
