@@ -16,7 +16,7 @@ import (
 )
 
 func TestLB_Components(t *testing.T) {
-	p, err := awstf.NewProvider("aws", "eu-west-3")
+	p, err := awstf.NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	t.Run("DefaultValues", func(t *testing.T) {
@@ -35,7 +35,7 @@ func TestLB_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AWSELB"),
 					Family:   util.StringPtr("Load Balancer-Application"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
@@ -68,7 +68,7 @@ func TestLB_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AWSELB"),
 					Family:   util.StringPtr("Load Balancer-Network"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
@@ -101,7 +101,7 @@ func TestLB_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AWSELB"),
 					Family:   util.StringPtr("Load Balancer-Gateway"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},
@@ -132,7 +132,7 @@ func TestLB_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AWSELB"),
 					Family:   util.StringPtr("Load Balancer"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "UsageType", ValueRegex: util.StringPtr("LoadBalancerUsage")},
 					},

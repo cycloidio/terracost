@@ -17,7 +17,7 @@ import (
 )
 
 func TestInstance_Components(t *testing.T) {
-	p, err := awstf.NewProvider("aws", "eu-west-3")
+	p, err := awstf.NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	t.Run("DefaultValues", func(t *testing.T) {
@@ -40,7 +40,7 @@ func TestInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Compute Instance"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "CapacityStatus", Value: util.StringPtr("Used")},
 						{Key: "InstanceType", Value: util.StringPtr("m5.xlarge")},
@@ -65,7 +65,7 @@ func TestInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
 					},
@@ -84,7 +84,7 @@ func TestInstance_Components(t *testing.T) {
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"availability_zone": "eu-west-3a",
+				"availability_zone": "eu-west-1a",
 				"instance_type":     "m5.xlarge",
 				"tenancy":           "dedicated",
 				"ebs_optimized":     true,
@@ -112,7 +112,7 @@ func TestInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Compute Instance"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "CapacityStatus", Value: util.StringPtr("Used")},
 						{Key: "InstanceType", Value: util.StringPtr("m5.xlarge")},
@@ -137,7 +137,7 @@ func TestInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("st1")},
 					},
@@ -151,7 +151,7 @@ func TestInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("CPU Credits"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "OperatingSystem", Value: util.StringPtr("Linux")},
 						{Key: "UsageType", Value: util.StringPtr(fmt.Sprintf("%s-CPUCredits:%s", "EU", "m5"))},
@@ -172,7 +172,7 @@ func TestInstance_Components(t *testing.T) {
 					Provider:         util.StringPtr("aws"),
 					Service:          util.StringPtr("AmazonCloudWatch"),
 					Family:           util.StringPtr("Metric"),
-					Location:         util.StringPtr("eu-west-3"),
+					Location:         util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{},
 				},
 				PriceFilter: &price.Filter{
@@ -191,10 +191,10 @@ func TestInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Compute Instance"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("m5.xlarge")},
-						{Key: "UsageType", Value: util.StringPtr(fmt.Sprintf("%s-EBSOptimized:%s", "eu-west-3", "m5.xlarge"))},
+						{Key: "UsageType", Value: util.StringPtr(fmt.Sprintf("%s-EBSOptimized:%s", "EU", "m5.xlarge"))},
 					},
 				},
 				PriceFilter: &price.Filter{

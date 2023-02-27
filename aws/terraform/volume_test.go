@@ -15,7 +15,7 @@ import (
 )
 
 func TestVolume_Components(t *testing.T) {
-	p, err := awstf.NewProvider("aws", "eu-west-3")
+	p, err := awstf.NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	t.Run("DefaultValues", func(t *testing.T) {
@@ -39,7 +39,7 @@ func TestVolume_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
 					},
@@ -58,7 +58,7 @@ func TestVolume_Components(t *testing.T) {
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"availability_zone": "us-east-1a",
+				"availability_zone": "eu-west-1a",
 				"type":              "io2",
 				"size":              float64(42),
 				"iops":              float64(123),
@@ -75,7 +75,7 @@ func TestVolume_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("io2")},
 					},
@@ -89,7 +89,7 @@ func TestVolume_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("System Operation"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("io2")},
 						{Key: "UsageType", ValueRegex: util.StringPtr("^EBS:VolumeP-IOPS")},

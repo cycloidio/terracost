@@ -56,6 +56,7 @@ resource "aws_instance" "front" {
   instance_type        = var.front_type
   key_name             = var.keypair_name
   ebs_optimized        = var.front_ebs_optimized
+  monitoring           = true
 
   vpc_security_group_ids = compact([var.bastion_sg_allow, aws_security_group.front.id])
 

@@ -47,7 +47,7 @@ type autoscalingGroupValues struct {
 // 	} `mapstructure:"credit_specification"`
 // }
 
-// decodeInstanceValues decodes and returns instanceValues from a Terraform values map.
+// decodeAutoscalingGroupValues decodes and returns instanceValues from a Terraform values map.
 func decodeAutoscalingGroupValues(tfVals map[string]interface{}) (autoscalingGroupValues, error) {
 	var v autoscalingGroupValues
 	if err := mapstructure.Decode(tfVals, &v); err != nil {

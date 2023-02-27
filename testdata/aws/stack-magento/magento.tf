@@ -10,7 +10,7 @@ module "magento" {
 
   #. vpc_id (required):
   #+ Amazon VPC id on which create each components.
-  vpc_id                   = "<vpc-id>"
+  vpc_id                   = "vpc-id"
 
   #. private_subnets_ids (required, array):
   #+ Amazon subnets IDs on which create each components.
@@ -18,11 +18,11 @@ module "magento" {
 
   #. magento_ssl_cert (required):
   #+ ARN of an Amazon certificate from Certificate Manager.
-  magento_ssl_cert         = "<ssl-cert-arn>"
+  magento_ssl_cert         = "ssl-cert-arn"
 
   #. bastion_sg_allow (optional):
   #+ Amazon source security group ID which will be allowed to connect on Magento front port 22 (ssh).
-  bastion_sg_allow         = "<bastion-sg>"
+  bastion_sg_allow         = "bastion-sg"
 
   #. public_subnets_ids (required, array):
   #+ Public subnet IDs to use for the public ELB load balancer.
@@ -53,7 +53,7 @@ module "magento" {
 
   #. rds_subnet_group (optional): Automatically generated from private_subnets_ids
   #+ ID of the private DB subnet group to use for RDS database.
-  # rds_subnet_group           = "<rds-subnet-group>"
+  # rds_subnet_group           = "rds-subnet-group"
 
   #. rds_type (optional): db.t3.small
   #+ AWS Instance type of the RDS database.
@@ -122,5 +122,5 @@ module "magento" {
 
   #. front_ebs_optimized (optional, bool): false
   #+ Whether the Instance is EBS optimized or not, related to the instance type you choose.
-  front_ebs_optimized   = "false"
+  front_ebs_optimized   = true
 }

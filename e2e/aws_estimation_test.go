@@ -285,7 +285,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(71.234), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(73.334), "USD"), pcost)
 		})
 	})
 }

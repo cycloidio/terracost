@@ -15,7 +15,7 @@ import (
 )
 
 func TestElastiCache_Components(t *testing.T) {
-	p, err := NewProvider("aws", "us-east-1")
+	p, err := NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	t.Run("RedisEngine", func(t *testing.T) {
@@ -40,7 +40,7 @@ func TestElastiCache_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
@@ -82,7 +82,7 @@ func TestElastiCache_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
@@ -103,7 +103,7 @@ func TestElastiCache_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Storage Snapshot"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 				},
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("GB-Mo"),
@@ -159,7 +159,7 @@ func TestElastiCache_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Memcached")},
@@ -200,7 +200,7 @@ func TestElastiCache_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Memcached")},

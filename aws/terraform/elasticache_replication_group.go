@@ -39,7 +39,7 @@ type elastiCacheReplicationValues struct {
 		NumNodeGroups        int64 `mapstructure:"num_node_groups"`
 		ReplicasPerNodeGroup int64 `mapstructure:"replicas_per_node_group"`
 	} `mapstructure:"cluster_mode"`
-	NumberCacheClusters      int64  `mapstructure:"number_cache_clusters"`
+	NumberCacheClusters      int64  `mapstructure:"num_cache_clusters"`
 	SnapshotRetentionLimit   int64  `mapstructure:"snapshot_retention_limit"`
 	GlobalReplicationGroupID string `mapstructure:"global_replication_group_id"`
 }
