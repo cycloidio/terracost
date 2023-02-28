@@ -274,7 +274,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(52.814), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(60.692), "USD"), pcost)
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 

@@ -59,7 +59,7 @@ func TestInstance_Components(t *testing.T) {
 			},
 			{
 				Name:            "Root volume: Storage",
-				MonthlyQuantity: decimal.NewFromInt(8),
+				MonthlyQuantity: decimal.NewFromFloat(8),
 				Unit:            "GB",
 				Details:         []string{"gp2"},
 				ProductFilter: &product.Filter{
@@ -132,7 +132,7 @@ func TestInstance_Components(t *testing.T) {
 			},
 			{
 				Name:            "Root volume: Storage",
-				MonthlyQuantity: decimal.NewFromInt(42),
+				MonthlyQuantity: decimal.NewFromFloat(42),
 				Unit:            "GB",
 				Details:         []string{"st1"},
 				ProductFilter: &product.Filter{
