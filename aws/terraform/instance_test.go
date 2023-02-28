@@ -30,6 +30,7 @@ func TestInstance_Components(t *testing.T) {
 				"instance_type": "m5.xlarge",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -73,7 +74,7 @@ func TestInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -102,6 +103,7 @@ func TestInstance_Components(t *testing.T) {
 				},
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -206,7 +208,7 @@ func TestInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

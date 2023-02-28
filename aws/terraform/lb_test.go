@@ -27,6 +27,7 @@ func TestLB_Components(t *testing.T) {
 			ProviderName: "aws",
 			Values:       map[string]interface{}{},
 		}
+		rss := map[string]terraform.Resource{}
 		expected := []query.Component{
 			{
 				Name:           "Application Load Balancer",
@@ -46,7 +47,7 @@ func TestLB_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -60,6 +61,7 @@ func TestLB_Components(t *testing.T) {
 				"load_balancer_type": "network",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 		expected := []query.Component{
 			{
 				Name:           "Network Load Balancer",
@@ -79,7 +81,7 @@ func TestLB_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -93,6 +95,8 @@ func TestLB_Components(t *testing.T) {
 				"load_balancer_type": "gateway",
 			},
 		}
+		rss := map[string]terraform.Resource{}
+
 		expected := []query.Component{
 			{
 				Name:           "Gateway Load Balancer",
@@ -112,7 +116,7 @@ func TestLB_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -124,6 +128,8 @@ func TestLB_Components(t *testing.T) {
 			ProviderName: "aws",
 			Values:       map[string]interface{}{},
 		}
+		rss := map[string]terraform.Resource{}
+
 		expected := []query.Component{
 			{
 				Name:           "Classic Load Balancer",
@@ -143,7 +149,7 @@ func TestLB_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

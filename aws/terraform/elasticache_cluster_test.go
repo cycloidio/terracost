@@ -30,6 +30,7 @@ func TestElastiCache_Components(t *testing.T) {
 				"num_cache_nodes": 1,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -55,7 +56,7 @@ func TestElastiCache_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -72,6 +73,7 @@ func TestElastiCache_Components(t *testing.T) {
 				"snapshot_retention_limit": 5,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -114,7 +116,7 @@ func TestElastiCache_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -130,10 +132,11 @@ func TestElastiCache_Components(t *testing.T) {
 				"replication_group_id": "replication-group-1",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -149,6 +152,7 @@ func TestElastiCache_Components(t *testing.T) {
 				"num_cache_nodes": 1,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -174,7 +178,7 @@ func TestElastiCache_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -190,6 +194,7 @@ func TestElastiCache_Components(t *testing.T) {
 				"num_cache_nodes": 2,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -215,7 +220,7 @@ func TestElastiCache_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

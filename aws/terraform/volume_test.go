@@ -28,6 +28,7 @@ func TestVolume_Components(t *testing.T) {
 				"size": float64(42),
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -47,7 +48,7 @@ func TestVolume_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -64,6 +65,7 @@ func TestVolume_Components(t *testing.T) {
 				"iops":              float64(123),
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -98,7 +100,7 @@ func TestVolume_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

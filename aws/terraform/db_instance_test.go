@@ -30,6 +30,7 @@ func TestDBInstance_Components(t *testing.T) {
 				"engine":            "postgres",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -72,7 +73,7 @@ func TestDBInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -90,6 +91,7 @@ func TestDBInstance_Components(t *testing.T) {
 				"engine":            "postgres",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -146,7 +148,7 @@ func TestDBInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -164,6 +166,7 @@ func TestDBInstance_Components(t *testing.T) {
 				"multi_az":          true,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -208,7 +211,7 @@ func TestDBInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

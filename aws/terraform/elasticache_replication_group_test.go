@@ -31,6 +31,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				"availability_zones": []string{"eu-west-1a", "eu-west-1b"},
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -56,7 +57,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -72,10 +73,11 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				"global_replication_group_id": "global-replication-group-1",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -92,6 +94,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				"snapshot_retention_limit": 5,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -134,7 +137,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -150,6 +153,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				"num_cache_clusters": 2,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -175,7 +179,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -196,6 +200,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				},
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -221,7 +226,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
