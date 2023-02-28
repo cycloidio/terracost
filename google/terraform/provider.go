@@ -24,7 +24,7 @@ func NewProvider(key, region string) (*Provider, error) {
 func (p *Provider) Name() string { return p.key }
 
 // ResourceComponents returns Component queries for a given terraform.Resource.
-func (p *Provider) ResourceComponents(tfRes terraform.Resource) []query.Component {
+func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes terraform.Resource) []query.Component {
 	switch tfRes.Type {
 	case "google_compute_instance":
 		vals, err := decodeComputeInstanceValues(tfRes.Values)

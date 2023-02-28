@@ -27,7 +27,7 @@ func NewProvider(key string, regionCode region.Code) (*Provider, error) {
 func (p *Provider) Name() string { return p.key }
 
 // ResourceComponents returns Component queries for a given terraform.Resource.
-func (p *Provider) ResourceComponents(tfRes terraform.Resource) []query.Component {
+func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes terraform.Resource) []query.Component {
 	switch tfRes.Type {
 	case "aws_instance":
 		vals, err := decodeInstanceValues(tfRes.Values)

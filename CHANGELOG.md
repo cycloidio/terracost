@@ -9,6 +9,8 @@
 
 - AWS ingester change to keep consistency between name from CSV
   ([Pull #68](https://github.com/cycloidio/terracost/pull/68))
+- Internal signature for computing resources price, now also have the map of all the other resources to compute so it can access them when referenced
+  ([Pull #68](https://github.com/cycloidio/terracost/pull/82))
 
 ## [0.5.0] _2022-01-18_
 
