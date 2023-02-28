@@ -26,7 +26,6 @@ type autoscalingGroupValues struct {
 func decodeAutoscalingGroupValues(tfVals map[string]interface{}) (autoscalingGroupValues, error) {
 	var v autoscalingGroupValues
 	if err := mapstructure.Decode(tfVals, &v); err != nil {
-		spew.Dump(err)
 		return v, err
 	}
 	return v, nil
@@ -81,14 +80,14 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 			inst.enableMonitoring = true
 		}
 
-		volVals := volumeValues{AvailabilityZone: availabilityZone}
 		if len(lc.RootBlockDevice) > 0 {
 			rbd := lc.RootBlockDevice[0]
+			volVals := volumeValues{AvailabilityZone: availabilityZone}
 			volVals.Type = rbd.VolumeType
 			volVals.Size = rbd.VolumeSize
 			volVals.IOPS = rbd.IOPS
+			inst.rootVolume = p.newVolume(volVals)
 		}
-		inst.rootVolume = p.newVolume(volVals)
 	}
 
 	// ASG use LaunchTemplate
@@ -135,8 +134,8 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 		// We assume the first EBS defined correspond to the RootDevice
 		if len(lt.BlockDeviceMappings) > 0 {
 			if len(lt.BlockDeviceMappings[0].EBS) > 0 {
-				volVals := volumeValues{AvailabilityZone: availabilityZone}
 				rbd := lt.BlockDeviceMappings[0].EBS[0]
+				volVals := volumeValues{AvailabilityZone: availabilityZone}
 				volVals.Type = rbd.VolumeType
 				volVals.Size = rbd.VolumeSize
 				volVals.IOPS = rbd.IOPS

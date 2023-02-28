@@ -188,11 +188,13 @@ func (inst *Instance) cpuCreditCostComponent() query.Component {
 }
 
 func (inst *Instance) detailedMonitoringCostComponent() query.Component {
-	var defaultEC2InstanceMetricCount = 7
+	var defaultEC2InstanceMetricCount = decimal.NewFromInt(7)
+	quantity := defaultEC2InstanceMetricCount.Mul(inst.instanceCount)
+
 	return query.Component{
 		Name:            "EC2 detailed monitoring",
 		Details:         []string{"on-demand", "monitoring"},
-		MonthlyQuantity: decimal.NewFromInt(int64(defaultEC2InstanceMetricCount)),
+		MonthlyQuantity: quantity,
 		ProductFilter: &product.Filter{
 			Provider:         util.StringPtr(inst.provider.key),
 			Service:          util.StringPtr("AmazonCloudWatch"),
