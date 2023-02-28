@@ -3,9 +3,11 @@ package terraform
 import (
 	"fmt"
 	"path"
+	"strings"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
+	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform/configs"
 	"github.com/spf13/afero"
 	"github.com/zclconf/go-cty/cty"
@@ -45,6 +47,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 func extractHCLModule(providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
 
+	rss := make(map[string]Resource)
 	for rk, rv := range mod.ManagedResources {
 		if modName != "" {
 			rk = fmt.Sprintf("%s.%s", modName, rk)
@@ -62,7 +65,7 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 		if !ok {
 			return nil, fmt.Errorf("invalid resource configuration body")
 		}
-		cfg := getBodyJSON(body, evalCtx)
+		cfg := getBodyJSON(modName, body, evalCtx)
 
 		// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
 		count := 1
@@ -78,11 +81,10 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 				addr = fmt.Sprintf("%s[%d]", rk, i)
 			}
 
-			// Only retrieve components if the provider is valid. If it's not, the comps will be nil, which signifies
+			// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
 			// that the resource was "skipped" from estimation.
-			var comps []query.Component
 			if provider != nil {
-				comps = provider.ResourceComponents(Resource{
+				rss[addr] = Resource{
 					Address:      addr,
 					Index:        i,
 					Mode:         "managed",
@@ -90,15 +92,19 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 					Name:         rv.Name,
 					ProviderName: rv.Provider.Type,
 					Values:       cfg,
-				})
+				}
 			}
-			queries = append(queries, query.Resource{
-				Address:    addr,
-				Type:       rv.Type,
-				Provider:   rv.Provider.Type,
-				Components: comps,
-			})
 		}
+	}
+
+	for _, r := range rss {
+		provider := providers[r.ProviderName]
+		queries = append(queries, query.Resource{
+			Address:    r.Address,
+			Type:       r.Type,
+			Provider:   r.ProviderName,
+			Components: provider.ResourceComponents(rss, r),
+		})
 	}
 
 	// Recursively extract resources from all child module calls.
@@ -204,39 +210,48 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value) *hcl.EvalContext
 	return evalCtx
 }
 
-// getBodyJSON gets all the variables in a JSON format of the actual representation
-func getBodyJSON(b *hclsyntax.Body, evalCtx *hcl.EvalContext) map[string]interface{} {
-	links := make(map[string]interface{})
-	// Each attribute of the body is casted to the correct type and placed into the links map.
+// getBodyJSON gets all the variables in a JSON format of the actual representation and the references it may have
+func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContext) map[string]interface{} {
+	cfg := make(map[string]interface{})
+	// Each attribute of the body is casted to the correct type and placed into the cfg map.
 	for attrk, attrv := range b.Attributes {
 		val, _ := attrv.Expr.Value(evalCtx)
-		if !val.IsKnown() {
+		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			continue
 		}
 		switch val.Type() {
 		case cty.String:
-			links[attrk] = val.AsString()
+			cfg[attrk] = val.AsString()
 		case cty.Number:
 			f, _ := val.AsBigFloat().Float64()
-			links[attrk] = f
+			cfg[attrk] = f
 		case cty.Bool:
-			links[attrk] = val.True()
+			cfg[attrk] = val.True()
+		default:
+			vars := make([]string, 0, 0)
+			for _, vr := range attrv.Expr.Variables() {
+				v := string(hclwrite.TokensForTraversal(vr).Bytes())
+				sv := strings.Split(v, ".")
+				v = strings.Join(sv[0:len(sv)-1], ".")
+				vars = append(vars, fmt.Sprintf("%s.%s", modulePrefix, v))
+			}
+			cfg[attrk] = vars
 		}
 	}
 	for _, block := range b.Blocks {
-		cfg := getBodyJSON(block.Body, evalCtx)
+		ncfg := getBodyJSON(modulePrefix, block.Body, evalCtx)
 		// We continue to not add empty information to the config
 		// so it's clean and only has required information
-		if len(cfg) == 0 {
+		if len(ncfg) == 0 {
 			continue
 		}
-		if _, ok := links[block.Type]; !ok {
-			links[block.Type] = make([]interface{}, 0)
+		if _, ok := cfg[block.Type]; !ok {
+			cfg[block.Type] = make([]interface{}, 0)
 		}
-		links[block.Type] = append(links[block.Type].([]interface{}), cfg)
+		cfg[block.Type] = append(cfg[block.Type].([]interface{}), ncfg)
 	}
 
-	return links
+	return cfg
 }
 
 // getHCLProviders extracts provider configurations from the module and initializes the providers using the
@@ -261,7 +276,7 @@ func getHCLProviders(mod *configs.Module, evalCtx *hcl.EvalContext, providerInit
 			return nil, fmt.Errorf("bad body")
 		}
 
-		cfg := getBodyJSON(body, evalCtx)
+		cfg := getBodyJSON("", body, evalCtx)
 		values := make(map[string]string)
 		for k, v := range cfg {
 			if s, ok := v.(string); ok {

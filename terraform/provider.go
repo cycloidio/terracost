@@ -13,7 +13,9 @@ type Provider interface {
 
 	// ResourceComponents returns price component queries for the given Resource. Nil may be returned
 	// which signifies a resource that is not supported by this Provider.
-	ResourceComponents(res Resource) []query.Component
+	// It also expects all the resources in case it needs to check the configuration of another
+	// resource
+	ResourceComponents(rss map[string]Resource, res Resource) []query.Component
 }
 
 // ProviderInitializer is used to initialize a Provider for each provider name that matches one of the MatchNames.
