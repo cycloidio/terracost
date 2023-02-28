@@ -29,7 +29,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				},
 			}}
 
-			provider.EXPECT().ResourceComponents(gomock.Any()).AnyTimes().DoAndReturn(func(res terraform.Resource) []query.Component {
+			provider.EXPECT().ResourceComponents(map[string]terraform.Resource{}, gomock.Any()).AnyTimes().DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) []query.Component {
 				switch res.Address {
 				case "aws_instance.example":
 					assert.Equal(t, "aws_instance", res.Type)
@@ -135,7 +135,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				},
 			}}
 
-			provider.EXPECT().ResourceComponents(gomock.Any()).AnyTimes().DoAndReturn(func(res terraform.Resource) []query.Component {
+			provider.EXPECT().ResourceComponents(map[string]terraform.Resource{}, gomock.Any()).AnyTimes().DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) []query.Component {
 				return nil
 			})
 

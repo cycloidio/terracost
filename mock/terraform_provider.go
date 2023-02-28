@@ -50,15 +50,15 @@ func (mr *TerraformProviderMockRecorder) Name() *gomock.Call {
 }
 
 // ResourceComponents mocks base method.
-func (m *TerraformProvider) ResourceComponents(arg0 terraform.Resource) []query.Component {
+func (m *TerraformProvider) ResourceComponents(arg0 map[string]terraform.Resource, arg1 terraform.Resource) []query.Component {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResourceComponents", arg0)
+	ret := m.ctrl.Call(m, "ResourceComponents", arg1)
 	ret0, _ := ret[0].([]query.Component)
 	return ret0
 }
 
 // ResourceComponents indicates an expected call of ResourceComponents.
-func (mr *TerraformProviderMockRecorder) ResourceComponents(arg0 interface{}) *gomock.Call {
+func (mr *TerraformProviderMockRecorder) ResourceComponents(arg0 map[string]terraform.Resource, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResourceComponents", reflect.TypeOf((*TerraformProvider)(nil).ResourceComponents), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResourceComponents", reflect.TypeOf((*TerraformProvider)(nil).ResourceComponents), arg1)
 }
