@@ -8,7 +8,7 @@ import (
 type launchTemplateValues struct {
 	InstanceType string `mapstructure:"instance_type"`
 	Placement    []struct {
-		Tenancy          string `mapstructure:"yenancy"`
+		Tenancy          string `mapstructure:"tenancy"`
 		AvailabilityZone string `mapstructure:"availability_zone"`
 	} `mapstructure:"placement"`
 

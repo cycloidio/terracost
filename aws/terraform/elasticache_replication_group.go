@@ -66,7 +66,7 @@ func (p *Provider) newElastiCacheReplication(vals elastiCacheReplicationValues) 
 		nodeGroups := decimal.NewFromInt(vals.ClusterMode[0].NumNodeGroups)
 		replicasNode := decimal.NewFromInt(vals.ClusterMode[0].ReplicasPerNodeGroup)
 		numCacheNodes = nodeGroups.Mul(replicasNode).Add(nodeGroups)
-	} else {
+	} else if vals.NumNodeGroups > 0 {
 		nodeGroups := decimal.NewFromInt(vals.NumNodeGroups)
 		replicasNode := decimal.NewFromInt(vals.ReplicasPerNodeGroup)
 		numCacheNodes = nodeGroups.Mul(replicasNode).Add(nodeGroups)

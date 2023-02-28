@@ -17,6 +17,7 @@ type launchConfigurationValues struct {
 		VolumeSize float64 `mapstructure:"volume_size"`
 		IOPS       float64 `mapstructure:"iops"`
 	} `mapstructure:"root_block_device"`
+	// TODO: support ebs_block_device
 }
 
 // decodeAutoscalingGroupValues decodes and returns instanceValues from a Terraform values map.
