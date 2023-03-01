@@ -174,4 +174,202 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 		assert.Equal(t, expected, actual)
 	})
 
+	t.Run("MixedInstancesPolicyLaunchTemplate", func(t *testing.T) {
+		tfres := terraform.Resource{
+			Address:      "aws_autoscaling_group.mixlt",
+			Type:         "aws_autoscaling_group",
+			Name:         "mixlt",
+			ProviderName: "aws",
+			Values: map[string]interface{}{
+				"desired_capacity":   3,
+				"availability_zones": []string{"eu-west-1a"},
+				"mixed_instances_policy": []interface{}{
+					map[string]interface{}{
+						"launch_template": []interface{}{
+							map[string]interface{}{
+								"launch_template_specification": []interface{}{
+									map[string]interface{}{
+										"launch_template_name": []string{"aws_launch_template.testmix"},
+									},
+								},
+								"override": []interface{}{
+									map[string]interface{}{
+										"instance_type": "c5.large",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		rss := map[string]terraform.Resource{
+			"aws_launch_template.testmix": terraform.Resource{
+				Address:      "aws_launch_template.testmix",
+				Type:         "aws_launch_template",
+				Name:         "testmix",
+				ProviderName: "aws",
+				Values: map[string]interface{}{
+					"instance_type": "m5.xlarge",
+					"placement":     []interface{}{map[string]interface{}{"availability_zone": "eu-west-1a"}},
+					"block_device_mappings": []interface{}{
+						map[string]interface{}{
+							"device_name": "/dev/sda1",
+							"ebs": []interface{}{
+								map[string]interface{}{"volume_size": float64(30)},
+							},
+						},
+					},
+				},
+			},
+		}
+
+		expected := []query.Component{
+			{
+				Name:           "Compute",
+				HourlyQuantity: decimal.NewFromInt(3),
+				Details:        []string{"Linux", "on-demand", "c5.large"},
+				ProductFilter: &product.Filter{
+					Provider: util.StringPtr("aws"),
+					Service:  util.StringPtr("AmazonEC2"),
+					Family:   util.StringPtr("Compute Instance"),
+					Location: util.StringPtr("eu-west-1"),
+					AttributeFilters: []*product.AttributeFilter{
+						{Key: "CapacityStatus", Value: util.StringPtr("Used")},
+						{Key: "InstanceType", Value: util.StringPtr("c5.large")},
+						{Key: "Tenancy", Value: util.StringPtr("Shared")},
+						{Key: "OperatingSystem", Value: util.StringPtr("Linux")},
+						{Key: "PreInstalledSW", Value: util.StringPtr("NA")},
+					},
+				},
+				PriceFilter: &price.Filter{
+					Unit: util.StringPtr("Hrs"),
+					AttributeFilters: []*price.AttributeFilter{
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
+					},
+				},
+			},
+			{
+				Name:            "Root volume: Storage",
+				MonthlyQuantity: decimal.NewFromFloat(30),
+				Unit:            "GB",
+				Details:         []string{"gp2"},
+				ProductFilter: &product.Filter{
+					Provider: util.StringPtr("aws"),
+					Service:  util.StringPtr("AmazonEC2"),
+					Family:   util.StringPtr("Storage"),
+					Location: util.StringPtr("eu-west-1"),
+					AttributeFilters: []*product.AttributeFilter{
+						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
+					},
+				},
+			},
+		}
+
+		actual := p.ResourceComponents(rss, tfres)
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("LaunchConfiguration", func(t *testing.T) {
+		tfres := terraform.Resource{
+			Address:      "module.test.aws_autoscaling_group.lt",
+			Type:         "aws_autoscaling_group",
+			Name:         "lt",
+			ProviderName: "aws",
+			Values: map[string]interface{}{
+				"desired_capacity":     2,
+				"min_size":             1,
+				"max_size":             5,
+				"availability_zones":   []string{"eu-west-1a", "eu-west-1b"},
+				"launch_configuration": []string{"aws_launch_configuration.test"},
+			},
+		}
+
+		rss := map[string]terraform.Resource{
+			"aws_launch_configuration.test": terraform.Resource{
+				Address:      "aws_launch_configuration.test",
+				Type:         "aws_launch_configuration",
+				Name:         "test",
+				ProviderName: "aws",
+				Values: map[string]interface{}{
+					"instance_type":     "m5.xlarge",
+					"enable_monitoring": true,
+					"placement_tenancy": "dedicated",
+
+					"root_block_device": []interface{}{
+						map[string]interface{}{
+							"volume_type": "gp2",
+							"volume_size": float64(42),
+						},
+					},
+				},
+			},
+		}
+
+		expected := []query.Component{
+			{
+				Name:           "Compute",
+				HourlyQuantity: decimal.NewFromInt(2),
+				Details:        []string{"Linux", "on-demand", "m5.xlarge"},
+				ProductFilter: &product.Filter{
+					Provider: util.StringPtr("aws"),
+					Service:  util.StringPtr("AmazonEC2"),
+					Family:   util.StringPtr("Compute Instance"),
+					Location: util.StringPtr("eu-west-1"),
+					AttributeFilters: []*product.AttributeFilter{
+						{Key: "CapacityStatus", Value: util.StringPtr("Used")},
+						{Key: "InstanceType", Value: util.StringPtr("m5.xlarge")},
+						{Key: "Tenancy", Value: util.StringPtr("Dedicated")},
+						{Key: "OperatingSystem", Value: util.StringPtr("Linux")},
+						{Key: "PreInstalledSW", Value: util.StringPtr("NA")},
+					},
+				},
+				PriceFilter: &price.Filter{
+					Unit: util.StringPtr("Hrs"),
+					AttributeFilters: []*price.AttributeFilter{
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
+					},
+				},
+			},
+			{
+				Name:            "Root volume: Storage",
+				MonthlyQuantity: decimal.NewFromFloat(42),
+				Unit:            "GB",
+				Details:         []string{"gp2"},
+				ProductFilter: &product.Filter{
+					Provider: util.StringPtr("aws"),
+					Service:  util.StringPtr("AmazonEC2"),
+					Family:   util.StringPtr("Storage"),
+					Location: util.StringPtr("eu-west-1"),
+					AttributeFilters: []*product.AttributeFilter{
+						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
+					},
+				},
+			},
+			{
+				Name:            "EC2 detailed monitoring",
+				Details:         []string{"on-demand", "monitoring"},
+				MonthlyQuantity: decimal.NewFromInt(int64(14)),
+				ProductFilter: &product.Filter{
+					Provider:         util.StringPtr("aws"),
+					Service:          util.StringPtr("AmazonCloudWatch"),
+					Family:           util.StringPtr("Metric"),
+					Location:         util.StringPtr("eu-west-1"),
+					AttributeFilters: []*product.AttributeFilter{},
+				},
+				PriceFilter: &price.Filter{
+					Unit: util.StringPtr("Metrics"),
+					AttributeFilters: []*price.AttributeFilter{
+						{Key: "TermType", Value: util.StringPtr("OnDemand")},
+						{Key: "StartingRange", Value: util.StringPtr("0")},
+					},
+				},
+			},
+		}
+
+		actual := p.ResourceComponents(rss, tfres)
+		assert.Equal(t, expected, actual)
+	})
+
 }
