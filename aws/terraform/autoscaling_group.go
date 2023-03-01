@@ -16,8 +16,27 @@ type autoscalingGroupValues struct {
 
 	LaunchTemplate []struct {
 		ID      []string `mapstructure:"id"`
+		Name    []string `mapstructure:"name"`
 		Version string   `mapstructure:"version"`
 	} `mapstructure:"launch_template"`
+
+	MixedInstancesPolicy []struct {
+		LaunchTemplate []struct {
+			LaunchTemplateSpecification []struct {
+				LaunchTemplateID   []string `mapstructure:"launch_template_id"`
+				LaunchTemplateName []string `mapstructure:"launch_template_name"`
+			} `mapstructure:"launch_template_specification"`
+
+			Override []struct {
+				InstanceType string `mapstructure:"instance_type"`
+			} `mapstructure:"override"`
+		} `mapstructure:"launch_template"`
+
+		InstancesDistribution []struct {
+			OnDemandBaseCapacity float64 `mapstructure:"on_demand_base_capacity"`
+		} `mapstructure:"instances_distribution"`
+	} `mapstructure:"mixed_instances_policy"`
+
 	MinSize         int64 `mapstructure:"min_size"`
 	DesiredCapacity int64 `mapstructure:"desired_capacity"`
 }
@@ -90,20 +109,45 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 		}
 	}
 
-	// ASG use LaunchTemplate
-	// or
-	// ASG use mixed Instance Launch Template
-	// if len(vals.MixedInstanceLaunchTemplate) > 0 {
-	// lt, err := decodeMixedInstancesLaunchTemplateValues(rss[vals.MixedInstanceLaunchTemplate[0]].Values)
-	// }
+	if len(vals.LaunchTemplate) > 0 || len(vals.MixedInstancesPolicy) > 0 {
 
-	if len(vals.LaunchTemplate) > 0 {
-		lt, err := decodeLaunchTemplateValues(rss[vals.LaunchTemplate[0].ID[0]].Values)
+		var ltref string
+		if len(vals.LaunchTemplate) > 0 {
+			if len(vals.LaunchTemplate[0].ID) > 0 {
+				ltref = vals.LaunchTemplate[0].ID[0]
+			} else {
+				ltref = vals.LaunchTemplate[0].Name[0]
+			}
+		}
+
+		// variable used to when instance type overrided by the ASG
+		mixedOverrideInstanceType := ""
+		if len(vals.MixedInstancesPolicy) > 0 {
+			if len(vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateID) > 0 {
+				ltref = vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateID[0]
+			} else {
+				ltref = vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateName[0]
+			}
+
+			// Logic partially implemented.
+			// We do not evaluate % between spot and on-demande
+			// We also assume first InstanceType override is the main one
+			if len(vals.MixedInstancesPolicy[0].LaunchTemplate[0].Override) > 0 {
+				mixedOverrideInstanceType = vals.MixedInstancesPolicy[0].LaunchTemplate[0].Override[0].InstanceType
+			}
+		}
+
+		lt, err := decodeLaunchTemplateValues(rss[ltref].Values)
 		if err != nil {
 			return inst
 		}
 
-		inst.instanceType = lt.InstanceType
+		if mixedOverrideInstanceType != "" {
+			inst.instanceType = mixedOverrideInstanceType
+		} else {
+			inst.instanceType = lt.InstanceType
+		}
+
 		if len(lt.Placement) > 0 {
 			if lt.Placement[0].Tenancy == "dedicated" {
 				inst.tenancy = "Dedicated"
