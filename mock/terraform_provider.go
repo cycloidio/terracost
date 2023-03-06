@@ -58,7 +58,7 @@ func (m *TerraformProvider) ResourceComponents(arg0 map[string]terraform.Resourc
 }
 
 // ResourceComponents indicates an expected call of ResourceComponents.
-func (mr *TerraformProviderMockRecorder) ResourceComponents(arg0 map[string]terraform.Resource, arg1 interface{}) *gomock.Call {
+func (mr *TerraformProviderMockRecorder) ResourceComponents(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResourceComponents", reflect.TypeOf((*TerraformProvider)(nil).ResourceComponents), arg0, arg1)
 }
