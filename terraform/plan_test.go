@@ -36,7 +36,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		require.NoError(t, err)
 
 		provider.EXPECT().Name().AnyTimes().Return("aws-test")
-		provider.EXPECT().ResourceComponents(map[string]terraform.Resource{}, gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
+		provider.EXPECT().ResourceComponents(gomock.Any(), gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
 			if res.Type == "aws_instance" {
 				assert.Equal(t, "module.instance.aws_instance.example", res.Address)
 				assert.Equal(t, "t2.xlarge", res.Values["instance_type"])
@@ -95,7 +95,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 		require.NoError(t, err)
 
 		provider.EXPECT().Name().AnyTimes().Return("aws-test")
-		provider.EXPECT().ResourceComponents(map[string]terraform.Resource{}, gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
+		provider.EXPECT().ResourceComponents(gomock.Any(), gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
 			return nil, errors.New("ResourceComponents fail")
 		}).Times(2)
 
@@ -132,7 +132,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		require.NoError(t, err)
 
 		provider.EXPECT().Name().AnyTimes().Return("aws-test")
-		provider.EXPECT().ResourceComponents(map[string]terraform.Resource{}, gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
+		provider.EXPECT().ResourceComponents(gomock.Any(), gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
 			assert.Equal(t, "module.instance.aws_instance.example", res.Address)
 			assert.Equal(t, "t2.micro", res.Values["instance_type"])
 			return []query.Component{}, nil
@@ -186,7 +186,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 		require.NoError(t, err)
 
 		provider.EXPECT().Name().AnyTimes().Return("aws-test")
-		provider.EXPECT().ResourceComponents(map[string]terraform.Resource{}, gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
+		provider.EXPECT().ResourceComponents(gomock.Any(), gomock.Any()).DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) ([]query.Component, error) {
 			return nil, errors.New("ResourceComponents fail")
 		})
 
