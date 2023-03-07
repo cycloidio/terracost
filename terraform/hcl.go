@@ -235,14 +235,38 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 		case cty.Bool:
 			cfg[attrk] = val.True()
 		default:
-			vars := make([]string, 0, 0)
-			for _, vr := range attrv.Expr.Variables() {
-				v := string(hclwrite.TokensForTraversal(vr).Bytes())
-				sv := strings.Split(v, ".")
-				v = strings.Join(sv[0:len(sv)-1], ".")
-				vars = append(vars, fmt.Sprintf("%s.%s", modulePrefix, v))
+			if val.Type().IsTupleType() {
+				values := make([]interface{}, 0, 0)
+				iter := val.ElementIterator()
+				for iter.Next() {
+					_, nval := iter.Element()
+					switch nval.Type() {
+					case cty.String:
+						// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
+						// Skip Unknow values to avoid panic.
+						// Other types such bool/Number without default value ends up here too
+						if !nval.IsKnown() {
+							continue
+						}
+						values = append(values, nval.AsString())
+					case cty.Number:
+						f, _ := nval.AsBigFloat().Float64()
+						values = append(values, f)
+					case cty.Bool:
+						values = append(values, nval.True())
+					}
+				}
+				cfg[attrk] = values
+			} else {
+				vars := make([]string, 0, 0)
+				for _, vr := range attrv.Expr.Variables() {
+					v := string(hclwrite.TokensForTraversal(vr).Bytes())
+					sv := strings.Split(v, ".")
+					v = strings.Join(sv[0:len(sv)-1], ".")
+					vars = append(vars, fmt.Sprintf("%s.%s", modulePrefix, v))
+				}
+				cfg[attrk] = vars
 			}
-			cfg[attrk] = vars
 		}
 	}
 	for _, block := range b.Blocks {
