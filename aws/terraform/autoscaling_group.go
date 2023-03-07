@@ -64,7 +64,6 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 		preInstalledSW:  "NA",
 	}
 
-	// TODO: fix vals.AvailabilityZone which is always empty
 	var availabilityZone string
 	if len(vals.AvailabilityZones) > 0 {
 		availabilityZone = vals.AvailabilityZones[0]
