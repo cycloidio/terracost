@@ -20,14 +20,6 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 	p, err := awstf.NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
-	// resource "" "" {
-
-	//   launch_template {
-	//     id      = aws_launch_template.foobar.id
-	//     version = "$Latest"
-	//   }
-	// }
-
 	t.Run("LaunchTemplate", func(t *testing.T) {
 		tfres := terraform.Resource{
 			Address:      "module.test.aws_autoscaling_group.lt",
