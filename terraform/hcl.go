@@ -219,8 +219,15 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			continue
 		}
+
 		switch val.Type() {
 		case cty.String:
+			// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
+			// Skip Unknow values to avoid panic.
+			// Other types such bool/Number without default value ends up here too
+			if !val.IsKnown() {
+				continue
+			}
 			cfg[attrk] = val.AsString()
 		case cty.Number:
 			f, _ := val.AsBigFloat().Float64()
