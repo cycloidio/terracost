@@ -6,12 +6,12 @@ variable "front_ebs_optimized" {
   default = true
 }
 
-variable "project" {
+variable "enable_mon" {
   type = bool
 }
 
 module "magento" {
   source = "./module"
-  project = var.project
+  enable_mon = var.enable_mon
   front_ebs_optimized = var.front_ebs_optimized
 }

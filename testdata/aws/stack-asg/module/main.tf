@@ -2,9 +2,6 @@
 variable "front_ebs_optimized" {
   default = false
 }
-variable "project" {
-  type = bool
-}
 variable "env" {
 }
 
@@ -51,55 +48,41 @@ resource "aws_autoscaling_group" "lt" {
 }
 
 
-#resource "aws_launch_configuration" "as_conf" {
-#  image_id      = data.aws_ami.ubuntu.id
-#  instance_type = "m4.large"
-#  placement_tenancy = "dedicated"
-#  enable_monitoring = true
-#}
-#
-#resource "aws_autoscaling_group" "lc" {
-#  availability_zones = ["eu-west-1a"]
-#  desired_capacity   = 3
-#  max_size           = 5
-#  min_size           = 1
-#  launch_configuration = aws_launch_configuration.as_conf.name
-#}
-#
-#
-#resource "aws_autoscaling_group" "example" {
-#  desired_capacity    = 3
-#  max_size            = 15
-#  min_size            = 2
-#
-#  mixed_instances_policy {
-#    instances_distribution {
-#      on_demand_base_capacity                  = 2
-#    }
-#
-#    launch_template {
-#      launch_template_specification {
-#        launch_template_name = aws_launch_template.foobar.name
-#      }
-#
-#      override {
-#        instance_type     = "c4.large"
-#        weighted_capacity = "3"
-#      }
-#    }
-#  }
-#}
-#
-#resource "aws_instance" "web" {
-#  ami           = data.aws_ami.ubuntu.id
-#  instance_type = "m3.xlarge"
-#
-#  ebs_optimized = var.front_ebs_optimized
-#  credit_specification {
-#    cpu_credits = "unlimited"
-#  }
-#  monitoring = true
-#  tags = {
-#    Name = "HelloWorld"
-#  }
-#}
+resource "aws_launch_configuration" "lc" {
+  image_id      = data.aws_ami.ubuntu.id
+  instance_type = "m4.large"
+  placement_tenancy = "dedicated"
+  enable_monitoring = true
+}
+
+resource "aws_autoscaling_group" "lc" {
+  availability_zones = ["eu-west-1a"]
+  desired_capacity   = 3
+  max_size           = 5
+  min_size           = 1
+  launch_configuration = aws_launch_configuration.lc.name
+}
+
+
+resource "aws_autoscaling_group" "mixed" {
+  desired_capacity    = 3
+  max_size            = 15
+  min_size            = 2
+
+  mixed_instances_policy {
+    instances_distribution {
+      on_demand_base_capacity                  = 2
+    }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_name = aws_launch_template.foobar.name
+      }
+
+      override {
+        instance_type     = "c4.large"
+        weighted_capacity = "3"
+      }
+    }
+  }
+}
