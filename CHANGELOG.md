@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.1] _2023-03-08_
+
 ### Added
 
 - AWS support for `aws_autoscaling_group`, `aws_launch_template`, `aws_launch_configuration`
