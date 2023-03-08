@@ -141,7 +141,7 @@ variable "front_ebs_optimized" {
 }
 
 variable "front_count" {
-  default = 1
+  default = 2
 }
 
 variable "debian_ami_name" {
