@@ -262,20 +262,10 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 				for _, vr := range attrv.Expr.Variables() {
 					v := string(hclwrite.TokensForTraversal(vr).Bytes())
 					sv := strings.Split(v, ".")
-					// The variables are also in here, if a variable
-					// has not been interpolated, which means it has no default,
-					// it'll be set as plain text and we don't want it
-					if sv[0] == "var" {
-						continue
-					}
-					// With this we remove the last element of the reference, which is the
-					// attribute it's linking to from the resource
 					v = strings.Join(sv[0:len(sv)-1], ".")
 					vars = append(vars, fmt.Sprintf("%s.%s", modulePrefix, v))
 				}
-				if len(vars) != 0 {
-					cfg[attrk] = vars[0]
-				}
+				cfg[attrk] = vars
 			}
 		}
 	}

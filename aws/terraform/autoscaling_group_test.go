@@ -31,7 +31,7 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 				"min_size":           1,
 				"max_size":           5,
 				"availability_zones": []string{"eu-west-1a", "eu-west-1b"},
-				"launch_template":    []interface{}{map[string]interface{}{"id": "aws_launch_template.test"}},
+				"launch_template":    []interface{}{map[string]interface{}{"id": []string{"aws_launch_template.test"}}},
 			},
 		}
 
@@ -181,7 +181,7 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 							map[string]interface{}{
 								"launch_template_specification": []interface{}{
 									map[string]interface{}{
-										"launch_template_name": "aws_launch_template.testmix",
+										"launch_template_name": []string{"aws_launch_template.testmix"},
 									},
 								},
 								"override": []interface{}{
@@ -274,7 +274,7 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 				"min_size":             1,
 				"max_size":             5,
 				"availability_zones":   []string{"eu-west-1a", "eu-west-1b"},
-				"launch_configuration": "aws_launch_configuration.test",
+				"launch_configuration": []string{"aws_launch_configuration.test"},
 			},
 		}
 
