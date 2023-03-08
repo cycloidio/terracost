@@ -12,19 +12,19 @@ import (
 type autoscalingGroupValues struct {
 	AvailabilityZones []string `mapstructure:"availability_zones"`
 
-	LaunchConfiguration []string `mapstructure:"launch_configuration"`
+	LaunchConfiguration string `mapstructure:"launch_configuration"`
 
 	LaunchTemplate []struct {
-		ID      []string `mapstructure:"id"`
-		Name    []string `mapstructure:"name"`
-		Version string   `mapstructure:"version"`
+		ID      string `mapstructure:"id"`
+		Name    string `mapstructure:"name"`
+		Version string `mapstructure:"version"`
 	} `mapstructure:"launch_template"`
 
 	MixedInstancesPolicy []struct {
 		LaunchTemplate []struct {
 			LaunchTemplateSpecification []struct {
-				LaunchTemplateID   []string `mapstructure:"launch_template_id"`
-				LaunchTemplateName []string `mapstructure:"launch_template_name"`
+				LaunchTemplateID   string `mapstructure:"launch_template_id"`
+				LaunchTemplateName string `mapstructure:"launch_template_name"`
 			} `mapstructure:"launch_template_specification"`
 
 			Override []struct {
@@ -78,10 +78,9 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 		instanceCount = 1
 	}
 	inst.instanceCount = decimal.NewFromInt(instanceCount)
-
 	// ASG use LaunchConfiguration
 	if len(vals.LaunchConfiguration) > 0 {
-		lc, err := decodeLaunchConfigurationValues(rss[vals.LaunchConfiguration[0]].Values)
+		lc, err := decodeLaunchConfigurationValues(rss[vals.LaunchConfiguration].Values)
 		if err != nil {
 			return inst
 		}
@@ -113,9 +112,9 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 		var ltref string
 		if len(vals.LaunchTemplate) > 0 {
 			if len(vals.LaunchTemplate[0].ID) > 0 {
-				ltref = vals.LaunchTemplate[0].ID[0]
+				ltref = vals.LaunchTemplate[0].ID
 			} else {
-				ltref = vals.LaunchTemplate[0].Name[0]
+				ltref = vals.LaunchTemplate[0].Name
 			}
 		}
 
@@ -123,9 +122,9 @@ func (p *Provider) newAutoscalingGroup(rss map[string]terraform.Resource, vals a
 		mixedOverrideInstanceType := ""
 		if len(vals.MixedInstancesPolicy) > 0 {
 			if len(vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateID) > 0 {
-				ltref = vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateID[0]
+				ltref = vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateID
 			} else {
-				ltref = vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateName[0]
+				ltref = vals.MixedInstancesPolicy[0].LaunchTemplate[0].LaunchTemplateSpecification[0].LaunchTemplateName
 			}
 
 			// Logic partially implemented.

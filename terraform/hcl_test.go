@@ -37,14 +37,14 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, map[string]interface{}{
 						"ami":           "some-ami",
 						"instance_type": "t2.micro",
-						"provider":      []string{".aws"},
+						"provider":      ".aws",
 					}, res.Values)
 
 				case "module.ec2.aws_instance.front":
 					assert.Equal(t, "aws_instance", res.Type)
 					assert.Equal(t, "front", res.Name)
 					assert.Equal(t, map[string]interface{}{
-						"ami":           []string{"module.ec2.data.aws_ami.debian"},
+						"ami":           "module.ec2.data.aws_ami.debian",
 						"count":         float64(1),
 						"instance_type": "t3.small",
 						"root_block_device": []interface{}{
@@ -75,9 +75,8 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, "aws_ebs_volume", res.Type)
 					assert.Equal(t, "volume", res.Name)
 					assert.Equal(t, map[string]interface{}{
-						"size":              float64(20),
-						"type":              "gp2",
-						"availability_zone": []string{"module.ec2.module.ebs.var"},
+						"size": float64(20),
+						"type": "gp2",
 					}, res.Values)
 
 				case "module.rds.aws_db_instance.db":
