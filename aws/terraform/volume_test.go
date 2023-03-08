@@ -15,7 +15,7 @@ import (
 )
 
 func TestVolume_Components(t *testing.T) {
-	p, err := awstf.NewProvider("aws", "eu-west-3")
+	p, err := awstf.NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	t.Run("DefaultValues", func(t *testing.T) {
@@ -28,18 +28,19 @@ func TestVolume_Components(t *testing.T) {
 				"size": float64(42),
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
 				Name:            "Storage",
-				MonthlyQuantity: decimal.NewFromInt(42),
+				MonthlyQuantity: decimal.NewFromFloat(42),
 				Unit:            "GB",
 				Details:         []string{"gp2"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
 					},
@@ -47,7 +48,7 @@ func TestVolume_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -58,24 +59,25 @@ func TestVolume_Components(t *testing.T) {
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"availability_zone": "us-east-1a",
+				"availability_zone": "eu-west-1a",
 				"type":              "io2",
 				"size":              float64(42),
 				"iops":              float64(123),
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
 				Name:            "Storage",
-				MonthlyQuantity: decimal.NewFromInt(42),
+				MonthlyQuantity: decimal.NewFromFloat(42),
 				Unit:            "GB",
 				Details:         []string{"io2"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("io2")},
 					},
@@ -83,13 +85,13 @@ func TestVolume_Components(t *testing.T) {
 			},
 			{
 				Name:            "Provisioned IOPS",
-				MonthlyQuantity: decimal.NewFromInt(123),
+				MonthlyQuantity: decimal.NewFromFloat(123),
 				Unit:            "IOPS",
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("System Operation"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "VolumeAPIName", Value: util.StringPtr("io2")},
 						{Key: "UsageType", ValueRegex: util.StringPtr("^EBS:VolumeP-IOPS")},
@@ -98,7 +100,7 @@ func TestVolume_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

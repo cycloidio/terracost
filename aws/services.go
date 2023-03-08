@@ -6,6 +6,7 @@ var supportedServices = map[string]struct{}{
 	"AmazonRDS":         {},
 	"AWSELB":            {},
 	"AmazonElastiCache": {},
+	"AmazonCloudWatch":  {},
 }
 
 // IsServiceSupported returns true if the AWS service is valid and supported by Terracost (e.g. for ingestion.)

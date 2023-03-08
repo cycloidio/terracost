@@ -15,7 +15,7 @@ import (
 )
 
 func TestElastiCacheReplication_Components(t *testing.T) {
-	p, err := NewProvider("aws", "us-east-1")
+	p, err := NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	//1 group 1 node
@@ -26,11 +26,12 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"node_type":             "cache.m4.large",
-				"number_cache_clusters": 1,
-				"availability_zones":    []string{"us-east-1a", "us-east-1b"},
+				"node_type":          "cache.m4.large",
+				"num_cache_clusters": 1,
+				"availability_zones": []string{"eu-west-1a", "eu-west-1b"},
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -41,7 +42,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
@@ -56,7 +57,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -67,15 +68,16 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"number_cache_clusters":       1,
-				"availability_zones":          []string{"us-east-1a", "us-east-1b"},
+				"num_cache_clusters":          1,
+				"availability_zones":          []string{"eu-west-1a", "eu-west-1b"},
 				"global_replication_group_id": "global-replication-group-1",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -88,10 +90,11 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			Values: map[string]interface{}{
 				"node_type":                "cache.m4.large",
 				"engine":                   "redis",
-				"number_cache_clusters":    1,
+				"num_cache_clusters":       1,
 				"snapshot_retention_limit": 5,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -102,7 +105,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
@@ -123,7 +126,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Storage Snapshot"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 				},
 				PriceFilter: &price.Filter{
 					Unit: util.StringPtr("GB-Mo"),
@@ -134,7 +137,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -145,11 +148,12 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			Name:         "test",
 			ProviderName: "aws",
 			Values: map[string]interface{}{
-				"node_type":             "cache.m4.large",
-				"engine":                "redis",
-				"number_cache_clusters": 2,
+				"node_type":          "cache.m4.large",
+				"engine":             "redis",
+				"num_cache_clusters": 2,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -160,7 +164,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
@@ -175,7 +179,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -196,6 +200,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				},
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -206,7 +211,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonElastiCache"),
 					Family:   util.StringPtr("Cache Instance"),
-					Location: util.StringPtr("us-east-1"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("cache.m4.large")},
 						{Key: "CacheEngine", Value: util.StringPtr("Redis")},
@@ -221,7 +226,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 

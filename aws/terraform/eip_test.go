@@ -28,6 +28,7 @@ func TestElasticIP_Components(t *testing.T) {
 				"vpc": true,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -53,7 +54,7 @@ func TestElasticIP_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -67,10 +68,11 @@ func TestElasticIP_Components(t *testing.T) {
 				"customer_owned_ipv4_pool": "customer-owned-ipv4-pool-id",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -84,10 +86,11 @@ func TestElasticIP_Components(t *testing.T) {
 				"instance": "instance-id",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -101,10 +104,11 @@ func TestElasticIP_Components(t *testing.T) {
 				"network_interface": "network-interface-id",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

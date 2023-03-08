@@ -15,7 +15,7 @@ import (
 )
 
 func TestDBInstance_Components(t *testing.T) {
-	p, err := NewProvider("aws", "eu-west-3")
+	p, err := NewProvider("aws", "eu-west-1")
 	require.NoError(t, err)
 
 	t.Run("DefaultValues", func(t *testing.T) {
@@ -30,6 +30,7 @@ func TestDBInstance_Components(t *testing.T) {
 				"engine":            "postgres",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -40,7 +41,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Database Instance"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("db.t2.xlarge")},
 						{Key: "DeploymentOption", Value: util.StringPtr("Single-AZ")},
@@ -63,7 +64,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Database Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "DeploymentOption", Value: util.StringPtr("Single-AZ")},
 						{Key: "VolumeType", Value: util.StringPtr("General Purpose")},
@@ -72,7 +73,7 @@ func TestDBInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -90,6 +91,7 @@ func TestDBInstance_Components(t *testing.T) {
 				"engine":            "postgres",
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -100,7 +102,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Database Instance"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("db.t2.xlarge")},
 						{Key: "DeploymentOption", Value: util.StringPtr("Single-AZ")},
@@ -123,7 +125,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Database Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "DeploymentOption", Value: util.StringPtr("Single-AZ")},
 						{Key: "VolumeType", Value: util.StringPtr("Provisioned IOPS")},
@@ -138,7 +140,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Provisioned IOPS"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "DeploymentOption", Value: util.StringPtr("Single-AZ")},
 					},
@@ -146,7 +148,7 @@ func TestDBInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 
@@ -164,6 +166,7 @@ func TestDBInstance_Components(t *testing.T) {
 				"multi_az":          true,
 			},
 		}
+		rss := map[string]terraform.Resource{}
 
 		expected := []query.Component{
 			{
@@ -174,7 +177,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Database Instance"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "InstanceType", Value: util.StringPtr("db.t2.xlarge")},
 						{Key: "DeploymentOption", Value: util.StringPtr("Multi-AZ")},
@@ -199,7 +202,7 @@ func TestDBInstance_Components(t *testing.T) {
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
 					Family:   util.StringPtr("Database Storage"),
-					Location: util.StringPtr("eu-west-3"),
+					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "DeploymentOption", Value: util.StringPtr("Multi-AZ")},
 						{Key: "VolumeType", Value: util.StringPtr("General Purpose")},
@@ -208,7 +211,7 @@ func TestDBInstance_Components(t *testing.T) {
 			},
 		}
 
-		actual := p.ResourceComponents(tfres)
+		actual := p.ResourceComponents(rss, tfres)
 		assert.Equal(t, expected, actual)
 	})
 }

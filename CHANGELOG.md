@@ -2,6 +2,8 @@
 
 ### Added
 
+- AWS support for `aws_autoscaling_group`, `aws_launch_template`, `aws_launch_configuration`
+  ([Pull #80](https://github.com/cycloidio/terracost/pull/80))
 - AWS support for `aws_eip`, `aws_aws_elasticache_cluster`, `aws_elasticache_replication_group`
   ([Pull #68](https://github.com/cycloidio/terracost/pull/68))
 

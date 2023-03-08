@@ -29,7 +29,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				},
 			}}
 
-			provider.EXPECT().ResourceComponents(gomock.Any()).AnyTimes().DoAndReturn(func(res terraform.Resource) []query.Component {
+			provider.EXPECT().ResourceComponents(gomock.Any(), gomock.Any()).AnyTimes().DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) []query.Component {
 				switch res.Address {
 				case "aws_instance.example":
 					assert.Equal(t, "aws_instance", res.Type)
@@ -37,12 +37,14 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, map[string]interface{}{
 						"ami":           "some-ami",
 						"instance_type": "t2.micro",
+						"provider":      ".aws",
 					}, res.Values)
 
 				case "module.ec2.aws_instance.front":
 					assert.Equal(t, "aws_instance", res.Type)
 					assert.Equal(t, "front", res.Name)
 					assert.Equal(t, map[string]interface{}{
+						"ami":           "module.ec2.data.aws_ami.debian",
 						"count":         float64(1),
 						"instance_type": "t3.small",
 						"root_block_device": []interface{}{
@@ -58,6 +60,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, "aws_elb", res.Type)
 					assert.Equal(t, "front", res.Name)
 					assert.Equal(t, map[string]interface{}{
+						"instances": []interface{}{"module.ec2.aws_instance.front[0]"},
 						"listener": []interface{}{
 							map[string]interface{}{
 								"instance_port":     float64(80),
@@ -135,7 +138,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				},
 			}}
 
-			provider.EXPECT().ResourceComponents(gomock.Any()).AnyTimes().DoAndReturn(func(res terraform.Resource) []query.Component {
+			provider.EXPECT().ResourceComponents(gomock.Any(), gomock.Any()).AnyTimes().DoAndReturn(func(rss map[string]terraform.Resource, res terraform.Resource) []query.Component {
 				return nil
 			})
 

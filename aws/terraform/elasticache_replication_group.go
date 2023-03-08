@@ -29,14 +29,17 @@ type ElastiCacheReplication struct {
 }
 
 type elastiCacheReplicationValues struct {
-	NodeType          string   `mapstructure:"node_type"`
-	AvailabilityZones []string `mapstructure:"availability_zones"`
-	Engine            string   `mapstructure:"engine"`
-	ClusterMode       []struct {
+	NodeType             string   `mapstructure:"node_type"`
+	AvailabilityZones    []string `mapstructure:"availability_zones"`
+	Engine               string   `mapstructure:"engine"`
+	NumNodeGroups        int64    `mapstructure:"num_node_groups"`
+	ReplicasPerNodeGroup int64    `mapstructure:"replicas_per_node_group"`
+	// Deprecated params cluster_mode
+	ClusterMode []struct {
 		NumNodeGroups        int64 `mapstructure:"num_node_groups"`
 		ReplicasPerNodeGroup int64 `mapstructure:"replicas_per_node_group"`
 	} `mapstructure:"cluster_mode"`
-	NumberCacheClusters      int64  `mapstructure:"number_cache_clusters"`
+	NumberCacheClusters      int64  `mapstructure:"num_cache_clusters"`
 	SnapshotRetentionLimit   int64  `mapstructure:"snapshot_retention_limit"`
 	GlobalReplicationGroupID string `mapstructure:"global_replication_group_id"`
 }
@@ -62,6 +65,10 @@ func (p *Provider) newElastiCacheReplication(vals elastiCacheReplicationValues) 
 	if len(vals.ClusterMode) > 0 {
 		nodeGroups := decimal.NewFromInt(vals.ClusterMode[0].NumNodeGroups)
 		replicasNode := decimal.NewFromInt(vals.ClusterMode[0].ReplicasPerNodeGroup)
+		numCacheNodes = nodeGroups.Mul(replicasNode).Add(nodeGroups)
+	} else if vals.NumNodeGroups > 0 {
+		nodeGroups := decimal.NewFromInt(vals.NumNodeGroups)
+		replicasNode := decimal.NewFromInt(vals.ReplicasPerNodeGroup)
 		numCacheNodes = nodeGroups.Mul(replicasNode).Add(nodeGroups)
 	}
 

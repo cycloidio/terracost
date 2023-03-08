@@ -274,7 +274,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(52.814), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(62.892), "USD"), pcost)
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 
@@ -285,7 +285,18 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(71.234), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(73.334), "USD"), pcost)
+		})
+		t.Run("SuccessASG", func(t *testing.T) {
+
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", terraformAWSProviderInitializer)
+			require.NoError(t, err)
+
+			assert.Nil(t, plan.Prior)
+
+			pcost, err := plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(764.863), "USD"), pcost)
 		})
 	})
 }

@@ -29,7 +29,7 @@ output "rds_port" {
 }
 
 output "rds_database" {
-  value = aws_db_instance.magento.name
+  value = aws_db_instance.magento.db_name
 }
 
 output "rds_username" {
