@@ -287,6 +287,17 @@ func TestAWSEstimation(t *testing.T) {
 			assert.NoError(t, err)
 			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(73.334), "USD"), pcost)
 		})
+		t.Run("SuccessASG", func(t *testing.T) {
+
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", terraformAWSProviderInitializer)
+			require.NoError(t, err)
+
+			assert.Nil(t, plan.Prior)
+
+			pcost, err := plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(73.334), "USD"), pcost)
+		})
 	})
 }
 
