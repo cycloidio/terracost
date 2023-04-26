@@ -337,11 +337,9 @@ func getHCLProviders(mod *configs.Module, evalCtx *hcl.EvalContext, providerInit
 		}
 
 		cfg := getBodyJSON("", body, evalCtx)
-		values := make(map[string]string)
+		values := make(map[string]interface{})
 		for k, v := range cfg {
-			if s, ok := v.(string); ok {
-				values[k] = s
-			}
+			values[k] = v
 		}
 
 		prov, err := pi.Provider(values)

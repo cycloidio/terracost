@@ -26,12 +26,12 @@ import (
 // which is also used in the tfplan & co.
 var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 	MatchNames: []string{"aws", "aws-test"},
-	Provider: func(config map[string]string) (terraform.Provider, error) {
+	Provider: func(config map[string]interface{}) (terraform.Provider, error) {
 		r, ok := config["region"]
 		if !ok {
 			return nil, nil
 		}
-		regCode := region.Code(r)
+		regCode := region.Code(r.(string))
 		return awstf.NewProvider("aws-test", regCode)
 	},
 }
@@ -43,12 +43,12 @@ var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 // from a real dump are injected to ensure better testing scenarios
 var terraformAWSProviderInitializer = terraform.ProviderInitializer{
 	MatchNames: []string{"aws", "registry.terraform.io/hashicorp/aws"},
-	Provider: func(config map[string]string) (terraform.Provider, error) {
+	Provider: func(config map[string]interface{}) (terraform.Provider, error) {
 		r, ok := config["region"]
 		if !ok {
 			return nil, nil
 		}
-		regCode := region.Code(r)
+		regCode := region.Code(r.(string))
 		return awstf.NewProvider("aws", regCode)
 	},
 }

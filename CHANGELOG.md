@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+### Fixed
+
+- Plan variables where forced to be `string` and if not was failing
+  ([Issue #86](https://github.com/cycloidio/terracost/issues/86))
+
 ## [0.5.1] _2023-03-08_
 
 ### Added

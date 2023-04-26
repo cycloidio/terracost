@@ -94,7 +94,7 @@ type Configuration struct {
 
 // Variable is a Terraform variable declaration.
 type Variable struct {
-	Value string `json:"value"`
+	Value interface{} `json:"value"`
 }
 
 // ConfigurationModule is used to configure a module.
