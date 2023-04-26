@@ -161,8 +161,8 @@ func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string
 
 // evaluateProviderConfigExpressions returns evaluated values of provider's configuration block, whether a constant
 // value or reference to a variable.
-func (p *Plan) evaluateProviderConfigExpressions(config ProviderConfig) (map[string]string, error) {
-	values := make(map[string]string)
+func (p *Plan) evaluateProviderConfigExpressions(config ProviderConfig) (map[string]interface{}, error) {
+	values := make(map[string]interface{})
 	for name, e := range config.Expressions {
 		if e.ConstantValue != "" {
 			values[name] = e.ConstantValue

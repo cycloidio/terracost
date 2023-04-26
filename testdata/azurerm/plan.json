@@ -26,6 +26,9 @@
 		"env": {
 			"value": "azure"
 		},
+		"test": {
+			"value":true
+		},
 		"project": {
 			"value": "marco-compute"
 		}
