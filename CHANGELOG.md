@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+### Added
+
+- Support for remote module references
+  ([Issue #88](https://github.com/cycloidio/terracost/issues/88))
+
 ### Fixed
 
 - Plan variables where forced to be `string` and if not was failing

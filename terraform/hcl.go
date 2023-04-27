@@ -1,14 +1,20 @@
 package terraform
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"path"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
+	"github.com/hashicorp/terraform/addrs"
 	"github.com/hashicorp/terraform/configs"
+	"github.com/hashicorp/terraform/getmodules"
+	"github.com/hashicorp/terraform/registry"
+	"github.com/hashicorp/terraform/registry/regsrc"
 	"github.com/spf13/afero"
 	"github.com/zclconf/go-cty/cty"
 
@@ -111,12 +117,34 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 	for mk, mv := range mod.ModuleCalls {
 		p := joinPath(modPath, mv.SourceAddr.String())
 
-		// Try to load a module from a config directory. Only local modules are supported, other types of modules
-		// will be skipped.
+		// EntersNewPackage checks if the module is a local
+		// one or a Remote one.
+		if mv.EntersNewPackage() {
+			dir, err := installModule(mv)
+			if err != nil {
+				return nil, fmt.Errorf("failed to install remote module: %w", err)
+			}
+			maddr, err := addrs.ParseModuleSource(dir)
+			if err != nil {
+				return nil, fmt.Errorf("failed parse module source %q: %w", dir, err)
+			}
+			// We ignore the SourceAddrRange for now
+			// as it's the reference to where the Source is
+			// located on the file which we do not need anymore
+			mv.SourceAddr = maddr
+			mv.SourceAddrRaw = dir
+			p = dir
+		}
+
 		child, diags := parser.LoadConfigDir(p)
 		if diags.HasErrors() {
-			// Skip unsupported modules
-			continue
+			return nil, fmt.Errorf("failed to load config dir: %w", diags)
+		}
+
+		// After the loading of the files we remove the ones
+		// that where downloaded
+		if mv.EntersNewPackage() {
+			os.RemoveAll(p)
 		}
 
 		body, ok := mv.Config.(*hclsyntax.Body)
@@ -171,6 +199,38 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 	}
 
 	return queries, nil
+}
+
+// installModule will walk the ModuleCall and download any remote module
+func installModule(mc *configs.ModuleCall) (string, error) {
+	dir, err := os.MkdirTemp("", "terracost")
+	if err != nil {
+		return "", fmt.Errorf("failed to create a temp dir: %w", err)
+	}
+	os.RemoveAll(dir)
+	fetcher := getmodules.NewPackageFetcher()
+	src := mc.SourceAddr.String()
+	ctx := context.Background()
+	if strings.Contains(src, "registry") {
+		rm, err := regsrc.ParseModuleSource(src)
+		if err != nil {
+			return "", fmt.Errorf("failed to parse module source %s: %w", src, err)
+		}
+		// we initialize the client with default values
+		// so everything is nil
+		rc := registry.NewClient(nil, nil)
+		noVersion := ""
+		ml, err := rc.ModuleLocation(ctx, rm, noVersion)
+		if err != nil {
+			return "", fmt.Errorf("failed to locate module %s: %w", src, err)
+		}
+		src = ml
+	}
+	err = fetcher.FetchPackage(ctx, dir, src)
+	if err != nil {
+		return "", fmt.Errorf("failed to download the module %q: %w", src, err)
+	}
+	return dir, nil
 }
 
 // getEvalCtx returns the evaluation context of the given module with variable values set.
@@ -230,9 +290,15 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 			}
 			cfg[attrk] = val.AsString()
 		case cty.Number:
+			if !val.IsKnown() {
+				continue
+			}
 			f, _ := val.AsBigFloat().Float64()
 			cfg[attrk] = f
 		case cty.Bool:
+			if !val.IsKnown() {
+				continue
+			}
 			cfg[attrk] = val.True()
 		default:
 			if val.Type().IsTupleType() {

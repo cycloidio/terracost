@@ -8,7 +8,8 @@ type Migration struct {
 
 // Migrations is an ordered list of migrations to track and execute. It is represented by a fixed-size array
 // to break the build if conflicting migrations were added concurrently.
-var Migrations = [2]Migration{
+var Migrations = [3]Migration{
 	v0Initial,
 	v1NameIndexes,
+	v2ExtendPriceUnit,
 }
