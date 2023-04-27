@@ -24,7 +24,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 			provider := mock.NewTerraformProvider(ctrl)
 			providerInitializers := []terraform.ProviderInitializer{{
 				MatchNames: []string{"aws", "aws-test"},
-				Provider: func(_ map[string]string) (terraform.Provider, error) {
+				Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 					return provider, nil
 				},
 			}}
@@ -115,7 +115,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 
 			providerInitializers := []terraform.ProviderInitializer{{
 				MatchNames: []string{"aws", "aws-test"},
-				Provider: func(_ map[string]string) (terraform.Provider, error) {
+				Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 					return nil, errors.New("bad provider")
 				},
 			}}
@@ -133,7 +133,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 			provider := mock.NewTerraformProvider(ctrl)
 			providerInitializers := []terraform.ProviderInitializer{{
 				MatchNames: []string{"aws", "aws-test"},
-				Provider: func(_ map[string]string) (terraform.Provider, error) {
+				Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 					return provider, nil
 				},
 			}}

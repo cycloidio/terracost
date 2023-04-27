@@ -23,7 +23,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
 			MatchNames: []string{"aws", "aws-test"},
-			Provider: func(_ map[string]string) (terraform.Provider, error) {
+			Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
@@ -58,7 +58,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
 			MatchNames: []string{"aws", "aws-test"},
-			Provider: func(_ map[string]string) (terraform.Provider, error) {
+			Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 				return nil, errors.New("bad provider")
 			},
 		})
@@ -82,7 +82,7 @@ func TestPlan_ExtractPlannedQueries(t *testing.T) {
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
 			MatchNames: []string{"aws", "aws-test"},
-			Provider: func(_ map[string]string) (terraform.Provider, error) {
+			Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
@@ -119,7 +119,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
 			MatchNames: []string{"aws", "aws-test"},
-			Provider: func(_ map[string]string) (terraform.Provider, error) {
+			Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
@@ -149,7 +149,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
 			MatchNames: []string{"aws", "aws-test"},
-			Provider: func(_ map[string]string) (terraform.Provider, error) {
+			Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 				return nil, errors.New("bad provider")
 			},
 		})
@@ -173,7 +173,7 @@ func TestPlan_ExtractPriorQueries(t *testing.T) {
 
 		plan := terraform.NewPlan(terraform.ProviderInitializer{
 			MatchNames: []string{"aws", "aws-test"},
-			Provider: func(_ map[string]string) (terraform.Provider, error) {
+			Provider: func(_ map[string]interface{}) (terraform.Provider, error) {
 				return provider, nil
 			},
 		})
