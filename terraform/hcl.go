@@ -3,8 +3,11 @@ package terraform
 import (
 	"context"
 	"fmt"
+	"io"
+	iofs "io/fs"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -36,7 +39,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 		return nil, err
 	}
 
-	queries, err := extractHCLModule(providers, parser, modPath, "", mod, evalCtx)
+	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +53,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 }
 
 // extractHCLModule returns the resources found in the provided module.
-func extractHCLModule(providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
+func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
 
 	rss := make(map[string]Resource)
@@ -120,7 +123,7 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 		// EntersNewPackage checks if the module is a local
 		// one or a Remote one.
 		if mv.EntersNewPackage() {
-			dir, err := installModule(mv)
+			dir, err := installModule(fs, mv)
 			if err != nil {
 				return nil, fmt.Errorf("failed to install remote module: %w", err)
 			}
@@ -139,12 +142,6 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 		child, diags := parser.LoadConfigDir(p)
 		if diags.HasErrors() {
 			return nil, fmt.Errorf("failed to load config dir: %w", diags)
-		}
-
-		// After the loading of the files we remove the ones
-		// that where downloaded
-		if mv.EntersNewPackage() {
-			os.RemoveAll(p)
 		}
 
 		body, ok := mv.Config.(*hclsyntax.Body)
@@ -191,7 +188,7 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 			nextModPath = fmt.Sprintf("module.%s", mk)
 		}
 
-		qs, err := extractHCLModule(childProvs, parser, p, nextModPath, child, nextEvalCtx)
+		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nextEvalCtx)
 		if err != nil {
 			return nil, err
 		}
@@ -202,11 +199,16 @@ func extractHCLModule(providers map[string]Provider, parser *configs.Parser, mod
 }
 
 // installModule will walk the ModuleCall and download any remote module
-func installModule(mc *configs.ModuleCall) (string, error) {
+func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 	dir, err := os.MkdirTemp("", "terracost")
 	if err != nil {
 		return "", fmt.Errorf("failed to create a temp dir: %w", err)
 	}
+	// We remove it to create just the folder and then
+	// we pass the 'dir' path to the Fetcher and we know
+	// it's a valid unexistent dir. If we did not delete it
+	// the 'FetchPackage' would try to 'git pull' instead
+	// of 'git clone'
 	os.RemoveAll(dir)
 	fetcher := getmodules.NewPackageFetcher()
 	src := mc.SourceAddr.String()
@@ -229,6 +231,40 @@ func installModule(mc *configs.ModuleCall) (string, error) {
 	err = fetcher.FetchPackage(ctx, dir, src)
 	if err != nil {
 		return "", fmt.Errorf("failed to download the module %q: %w", src, err)
+	}
+
+	// If the dir already exists we assume it's the right Fs
+	// so no need to copy the content
+	if ok, _ := afero.DirExists(fs, dir); ok {
+		return dir, nil
+	}
+
+	// Once everything is copied we can remove it
+	defer os.RemoveAll(dir)
+
+	fs.MkdirAll(dir, 0700)
+	err = filepath.WalkDir(dir, func(p string, d iofs.DirEntry, err error) error {
+		if d.IsDir() {
+			fs.MkdirAll(p, d.Type())
+			return nil
+		}
+		f, err := fs.Create(p)
+		if err != nil {
+			return fmt.Errorf("failed to create %s into the FS: %w", d.Name(), err)
+		}
+
+		osf, err := os.Open(p)
+		if err != nil {
+			return fmt.Errorf("failed to open %s: %w", p, err)
+		}
+
+		io.Copy(f, osf)
+		f.Close()
+		osf.Close()
+		return nil
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to copy the module to %s: %w", dir, err)
 	}
 	return dir, nil
 }
