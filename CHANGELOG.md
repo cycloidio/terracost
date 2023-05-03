@@ -9,6 +9,8 @@
 
 - Plan variables where forced to be `string` and if not was failing
   ([Issue #86](https://github.com/cycloidio/terracost/issues/86))
+- Added weak type conversion for values when calculation price from the user inputs
+  ([Pull #89](https://github.com/cycloidio/terracost/pull/89))
 
 ## [0.5.1] _2023-03-08_
 
