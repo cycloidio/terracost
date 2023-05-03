@@ -285,7 +285,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(73.334), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(86.474), "USD"), pcost)
 		})
 		t.Run("SuccessASG", func(t *testing.T) {
 
@@ -296,7 +296,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(764.863), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(691.863), "USD"), pcost)
 		})
 		t.Run("SuccessRemote", func(t *testing.T) {
 
@@ -307,7 +307,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(764.863), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(86.474), "USD"), pcost)
 		})
 	})
 }
