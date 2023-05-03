@@ -1,18 +1,20 @@
 # TerraCost examples
 
-Examples help you to understand how to test Terracost.
+Examples help you to understand how to test TerraCost.
 
 ## Requirements
 
 ### Mysql
 
-Cloud Provider pricing datas need to be ingested in a Mysql server. For testing purpose, local docker can be used
+Cloud Provider pricing data need to be ingested in a Mysql server. For testing purpose, local docker can be used
 
 ```
-docker run  -p 3306:3306 -d --privileged  -e MYSQL_ROOT_PASSWORD=password  mysql:8.0.21 --default-authentication-plugin=mysql_native_password
+docker run  -p 3306:3306 -d --privileged  -e MYSQL_ROOT_PASSWORD=terracost  mysql:8.0.21 --default-authentication-plugin=mysql_native_password
+```
 
-# Once Mysql started, create the terracost database
-mysql -h 127.0.0.1 -uroot -ppassword -e "CREATE DATABASE terracost"
+Once Mysql started, create the terracost database
+```
+mysql -h 127.0.0.1 -uroot -pterracost -e "CREATE DATABASE terracost_test"
 ```
 
 ## Examples
@@ -21,21 +23,17 @@ mysql -h 127.0.0.1 -uroot -ppassword -e "CREATE DATABASE terracost"
 
 To start prices ingestion you need to first decide which cloud provider to ingest. In the example `AWS` is available with `-ingest-aws`.
 
- and services
-
- in `terracost-ingester.go`
-
 ```
 go run terracost.go -ingest-aws
 ```
 
-Here we ingest all supported services by Terracost, ingestion could takes severals minutes depending the amonts of datas.
-If you don't need all services, the list could be defined to reduce time.
+Here we ingest all supported services by TerraCost, ingestion could takes several minutes depending the amounts of data.
+If you don't need all services you can run it with `-minimal` which will run just the small subset needed for it work.
 
 > Note
 > Before to ingest datas, the database migrations are needed. In order to correctly run migrations, we need `?multiStatements=true` param on DB connector
 > ```
-> sql.Open("mysql", "root:password@tcp(127.0.0.1:3306)/terracost?multiStatements=true")
+> sql.Open("mysql", "root:terracost@tcp(127.0.0.1:3306)/terracost_test?multiStatements=true")
 > ```
 
 ### Pricing Estimation (from Plan)

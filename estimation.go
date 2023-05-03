@@ -56,6 +56,10 @@ func EstimateHCL(ctx context.Context, be backend.Backend, fs afero.Fs, path stri
 		providerInitializers = getDefaultProviders()
 	}
 
+	if fs == nil {
+		fs = afero.NewOsFs()
+	}
+
 	plannedQueries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, path)
 	if err != nil {
 		return nil, err

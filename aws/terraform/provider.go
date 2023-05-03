@@ -34,6 +34,7 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 		if err != nil {
 			return nil
 		}
+
 		return p.newInstance(vals).Components()
 	case "aws_autoscaling_group":
 		vals, err := decodeAutoscalingGroupValues(tfRes.Values)

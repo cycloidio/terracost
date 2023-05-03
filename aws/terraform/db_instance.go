@@ -79,7 +79,17 @@ var licenseModelMap = map[string]string{
 
 func decodeDBInstanceValues(tfVals map[string]interface{}) (dbInstanceValues, error) {
 	var v dbInstanceValues
-	if err := mapstructure.Decode(tfVals, &v); err != nil {
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		Result:           &v,
+	}
+
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return v, err
+	}
+
+	if err := decoder.Decode(tfVals); err != nil {
 		return v, err
 	}
 	return v, nil
