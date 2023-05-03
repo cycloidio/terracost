@@ -28,7 +28,17 @@ type computeInstanceValues struct {
 // decodeComputeInstanceValues decodes and returns computeInstanceValues from a Terraform values map.
 func decodeComputeInstanceValues(tfVals map[string]interface{}) (computeInstanceValues, error) {
 	var v computeInstanceValues
-	if err := mapstructure.Decode(tfVals, &v); err != nil {
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		Result:           &v,
+	}
+
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return v, err
+	}
+
+	if err := decoder.Decode(tfVals); err != nil {
 		return v, err
 	}
 	return v, nil

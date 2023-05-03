@@ -33,7 +33,17 @@ type launchTemplateValues struct {
 // decodeAutoscalingGroupValues decodes and returns instanceValues from a Terraform values map.
 func decodeLaunchTemplateValues(tfVals map[string]interface{}) (launchTemplateValues, error) {
 	var v launchTemplateValues
-	if err := mapstructure.Decode(tfVals, &v); err != nil {
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		Result:           &v,
+	}
+
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return v, err
+	}
+
+	if err := decoder.Decode(tfVals); err != nil {
 		return v, err
 	}
 	return v, nil

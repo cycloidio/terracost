@@ -48,7 +48,17 @@ var cacheTypeMap = map[string]string{
 
 func decodeElastiCacheValues(tfVals map[string]interface{}) (elastiCacheValues, error) {
 	var v elastiCacheValues
-	if err := mapstructure.Decode(tfVals, &v); err != nil {
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		Result:           &v,
+	}
+
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return v, err
+	}
+
+	if err := decoder.Decode(tfVals); err != nil {
 		return v, err
 	}
 	return v, nil
