@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/cycloidio/terracost"
 	"github.com/cycloidio/terracost/aws"
@@ -55,9 +56,9 @@ func main() {
 	}
 
 	// Use your mysql access with MultiStatements
-	db, err := sql.Open("mysql", "root:password@tcp(127.0.0.1:3306)/terracost?multiStatements=true")
+	db, err := sql.Open("mysql", "root:terracost@tcp(127.0.0.1:3306)/terracost_test?multiStatements=true")
 	if err != nil {
-		fmt.Printf("%s", err)
+		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
 	backend := mysql.NewBackend(db)
@@ -76,11 +77,10 @@ func main() {
 
 }
 func awsIngest(region string, backend *mysql.Backend, db *sql.DB) {
-	fmt.Printf("AWS Ingestion")
+	fmt.Printf("AWS Ingestion\n")
 
-	// Run all database migrations
 	err := mysql.Migrate(context.Background(), db, "pricing_migrations")
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "Error 1050") {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
@@ -94,13 +94,13 @@ func awsIngest(region string, backend *mysql.Backend, db *sql.DB) {
 		}
 		ingester, err := aws.NewIngester(s, region, op...)
 		if err != nil {
-			fmt.Printf("%s", err)
+			fmt.Printf("%s\n", err)
 			os.Exit(1)
 		}
 
 		err = terracost.IngestPricing(context.Background(), backend, ingester)
 		if err != nil {
-			fmt.Printf("%s", err)
+			fmt.Printf("%s\n", err)
 			os.Exit(1)
 		}
 	}
@@ -110,13 +110,13 @@ func estimatePlan(path string, backend *mysql.Backend) {
 	fmt.Printf("EstimateTerraformPlan\n")
 	file, err := os.Open(path)
 	if err != nil {
-		fmt.Printf("%s", err)
+		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
 	plan, err := terracost.EstimateTerraformPlan(context.Background(), backend, file)
 	if err != nil {
-		fmt.Printf("%s", err)
+		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
@@ -143,7 +143,7 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 	// terraform HCL directory
 	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, terraformAWSProviderInitializer)
 	if err != nil {
-		fmt.Printf("%s", err)
+		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
@@ -154,13 +154,13 @@ func estimateDisplay(resourceDiff *cost.Plan) {
 	for _, res := range resourceDiff.ResourceDifferences() {
 		priorCost, err := res.PriorCost()
 		if err != nil {
-			fmt.Printf("PriorCost %s: %s", res.Address, err)
+			fmt.Printf("PriorCost %s: %s\n", res.Address, err)
 			continue
 		}
 
 		plannedCost, err := res.PlannedCost()
 		if err != nil {
-			fmt.Printf("PlannedCost %s: %s", res.Address, err)
+			fmt.Printf("PlannedCost %s: %s\n", res.Address, err)
 			continue
 		}
 		fmt.Printf("%s: %s -> %s\n", res.Address, priorCost, plannedCost)
