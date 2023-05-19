@@ -11,6 +11,8 @@
   ([Issue #86](https://github.com/cycloidio/terracost/issues/86))
 - Added weak type conversion for values when calculation price from the user inputs
   ([Pull #89](https://github.com/cycloidio/terracost/pull/89))
+- Resource.Index is now of type `interface{}` as it can be `int` or `string`
+  ([Pull #90](https://github.com/cycloidio/terracost/pull/90))
 
 ## [0.5.1] _2023-03-08_
 

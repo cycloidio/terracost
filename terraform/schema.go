@@ -70,8 +70,11 @@ type State struct {
 
 // Resource is a single Terraform resource definition.
 type Resource struct {
-	Address      string                 `json:"address"`
-	Index        int                    `json:"index"`
+	Address string `json:"address"`
+	// This value is 99% of the time an integer, but it can also be
+	// a string, the implementation on TF side is of 'addrs.InstanceKey'
+	// which can be of type 'IntKey' or 'StringKey'
+	Index        interface{}            `json:"index"`
 	Mode         string                 `json:"mode"`
 	Type         string                 `json:"type"`
 	Name         string                 `json:"name"`
