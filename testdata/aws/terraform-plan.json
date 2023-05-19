@@ -13,6 +13,7 @@
                             "name": "example",
                             "provider_name": "registry.terraform.io/hashicorp/aws",
                             "schema_version": 1,
+                            "index":"test",
                             "values": {
                                 "ami": "ami-2757f631",
                                 "availability_zone": "us-east-1e",
@@ -38,6 +39,7 @@
                     "type": "aws_lb",
                     "name": "example",
                     "provider_name": "registry.terraform.io/hashicorp/aws",
+                    "index":1,
                     "schema_version": 0,
                     "values": {
                         "load_balancer_type": "application"
