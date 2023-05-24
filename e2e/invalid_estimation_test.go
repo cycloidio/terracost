@@ -50,12 +50,12 @@ func TestVMWareEstimation(t *testing.T) {
 
 	t.Run("HCL", func(t *testing.T) {
 		t.Run("UnsupportedProvider", func(t *testing.T) {
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-vmware", terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-vmware")
 			assert.Nil(t, plan)
 			assert.Error(t, err, terraform.ErrNoKnownProvider)
 		})
 		t.Run("EmptyTerraform", func(t *testing.T) {
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-empty", terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-empty")
 			assert.Nil(t, plan)
 			assert.Error(t, err, terraform.ErrNoQueries)
 		})

@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	costestimation "github.com/cycloidio/terracost"
+	"github.com/cycloidio/terracost/aws"
 	"github.com/cycloidio/terracost/aws/region"
 	awstf "github.com/cycloidio/terracost/aws/terraform"
 	"github.com/cycloidio/terracost/cost"
@@ -33,23 +34,6 @@ var terraformAWSTestProviderInitializer = terraform.ProviderInitializer{
 		}
 		regCode := region.Code(r.(string))
 		return awstf.NewProvider("aws-test", regCode)
-	},
-}
-
-// terraformAWSProviderInitializer is a proper AWS provider.
-// We do not want to reuse the testing terraformAWSTestProviderInitializer
-// because the HCL contains actual valid AWS resources and provider
-// meaning 'aws' is used an not 'aws-test'. On top of that pricing data
-// from a real dump are injected to ensure better testing scenarios
-var terraformAWSProviderInitializer = terraform.ProviderInitializer{
-	MatchNames: []string{"aws", "registry.terraform.io/hashicorp/aws"},
-	Provider: func(config map[string]interface{}) (terraform.Provider, error) {
-		r, ok := config["region"]
-		if !ok {
-			return nil, nil
-		}
-		regCode := region.Code(r.(string))
-		return awstf.NewProvider("aws", regCode)
 	},
 }
 
@@ -211,12 +195,49 @@ func TestAWSEstimation(t *testing.T) {
 				}
 			}
 		})
+		t.Run("SuccessNoRegion", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/terraform-plan-no-region.json")
+			require.NoError(t, err)
+			defer f.Close()
+
+			// Instead of using the default one we have a custom one that will
+			// basically only work if the region is not set and will set it to
+			// the one we are importing by default so we do not have to import
+			// other regions for testing
+			tfpi := terraform.ProviderInitializer{
+				MatchNames: []string{aws.ProviderName, aws.RegistryName},
+				Provider: func(values map[string]interface{}) (terraform.Provider, error) {
+					r, ok := values["region"]
+					if !ok {
+						r = "eu-west-1"
+					} else {
+						return nil, nil
+					}
+					regCode := region.Code(r.(string))
+					return awstf.NewProvider(aws.ProviderName, regCode)
+				},
+			}
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, tfpi)
+			require.NoError(t, err)
+
+			pcost, err := plan.PriorCost()
+			assert.NoError(t, err)
+			assert.Equal(t, cost.Zero, pcost)
+
+			pcost, err = plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(31.984), "USD"), pcost)
+
+			diffs := plan.ResourceDifferences()
+			require.Len(t, diffs, 1)
+			require.Len(t, diffs[0].ComponentDiffs, 2)
+		})
 		t.Run("SuccessNoPrior", func(t *testing.T) {
 			f, err := os.Open("../testdata/aws/terraform-noprior-plan.json")
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f)
 			require.NoError(t, err)
 
 			pcost, err := plan.PriorCost()
@@ -267,7 +288,7 @@ func TestAWSEstimation(t *testing.T) {
 	t.Run("HCL", func(t *testing.T) {
 		t.Run("Success", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws")
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)
@@ -278,7 +299,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento")
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)
@@ -289,7 +310,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessASG", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg")
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)
@@ -300,7 +321,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessRemote", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote", terraformAWSProviderInitializer)
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote")
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)

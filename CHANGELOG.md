@@ -13,6 +13,8 @@
   ([Pull #89](https://github.com/cycloidio/terracost/pull/89))
 - Resource.Index is now of type `interface{}` as it can be `int` or `string`
   ([Pull #90](https://github.com/cycloidio/terracost/pull/90))
+- If the AWS provider is defined without region it'll use `us-east-1`
+  ([Pull #94](https://github.com/cycloidio/terracost/pull/94))
 
 ## [0.5.1] _2023-03-08_
 
