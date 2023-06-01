@@ -15,6 +15,8 @@
   ([Pull #90](https://github.com/cycloidio/terracost/pull/90))
 - If the AWS provider is defined without region it'll use `us-east-1`
   ([Pull #94](https://github.com/cycloidio/terracost/pull/94))
+- The documentation to install is has been updated to display the needed `replace` of `terraform`
+  ([Issue #90](https://github.com/cycloidio/terracost/issues/90)), ([Issue #74](https://github.com/cycloidio/terracost/issues/74))
 
 ## [0.5.1] _2023-03-08_
 
