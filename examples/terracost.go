@@ -15,10 +15,11 @@ import (
 	"github.com/cycloidio/terracost/cost"
 	"github.com/cycloidio/terracost/mysql"
 	"github.com/cycloidio/terracost/terraform"
+	"github.com/cycloidio/terracost/usage"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func usage() {
+func helpUsage() {
 	fmt.Fprint(os.Stderr, "Terracost\n\n")
 	flag.PrintDefaults()
 	os.Exit(2)
@@ -35,7 +36,7 @@ var (
 
 func main() {
 
-	flag.Usage = usage
+	flag.Usage = helpUsage
 	flag.BoolVar(&flagAWSIngest, "ingest-aws", flagAWSIngest, "Run AWS price ingester")
 	flag.BoolVar(&flagAWSIngestMinimal, "minimal", flagAWSIngestMinimal, "Import the minimum amount of prices")
 	flag.StringVar(&flagAWSIngestRegion, "ingest-aws-region", flagAWSIngestRegion, "AWS region used to ingest")
@@ -51,7 +52,7 @@ func main() {
 	}
 
 	if !flagAWSIngest && flagestimatePlan == "" && flagestimateHCL == "" {
-		usage()
+		helpUsage()
 		os.Exit(0)
 	}
 
@@ -114,7 +115,7 @@ func estimatePlan(path string, backend *mysql.Backend) {
 		os.Exit(1)
 	}
 
-	plan, err := terracost.EstimateTerraformPlan(context.Background(), backend, file)
+	plan, err := terracost.EstimateTerraformPlan(context.Background(), backend, file, usage.Default)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
@@ -141,7 +142,7 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 	}
 
 	// terraform HCL directory
-	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, terraformAWSProviderInitializer)
+	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, usage.Default, terraformAWSProviderInitializer)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)

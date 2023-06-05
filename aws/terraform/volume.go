@@ -52,9 +52,9 @@ func (p *Provider) newVolume(vals volumeValues) *Volume {
 	v := &Volume{
 		provider:   p,
 		region:     p.region,
-		volumeType: "gp2",
+		volumeType: "gp3",
 		size:       decimal.NewFromInt(8),
-		iops:       decimal.NewFromInt(100),
+		iops:       decimal.NewFromInt(16000),
 	}
 
 	if reg := region.NewFromZone(vals.AvailabilityZone); reg.Valid() {

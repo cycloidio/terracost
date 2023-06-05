@@ -39,7 +39,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 						"ami":           "some-ami",
 						"instance_type": "t2.micro",
 						"provider":      ".aws",
-						"usage": map[string]interface{}{
+						"tc_usage": map[string]interface{}{
 							"usage": "set_instance",
 						},
 					}, res.Values)
@@ -58,7 +58,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 								"volume_type":           "gp2",
 							},
 						},
-						"usage": map[string]interface{}{
+						"tc_usage": map[string]interface{}{
 							"usage": "set_instance",
 						},
 					}, res.Values)
@@ -76,7 +76,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 								"lb_protocol":       "tcp",
 							},
 						},
-						"usage": map[string]interface{}{
+						"tc_usage": map[string]interface{}{
 							"usage": "set_elb",
 						},
 					}, res.Values)
@@ -85,9 +85,9 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, "aws_ebs_volume", res.Type)
 					assert.Equal(t, "volume", res.Name)
 					assert.Equal(t, map[string]interface{}{
-						"size":  float64(20),
-						"type":  "gp2",
-						"usage": map[string]interface{}(nil),
+						"size":     float64(20),
+						"type":     "gp2",
+						"tc_usage": map[string]interface{}(nil),
 					}, res.Values)
 
 				case "module.rds.aws_db_instance.db":
@@ -99,7 +99,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 						"instance_class":    "db.t3.small",
 						"multi_az":          true,
 						"storage_type":      "gp2",
-						"usage":             map[string]interface{}(nil),
+						"tc_usage":          map[string]interface{}(nil),
 					}, res.Values)
 
 				default:

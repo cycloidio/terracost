@@ -12,30 +12,30 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// Backend is a mock of Backend interface.
+// Backend is a mock of Backend interface
 type Backend struct {
 	ctrl     *gomock.Controller
 	recorder *BackendMockRecorder
 }
 
-// BackendMockRecorder is the mock recorder for Backend.
+// BackendMockRecorder is the mock recorder for Backend
 type BackendMockRecorder struct {
 	mock *Backend
 }
 
-// NewBackend creates a new mock instance.
+// NewBackend creates a new mock instance
 func NewBackend(ctrl *gomock.Controller) *Backend {
 	mock := &Backend{ctrl: ctrl}
 	mock.recorder = &BackendMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
+// EXPECT returns an object that allows the caller to indicate expected use
 func (m *Backend) EXPECT() *BackendMockRecorder {
 	return m.recorder
 }
 
-// Prices mocks base method.
+// Prices mocks base method
 func (m *Backend) Prices() price.Repository {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Prices")
@@ -43,13 +43,13 @@ func (m *Backend) Prices() price.Repository {
 	return ret0
 }
 
-// Prices indicates an expected call of Prices.
+// Prices indicates an expected call of Prices
 func (mr *BackendMockRecorder) Prices() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Prices", reflect.TypeOf((*Backend)(nil).Prices))
 }
 
-// Products mocks base method.
+// Products mocks base method
 func (m *Backend) Products() product.Repository {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Products")
@@ -57,7 +57,7 @@ func (m *Backend) Products() product.Repository {
 	return ret0
 }
 
-// Products indicates an expected call of Products.
+// Products indicates an expected call of Products
 func (mr *BackendMockRecorder) Products() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Products", reflect.TypeOf((*Backend)(nil).Products))

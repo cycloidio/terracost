@@ -61,14 +61,14 @@ func TestInstance_Components(t *testing.T) {
 				Name:            "Root volume: Storage",
 				MonthlyQuantity: decimal.NewFromFloat(8),
 				Unit:            "GB",
-				Details:         []string{"gp2"},
+				Details:         []string{"gp3"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
 					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
+						{Key: "VolumeAPIName", Value: util.StringPtr("gp3")},
 					},
 				},
 			},
