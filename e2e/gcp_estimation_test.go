@@ -11,6 +11,7 @@ import (
 	"github.com/cycloidio/terracost/google"
 	"github.com/cycloidio/terracost/mysql"
 	"github.com/cycloidio/terracost/testutil"
+	"github.com/cycloidio/terracost/usage"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -47,7 +48,7 @@ func TestGoogleEstimation(t *testing.T) {
 		require.NoError(t, err)
 		defer f.Close()
 
-		plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f)
+		plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default)
 		require.NoError(t, err)
 
 		pcost, err := plan.PriorCost()
@@ -59,7 +60,7 @@ func TestGoogleEstimation(t *testing.T) {
 		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(39.7258116), "USD"), pcost)
 	})
 	t.Run("FromHCL", func(t *testing.T) {
-		plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/google/stack-compute")
+		plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/google/stack-compute", usage.Default)
 		require.NoError(t, err)
 
 		assert.Nil(t, plan.Prior)

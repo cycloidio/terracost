@@ -7,17 +7,22 @@ import (
 	"strings"
 
 	"github.com/cycloidio/terracost/query"
+	"github.com/cycloidio/terracost/usage"
 )
 
 // Plan is a representation of a Terraform plan file.
 type Plan struct {
 	providerInitializers map[string]ProviderInitializer
+	usage                usage.Usage
 
 	Configuration Configuration       `json:"configuration"`
 	PriorState    *State              `json:"prior_state"`
 	PlannedValues Values              `json:"planned_values"`
 	Variables     map[string]Variable `json:"variables"`
 }
+
+// SetUsage will set the usage of the plan
+func (p *Plan) SetUsage(u usage.Usage) { p.usage = u }
 
 // NewPlan returns an empty Plan.
 func NewPlan(providerInitializers ...ProviderInitializer) *Plan {
@@ -142,6 +147,7 @@ func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string
 			continue
 		}
 
+		tfres.Values[usage.Key] = p.usage.GetUsage(tfres.Type)
 		comps := provider.ResourceComponents(nil, tfres)
 		q := query.Resource{
 			Address:    tfres.Address,

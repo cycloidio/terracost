@@ -22,10 +22,11 @@ import (
 	"github.com/zclconf/go-cty/cty"
 
 	"github.com/cycloidio/terracost/query"
+	"github.com/cycloidio/terracost/usage"
 )
 
 // ExtractQueriesFromHCL returns the resources found in the module identified by the modPath.
-func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string) ([]query.Resource, error) {
+func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage) ([]query.Resource, error) {
 	parser := configs.NewParser(fs)
 	mod, diags := parser.LoadConfigDir(modPath)
 	if diags.HasErrors() {
@@ -39,7 +40,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 		return nil, err
 	}
 
-	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx)
+	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +54,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 }
 
 // extractHCLModule returns the resources found in the provided module.
-func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext) ([]query.Resource, error) {
+func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext, u usage.Usage) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
 
 	rss := make(map[string]Resource)
@@ -107,6 +108,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 	}
 
 	for _, r := range rss {
+		r.Values[usage.Key] = u.GetUsage(r.Type)
 		provider := providers[r.ProviderName]
 		queries = append(queries, query.Resource{
 			Address:    r.Address,
@@ -188,7 +190,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			nextModPath = fmt.Sprintf("module.%s", mk)
 		}
 
-		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nextEvalCtx)
+		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nextEvalCtx, u)
 		if err != nil {
 			return nil, err
 		}

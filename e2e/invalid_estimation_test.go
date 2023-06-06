@@ -9,6 +9,7 @@ import (
 	costestimation "github.com/cycloidio/terracost"
 	"github.com/cycloidio/terracost/mysql"
 	"github.com/cycloidio/terracost/terraform"
+	"github.com/cycloidio/terracost/usage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -33,7 +34,7 @@ func TestVMWareEstimation(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, terraformAWSTestProviderInitializer)
 			require.Error(t, err, terraform.ErrNoQueries)
 			assert.Nil(t, plan)
 		})
@@ -42,7 +43,7 @@ func TestVMWareEstimation(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, terraformAWSTestProviderInitializer)
 			require.Error(t, err, terraform.ErrNoKnownProvider)
 			assert.Nil(t, plan)
 		})
@@ -50,12 +51,12 @@ func TestVMWareEstimation(t *testing.T) {
 
 	t.Run("HCL", func(t *testing.T) {
 		t.Run("UnsupportedProvider", func(t *testing.T) {
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-vmware")
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-vmware", usage.Default)
 			assert.Nil(t, plan)
 			assert.Error(t, err, terraform.ErrNoKnownProvider)
 		})
 		t.Run("EmptyTerraform", func(t *testing.T) {
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-empty")
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/invalid/stack-empty", usage.Default)
 			assert.Nil(t, plan)
 			assert.Error(t, err, terraform.ErrNoQueries)
 		})

@@ -110,6 +110,10 @@ for _, res := range plan.ResourceDifferences() {
 
 Check the documentation for all available fields.
 
+### Usage estimation
+
+Some resources do cannot be estimated just by the configuration and need some extra usage information, for that we have some default on `usage/usage.go` which are also all the resources and options we support currently and can be overwritten when estimating if passing a custom one instead of the custom Default one.
+
 ## Examples
 
 For more examples, please check [examples](examples/README.md).

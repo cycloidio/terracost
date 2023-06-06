@@ -15,6 +15,7 @@ import (
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/terraform"
+	"github.com/cycloidio/terracost/usage"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -142,7 +143,7 @@ func TestAWSEstimation(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, terraformAWSTestProviderInitializer)
 			require.NoError(t, err)
 
 			pcost, err := plan.PriorCost()
@@ -217,7 +218,7 @@ func TestAWSEstimation(t *testing.T) {
 					return awstf.NewProvider(aws.ProviderName, regCode)
 				},
 			}
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, tfpi)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, tfpi)
 			require.NoError(t, err)
 
 			pcost, err := plan.PriorCost()
@@ -237,7 +238,7 @@ func TestAWSEstimation(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default)
 			require.NoError(t, err)
 
 			pcost, err := plan.PriorCost()
@@ -258,7 +259,7 @@ func TestAWSEstimation(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, terraformAWSTestProviderInitializer)
 			require.NoError(t, err)
 
 			diffs := plan.ResourceDifferences()
@@ -280,7 +281,7 @@ func TestAWSEstimation(t *testing.T) {
 			require.NoError(t, err)
 			defer f.Close()
 
-			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, terraformAWSTestProviderInitializer)
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, terraformAWSTestProviderInitializer)
 			require.Error(t, err, terraform.ErrNoProviders)
 			require.Nil(t, plan)
 		})
@@ -288,7 +289,7 @@ func TestAWSEstimation(t *testing.T) {
 	t.Run("HCL", func(t *testing.T) {
 		t.Run("Success", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws")
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", usage.Default)
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)
@@ -299,7 +300,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento")
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", usage.Default)
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)
@@ -310,7 +311,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessASG", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg")
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", usage.Default)
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)
@@ -321,7 +322,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessRemote", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote")
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote", usage.Default)
 			require.NoError(t, err)
 
 			assert.Nil(t, plan.Prior)

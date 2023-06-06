@@ -4,6 +4,8 @@
 
 - Support for remote module references
   ([Issue #88](https://github.com/cycloidio/terracost/issues/88))
+- Added 'Usage' support for those options that are not from configuration but from usage of the resource
+  ([Issue #96](https://github.com/cycloidio/terracost/issues/96))
 
 ### Fixed
 
