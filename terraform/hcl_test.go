@@ -12,6 +12,7 @@ import (
 	"github.com/cycloidio/terracost/mock"
 	"github.com/cycloidio/terracost/query"
 	"github.com/cycloidio/terracost/terraform"
+	"github.com/cycloidio/terracost/usage"
 )
 
 func TestExtractQueriesFromHCL(t *testing.T) {
@@ -38,6 +39,9 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 						"ami":           "some-ami",
 						"instance_type": "t2.micro",
 						"provider":      ".aws",
+						"usage": map[string]interface{}{
+							"usage": "set_instance",
+						},
 					}, res.Values)
 
 				case "module.ec2.aws_instance.front":
@@ -54,6 +58,9 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 								"volume_type":           "gp2",
 							},
 						},
+						"usage": map[string]interface{}{
+							"usage": "set_instance",
+						},
 					}, res.Values)
 
 				case "module.ec2.aws_elb.front":
@@ -69,14 +76,18 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 								"lb_protocol":       "tcp",
 							},
 						},
+						"usage": map[string]interface{}{
+							"usage": "set_elb",
+						},
 					}, res.Values)
 
 				case "module.ec2.module.ebs.aws_ebs_volume.volume":
 					assert.Equal(t, "aws_ebs_volume", res.Type)
 					assert.Equal(t, "volume", res.Name)
 					assert.Equal(t, map[string]interface{}{
-						"size": float64(20),
-						"type": "gp2",
+						"size":  float64(20),
+						"type":  "gp2",
+						"usage": map[string]interface{}(nil),
 					}, res.Values)
 
 				case "module.rds.aws_db_instance.db":
@@ -88,6 +99,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 						"instance_class":    "db.t3.small",
 						"multi_az":          true,
 						"storage_type":      "gp2",
+						"usage":             map[string]interface{}(nil),
 					}, res.Values)
 
 				default:
@@ -99,7 +111,16 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				return nil
 			})
 
-			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws")
+			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Usage{
+				ResourceDefaultTypeUsage: map[string]interface{}{
+					"aws_instance": map[string]interface{}{
+						"usage": "set_instance",
+					},
+					"aws_elb": map[string]interface{}{
+						"usage": "set_elb",
+					},
+				},
+			})
 			require.NoError(t, err)
 			require.Len(t, queries, 5)
 			for _, q := range queries {
@@ -120,7 +141,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				},
 			}}
 
-			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws")
+			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default)
 			require.Error(t, err)
 			require.Len(t, queries, 0)
 		})
@@ -142,7 +163,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				return nil
 			})
 
-			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws")
+			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default)
 			require.NoError(t, err)
 			require.Len(t, queries, 5)
 
