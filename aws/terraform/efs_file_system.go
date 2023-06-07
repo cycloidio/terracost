@@ -110,7 +110,11 @@ func (v *EFSFileSystem) calculateProvisionedThroughput(storageGB decimal.Decimal
 	totalProvisionedThroughput := throughput.Mul(decimal.NewFromInt(730))
 	totalBillableProvisionedThroughput := totalProvisionedThroughput.Sub(defaultThroughput).Div(decimal.NewFromInt(730))
 
+	//spew.Dump(storageGB, throughput, defaultThroughput, totalProvisionedThroughput, totalBillableProvisionedThroughput)
 	if totalBillableProvisionedThroughput.IsPositive() {
+		//spew.Dump(totalBillableProvisionedThroughput)
+		//spew.Dump(decimal.NewFromFloat(float64(8.5)))
+		//spew.Dump(reflect.DeepEqual(decimal.NewFromFloat(float64(8.5)), decimal.NewFromFloat(float64(8.5))))
 		return totalBillableProvisionedThroughput
 	}
 

@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	"github.com/shopspring/decimal"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	awstf "github.com/cycloidio/terracost/aws/terraform"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
 	"github.com/cycloidio/terracost/terraform"
+	"github.com/cycloidio/terracost/testutil"
 	"github.com/cycloidio/terracost/usage"
 	"github.com/cycloidio/terracost/util"
 )
@@ -32,7 +32,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 		expected := []query.Component{
 			{
 				Name:            "Storage .*-TimedStorage-ByteHrs",
-				MonthlyQuantity: decimal.NewFromFloat(23),
+				MonthlyQuantity: decimal.NewFromFloat(230),
 				Unit:            "GB",
 				Details:         []string{"EFS storage", ".*-TimedStorage-ByteHrs"},
 				Usage:           true,
@@ -51,7 +51,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 		us := usage.Default.GetUsage("aws_efs_file_system")
 		tfres.Values[usage.Key] = us
 		actual := p.ResourceComponents(rss, tfres)
-		assert.Equal(t, expected, actual)
+		testutil.EqualQueryComponents(t, expected, actual)
 	})
 
 	t.Run("WithAllValues", func(t *testing.T) {
@@ -74,7 +74,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 		expected := []query.Component{
 			{
 				Name:            "Storage .*-TimedStorage-ByteHrs",
-				MonthlyQuantity: decimal.NewFromFloat(23),
+				MonthlyQuantity: decimal.NewFromFloat(230),
 				Unit:            "GB",
 				Details:         []string{"EFS storage", ".*-TimedStorage-ByteHrs"},
 				Usage:           true,
@@ -90,7 +90,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Provisioned throughput",
-				MonthlyQuantity: decimal.NewFromFloat(85),
+				MonthlyQuantity: decimal.NewFromFloat(8.5),
 				Unit:            "MBps",
 				Details:         []string{"Througput"},
 				Usage:           true,
@@ -106,10 +106,9 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Storage .*-IATimedStorage-ByteHrs",
-				MonthlyQuantity: decimal.NewFromFloat(1),
-				Unit:            "GB",
-				Details:         []string{"EFS storage", ".*-IATimedStorage-ByteHrs"},
-				Usage:           true,
+				MonthlyQuantity: decimal.NewFromFloat(100),
+				Unit:            "GB", Details: []string{"EFS storage", ".*-IATimedStorage-ByteHrs"},
+				Usage: true,
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEFS"),
@@ -122,7 +121,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Requests Read",
-				MonthlyQuantity: decimal.NewFromFloat(5),
+				MonthlyQuantity: decimal.NewFromFloat(50),
 				Unit:            "GB",
 				Details:         []string{"Requests", "Infrequent Access", "Read"},
 				Usage:           true,
@@ -139,7 +138,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Requests Write",
-				MonthlyQuantity: decimal.NewFromFloat(1),
+				MonthlyQuantity: decimal.NewFromFloat(100),
 				Unit:            "GB",
 				Details:         []string{"Requests", "Infrequent Access", "Write"},
 				Usage:           true,
@@ -159,6 +158,6 @@ func TestEFSFileSystem_Components(t *testing.T) {
 		us := usage.Default.GetUsage("aws_efs_file_system")
 		tfres.Values[usage.Key] = us
 		actual := p.ResourceComponents(rss, tfres)
-		assert.Equal(t, expected, actual)
+		testutil.EqualQueryComponents(t, expected, actual)
 	})
 }
