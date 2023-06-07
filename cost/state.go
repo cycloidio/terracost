@@ -66,6 +66,7 @@ func NewState(ctx context.Context, backend backend.Backend, queries []query.Reso
 				Unit:     comp.Unit,
 				Rate:     rate,
 				Details:  comp.Details,
+				Usage:    comp.Usage,
 			}
 
 			state.addComponent(res.Address, comp.Name, component)

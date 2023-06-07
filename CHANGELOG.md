@@ -6,6 +6,8 @@
   ([Issue #88](https://github.com/cycloidio/terracost/issues/88))
 - Added 'Usage' support for those options that are not from configuration but from usage of the resource
   ([Issue #96](https://github.com/cycloidio/terracost/issues/96))
+- Added 'Usage' attribute to the cost.Component and query.Component
+  ([Issue #10](https://github.com/cycloidio/terracost/issues/100))
 
 ### Fixed
 
