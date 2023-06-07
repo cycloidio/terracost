@@ -33,6 +33,7 @@ type Component struct {
 	MonthlyQuantity decimal.Decimal
 	Unit            string
 	Details         []string
+	Usage           bool
 	ProductFilter   *product.Filter
 	PriceFilter     *price.Filter
 }

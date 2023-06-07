@@ -11,6 +11,7 @@ type Component struct {
 	Unit     string
 	Rate     Cost
 	Details  []string
+	Usage    bool
 
 	Error error
 }
