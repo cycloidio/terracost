@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _FieldName = "SKUCapacityStatusGroupInstance TypeLocationOperating SystemPre Installed S/WProduct FamilyserviceCodeTenancyusageTypeVolume API NameVolume TypeCache EngineDatabase EngineDatabase EditionDeployment OptionLicense ModelCurrencyPricePerUnitStartingRangeTermTypeUnit"
+const _FieldName = "SKUCapacityStatusGroupInstance TypeLocationOperating SystemPre Installed S/WProduct FamilyserviceCodeTenancyusageTypeVolume API NameVolume TypeStorage ClassAccess TypeThroughput ClassCache EngineDatabase EngineDatabase EditionDeployment OptionLicense ModelCurrencyPricePerUnitStartingRangeTermTypeUnit"
 
-var _FieldIndex = [...]uint16{0, 3, 17, 22, 35, 43, 59, 76, 90, 101, 108, 117, 132, 143, 155, 170, 186, 203, 216, 224, 236, 249, 257, 261}
+var _FieldIndex = [...]uint16{0, 3, 17, 22, 35, 43, 59, 76, 90, 101, 108, 117, 132, 143, 156, 167, 183, 195, 210, 226, 243, 256, 264, 276, 289, 297, 301}
 
-const _FieldLowerName = "skucapacitystatusgroupinstance typelocationoperating systempre installed s/wproduct familyservicecodetenancyusagetypevolume api namevolume typecache enginedatabase enginedatabase editiondeployment optionlicense modelcurrencypriceperunitstartingrangetermtypeunit"
+const _FieldLowerName = "skucapacitystatusgroupinstance typelocationoperating systempre installed s/wproduct familyservicecodetenancyusagetypevolume api namevolume typestorage classaccess typethroughput classcache enginedatabase enginedatabase editiondeployment optionlicense modelcurrencypriceperunitstartingrangetermtypeunit"
 
 func (i Field) String() string {
 	if i >= Field(len(_FieldIndex)-1) {
@@ -37,19 +37,22 @@ func _FieldNoOp() {
 	_ = x[UsageType-(10)]
 	_ = x[VolumeAPIName-(11)]
 	_ = x[VolumeType-(12)]
-	_ = x[CacheEngine-(13)]
-	_ = x[DatabaseEngine-(14)]
-	_ = x[DatabaseEdition-(15)]
-	_ = x[DeploymentOption-(16)]
-	_ = x[LicenseModel-(17)]
-	_ = x[Currency-(18)]
-	_ = x[PricePerUnit-(19)]
-	_ = x[StartingRange-(20)]
-	_ = x[TermType-(21)]
-	_ = x[Unit-(22)]
+	_ = x[StorageClass-(13)]
+	_ = x[AccessType-(14)]
+	_ = x[ThroughputClass-(15)]
+	_ = x[CacheEngine-(16)]
+	_ = x[DatabaseEngine-(17)]
+	_ = x[DatabaseEdition-(18)]
+	_ = x[DeploymentOption-(19)]
+	_ = x[LicenseModel-(20)]
+	_ = x[Currency-(21)]
+	_ = x[PricePerUnit-(22)]
+	_ = x[StartingRange-(23)]
+	_ = x[TermType-(24)]
+	_ = x[Unit-(25)]
 }
 
-var _FieldValues = []Field{SKU, CapacityStatus, Group, InstanceType, Location, OperatingSystem, PreInstalledSW, ProductFamily, ServiceCode, Tenancy, UsageType, VolumeAPIName, VolumeType, CacheEngine, DatabaseEngine, DatabaseEdition, DeploymentOption, LicenseModel, Currency, PricePerUnit, StartingRange, TermType, Unit}
+var _FieldValues = []Field{SKU, CapacityStatus, Group, InstanceType, Location, OperatingSystem, PreInstalledSW, ProductFamily, ServiceCode, Tenancy, UsageType, VolumeAPIName, VolumeType, StorageClass, AccessType, ThroughputClass, CacheEngine, DatabaseEngine, DatabaseEdition, DeploymentOption, LicenseModel, Currency, PricePerUnit, StartingRange, TermType, Unit}
 
 var _FieldNameToValueMap = map[string]Field{
 	_FieldName[0:3]:          SKU,
@@ -78,26 +81,32 @@ var _FieldNameToValueMap = map[string]Field{
 	_FieldLowerName[117:132]: VolumeAPIName,
 	_FieldName[132:143]:      VolumeType,
 	_FieldLowerName[132:143]: VolumeType,
-	_FieldName[143:155]:      CacheEngine,
-	_FieldLowerName[143:155]: CacheEngine,
-	_FieldName[155:170]:      DatabaseEngine,
-	_FieldLowerName[155:170]: DatabaseEngine,
-	_FieldName[170:186]:      DatabaseEdition,
-	_FieldLowerName[170:186]: DatabaseEdition,
-	_FieldName[186:203]:      DeploymentOption,
-	_FieldLowerName[186:203]: DeploymentOption,
-	_FieldName[203:216]:      LicenseModel,
-	_FieldLowerName[203:216]: LicenseModel,
-	_FieldName[216:224]:      Currency,
-	_FieldLowerName[216:224]: Currency,
-	_FieldName[224:236]:      PricePerUnit,
-	_FieldLowerName[224:236]: PricePerUnit,
-	_FieldName[236:249]:      StartingRange,
-	_FieldLowerName[236:249]: StartingRange,
-	_FieldName[249:257]:      TermType,
-	_FieldLowerName[249:257]: TermType,
-	_FieldName[257:261]:      Unit,
-	_FieldLowerName[257:261]: Unit,
+	_FieldName[143:156]:      StorageClass,
+	_FieldLowerName[143:156]: StorageClass,
+	_FieldName[156:167]:      AccessType,
+	_FieldLowerName[156:167]: AccessType,
+	_FieldName[167:183]:      ThroughputClass,
+	_FieldLowerName[167:183]: ThroughputClass,
+	_FieldName[183:195]:      CacheEngine,
+	_FieldLowerName[183:195]: CacheEngine,
+	_FieldName[195:210]:      DatabaseEngine,
+	_FieldLowerName[195:210]: DatabaseEngine,
+	_FieldName[210:226]:      DatabaseEdition,
+	_FieldLowerName[210:226]: DatabaseEdition,
+	_FieldName[226:243]:      DeploymentOption,
+	_FieldLowerName[226:243]: DeploymentOption,
+	_FieldName[243:256]:      LicenseModel,
+	_FieldLowerName[243:256]: LicenseModel,
+	_FieldName[256:264]:      Currency,
+	_FieldLowerName[256:264]: Currency,
+	_FieldName[264:276]:      PricePerUnit,
+	_FieldLowerName[264:276]: PricePerUnit,
+	_FieldName[276:289]:      StartingRange,
+	_FieldLowerName[276:289]: StartingRange,
+	_FieldName[289:297]:      TermType,
+	_FieldLowerName[289:297]: TermType,
+	_FieldName[297:301]:      Unit,
+	_FieldLowerName[297:301]: Unit,
 }
 
 var _FieldNames = []string{
@@ -114,16 +123,19 @@ var _FieldNames = []string{
 	_FieldName[108:117],
 	_FieldName[117:132],
 	_FieldName[132:143],
-	_FieldName[143:155],
-	_FieldName[155:170],
-	_FieldName[170:186],
-	_FieldName[186:203],
-	_FieldName[203:216],
-	_FieldName[216:224],
-	_FieldName[224:236],
-	_FieldName[236:249],
-	_FieldName[249:257],
-	_FieldName[257:261],
+	_FieldName[143:156],
+	_FieldName[156:167],
+	_FieldName[167:183],
+	_FieldName[183:195],
+	_FieldName[195:210],
+	_FieldName[210:226],
+	_FieldName[226:243],
+	_FieldName[243:256],
+	_FieldName[256:264],
+	_FieldName[264:276],
+	_FieldName[276:289],
+	_FieldName[289:297],
+	_FieldName[297:301],
 }
 
 // FieldString retrieves an enum value from the enum constants string name.

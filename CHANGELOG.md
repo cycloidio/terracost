@@ -2,6 +2,8 @@
 
 ### Added
 
+- AWS support for `aws_eks_cluster`, `aws_eks_node_group`, `aws_efs_file_system`
+  ([Pull #97](https://github.com/cycloidio/terracost/pull/97))
 - Support for remote module references
   ([Issue #88](https://github.com/cycloidio/terracost/issues/88))
 - Added 'Usage' support for those options that are not from configuration but from usage of the resource

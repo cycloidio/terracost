@@ -227,7 +227,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err = plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(31.984), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(31.544), "USD"), pcost)
 
 			diffs := plan.ResourceDifferences()
 			require.Len(t, diffs, 1)
@@ -247,7 +247,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err = plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(31.984), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(31.544), "USD"), pcost)
 
 			diffs := plan.ResourceDifferences()
 			require.Len(t, diffs, 1)
@@ -296,7 +296,7 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(62.892), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(62.716), "USD"), pcost)
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 
@@ -318,7 +318,18 @@ func TestAWSEstimation(t *testing.T) {
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
-			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(691.863), "USD"), pcost)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(690.983), "USD"), pcost)
+		})
+		t.Run("SuccessEKS", func(t *testing.T) {
+
+			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-eks", usage.Default)
+			require.NoError(t, err)
+
+			assert.Nil(t, plan.Prior)
+
+			pcost, err := plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(99.798), "USD"), pcost)
 		})
 		t.Run("SuccessRemote", func(t *testing.T) {
 

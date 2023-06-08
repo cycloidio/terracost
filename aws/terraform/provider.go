@@ -34,7 +34,6 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 		if err != nil {
 			return nil
 		}
-
 		return p.newInstance(vals).Components()
 	case "aws_autoscaling_group":
 		vals, err := decodeAutoscalingGroupValues(tfRes.Values)
@@ -48,6 +47,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newVolume(vals).Components()
+	case "aws_efs_file_system":
+		vals, err := decodeEFSFileSystemValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newEFSFileSystem(rss, vals).Components()
 	case "aws_elasticache_cluster":
 		vals, err := decodeElastiCacheValues(tfRes.Values)
 		if err != nil {
@@ -82,6 +87,18 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 		// ELB Classic does not have any special configuration.
 		vals := lbValues{LoadBalancerType: "classic"}
 		return p.newLB(vals).Components()
+	case "aws_eks_cluster":
+		vals, err := decodeEKSClusterValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newEKSCluster(vals).Components()
+	case "aws_eks_node_group":
+		vals, err := decodeEKSNodeGroupValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newEKSNodeGroup(rss, vals).Components()
 	default:
 		return nil
 	}

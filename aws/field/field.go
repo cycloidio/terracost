@@ -22,6 +22,11 @@ const (
 	VolumeAPIName                // Volume API Name
 	VolumeType                   // Volume Type
 
+	// EFSFileSystem
+	StorageClass    // Storage Class
+	AccessType      // Access Type
+	ThroughputClass // Throughput Class
+
 	// ElastiCache
 	CacheEngine // Cache Engine
 

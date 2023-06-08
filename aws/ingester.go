@@ -201,6 +201,11 @@ var columnProductToIngest = map[field.Field]string{
 	field.VolumeAPIName:   "VolumeAPIName",
 	field.VolumeType:      "VolumeType",
 
+	// EFS attributes
+	field.StorageClass:    "StorageClass",
+	field.AccessType:      "AccessType",
+	field.ThroughputClass: "ThroughputClass",
+
 	// ElastiCache
 	field.CacheEngine: "CacheEngine",
 

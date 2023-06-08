@@ -88,14 +88,14 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 				Name:            "Root volume: Storage",
 				MonthlyQuantity: decimal.NewFromFloat(20),
 				Unit:            "GB",
-				Details:         []string{"gp2"},
+				Details:         []string{"gp3"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
 					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
+						{Key: "VolumeAPIName", Value: util.StringPtr("gp3")},
 					},
 				},
 			},
@@ -246,14 +246,14 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 				Name:            "Root volume: Storage",
 				MonthlyQuantity: decimal.NewFromFloat(30),
 				Unit:            "GB",
-				Details:         []string{"gp2"},
+				Details:         []string{"gp3"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
 					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
+						{Key: "VolumeAPIName", Value: util.StringPtr("gp3")},
 					},
 				},
 			},
@@ -291,7 +291,7 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 
 					"root_block_device": []interface{}{
 						map[string]interface{}{
-							"volume_type": "gp2",
+							"volume_type": "gp3",
 							"volume_size": float64(42),
 						},
 					},
@@ -328,14 +328,14 @@ func TestAutoscalingGroup_Components(t *testing.T) {
 				Name:            "Root volume: Storage",
 				MonthlyQuantity: decimal.NewFromFloat(42),
 				Unit:            "GB",
-				Details:         []string{"gp2"},
+				Details:         []string{"gp3"},
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonEC2"),
 					Family:   util.StringPtr("Storage"),
 					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
-						{Key: "VolumeAPIName", Value: util.StringPtr("gp2")},
+						{Key: "VolumeAPIName", Value: util.StringPtr("gp3")},
 					},
 				},
 			},

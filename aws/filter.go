@@ -26,6 +26,10 @@ func MinimalFilter(pp *price.WithProduct) bool {
 		return true // is minimal already
 	case "AmazonCloudWatch":
 		return true // is minimal already
+	case "AmazonEKS":
+		return true // is minimal already
+	case "AmazonEFS":
+		return true // is minimal already
 	default:
 		return false
 	}

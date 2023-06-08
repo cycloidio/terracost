@@ -13,30 +13,30 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// PriceRepository is a mock of Repository interface.
+// PriceRepository is a mock of Repository interface
 type PriceRepository struct {
 	ctrl     *gomock.Controller
 	recorder *PriceRepositoryMockRecorder
 }
 
-// PriceRepositoryMockRecorder is the mock recorder for PriceRepository.
+// PriceRepositoryMockRecorder is the mock recorder for PriceRepository
 type PriceRepositoryMockRecorder struct {
 	mock *PriceRepository
 }
 
-// NewPriceRepository creates a new mock instance.
+// NewPriceRepository creates a new mock instance
 func NewPriceRepository(ctrl *gomock.Controller) *PriceRepository {
 	mock := &PriceRepository{ctrl: ctrl}
 	mock.recorder = &PriceRepositoryMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
+// EXPECT returns an object that allows the caller to indicate expected use
 func (m *PriceRepository) EXPECT() *PriceRepositoryMockRecorder {
 	return m.recorder
 }
 
-// DeleteByProductWithKeep mocks base method.
+// DeleteByProductWithKeep mocks base method
 func (m *PriceRepository) DeleteByProductWithKeep(arg0 context.Context, arg1 product.ID, arg2 []price.ID) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteByProductWithKeep", arg0, arg1, arg2)
@@ -44,13 +44,13 @@ func (m *PriceRepository) DeleteByProductWithKeep(arg0 context.Context, arg1 pro
 	return ret0
 }
 
-// DeleteByProductWithKeep indicates an expected call of DeleteByProductWithKeep.
+// DeleteByProductWithKeep indicates an expected call of DeleteByProductWithKeep
 func (mr *PriceRepositoryMockRecorder) DeleteByProductWithKeep(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByProductWithKeep", reflect.TypeOf((*PriceRepository)(nil).DeleteByProductWithKeep), arg0, arg1, arg2)
 }
 
-// Filter mocks base method.
+// Filter mocks base method
 func (m *PriceRepository) Filter(arg0 context.Context, arg1 product.ID, arg2 *price.Filter) ([]*price.Price, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Filter", arg0, arg1, arg2)
@@ -59,13 +59,13 @@ func (m *PriceRepository) Filter(arg0 context.Context, arg1 product.ID, arg2 *pr
 	return ret0, ret1
 }
 
-// Filter indicates an expected call of Filter.
+// Filter indicates an expected call of Filter
 func (mr *PriceRepositoryMockRecorder) Filter(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Filter", reflect.TypeOf((*PriceRepository)(nil).Filter), arg0, arg1, arg2)
 }
 
-// Upsert mocks base method.
+// Upsert mocks base method
 func (m *PriceRepository) Upsert(arg0 context.Context, arg1 *price.WithProduct) (price.ID, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Upsert", arg0, arg1)
@@ -74,7 +74,7 @@ func (m *PriceRepository) Upsert(arg0 context.Context, arg1 *price.WithProduct) 
 	return ret0, ret1
 }
 
-// Upsert indicates an expected call of Upsert.
+// Upsert indicates an expected call of Upsert
 func (mr *PriceRepositoryMockRecorder) Upsert(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Upsert", reflect.TypeOf((*PriceRepository)(nil).Upsert), arg0, arg1)

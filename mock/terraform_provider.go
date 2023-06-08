@@ -12,30 +12,30 @@ import (
 	gomock "github.com/golang/mock/gomock"
 )
 
-// TerraformProvider is a mock of Provider interface.
+// TerraformProvider is a mock of Provider interface
 type TerraformProvider struct {
 	ctrl     *gomock.Controller
 	recorder *TerraformProviderMockRecorder
 }
 
-// TerraformProviderMockRecorder is the mock recorder for TerraformProvider.
+// TerraformProviderMockRecorder is the mock recorder for TerraformProvider
 type TerraformProviderMockRecorder struct {
 	mock *TerraformProvider
 }
 
-// NewTerraformProvider creates a new mock instance.
+// NewTerraformProvider creates a new mock instance
 func NewTerraformProvider(ctrl *gomock.Controller) *TerraformProvider {
 	mock := &TerraformProvider{ctrl: ctrl}
 	mock.recorder = &TerraformProviderMockRecorder{mock}
 	return mock
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
+// EXPECT returns an object that allows the caller to indicate expected use
 func (m *TerraformProvider) EXPECT() *TerraformProviderMockRecorder {
 	return m.recorder
 }
 
-// Name mocks base method.
+// Name mocks base method
 func (m *TerraformProvider) Name() string {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Name")
@@ -43,13 +43,13 @@ func (m *TerraformProvider) Name() string {
 	return ret0
 }
 
-// Name indicates an expected call of Name.
+// Name indicates an expected call of Name
 func (mr *TerraformProviderMockRecorder) Name() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Name", reflect.TypeOf((*TerraformProvider)(nil).Name))
 }
 
-// ResourceComponents mocks base method.
+// ResourceComponents mocks base method
 func (m *TerraformProvider) ResourceComponents(arg0 map[string]terraform.Resource, arg1 terraform.Resource) []query.Component {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ResourceComponents", arg0, arg1)
@@ -57,7 +57,7 @@ func (m *TerraformProvider) ResourceComponents(arg0 map[string]terraform.Resourc
 	return ret0
 }
 
-// ResourceComponents indicates an expected call of ResourceComponents.
+// ResourceComponents indicates an expected call of ResourceComponents
 func (mr *TerraformProviderMockRecorder) ResourceComponents(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResourceComponents", reflect.TypeOf((*TerraformProvider)(nil).ResourceComponents), arg0, arg1)
