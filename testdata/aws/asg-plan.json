@@ -1,0 +1,1207 @@
+{
+    "format_version": "1.2",
+    "terraform_version": "1.5.1",
+    "variables": {
+        "enable_mon": {
+            "value": "false"
+        },
+        "env": {
+            "value": "prod"
+        },
+        "front_ebs_optimized": {
+            "value": true
+        }
+    },
+    "planned_values": {
+        "root_module": {
+            "child_modules": [
+                {
+                    "resources": [
+                        {
+                            "address": "module.magento.aws_autoscaling_group.lc",
+                            "mode": "managed",
+                            "type": "aws_autoscaling_group",
+                            "name": "lc",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "availability_zones": [
+                                    "eu-west-1a"
+                                ],
+                                "capacity_rebalance": null,
+                                "context": null,
+                                "default_instance_warmup": null,
+                                "desired_capacity": 3,
+                                "desired_capacity_type": null,
+                                "enabled_metrics": null,
+                                "force_delete": false,
+                                "force_delete_warm_pool": false,
+                                "health_check_grace_period": 300,
+                                "initial_lifecycle_hook": [],
+                                "instance_refresh": [],
+                                "launch_template": [],
+                                "max_instance_lifetime": null,
+                                "max_size": 5,
+                                "metrics_granularity": "1Minute",
+                                "min_elb_capacity": null,
+                                "min_size": 1,
+                                "mixed_instances_policy": [],
+                                "placement_group": null,
+                                "protect_from_scale_in": false,
+                                "suspended_processes": null,
+                                "tag": [],
+                                "termination_policies": null,
+                                "timeouts": null,
+                                "wait_for_capacity_timeout": "10m",
+                                "wait_for_elb_capacity": null,
+                                "warm_pool": []
+                            },
+                            "sensitive_values": {
+                                "availability_zones": [
+                                    false
+                                ],
+                                "initial_lifecycle_hook": [],
+                                "instance_refresh": [],
+                                "launch_template": [],
+                                "load_balancers": [],
+                                "mixed_instances_policy": [],
+                                "tag": [],
+                                "target_group_arns": [],
+                                "traffic_source": [],
+                                "vpc_zone_identifier": [],
+                                "warm_pool": []
+                            }
+                        },
+                        {
+                            "address": "module.magento.aws_autoscaling_group.lt",
+                            "mode": "managed",
+                            "type": "aws_autoscaling_group",
+                            "name": "lt",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "availability_zones": [
+                                    "eu-west-1a"
+                                ],
+                                "capacity_rebalance": null,
+                                "context": null,
+                                "default_instance_warmup": null,
+                                "desired_capacity": 2,
+                                "desired_capacity_type": null,
+                                "enabled_metrics": null,
+                                "force_delete": false,
+                                "force_delete_warm_pool": false,
+                                "health_check_grace_period": 300,
+                                "initial_lifecycle_hook": [],
+                                "instance_refresh": [],
+                                "launch_configuration": null,
+                                "launch_template": [
+                                    {
+                                        "version": "$Latest"
+                                    }
+                                ],
+                                "max_instance_lifetime": null,
+                                "max_size": 10,
+                                "metrics_granularity": "1Minute",
+                                "min_elb_capacity": null,
+                                "min_size": 1,
+                                "mixed_instances_policy": [],
+                                "placement_group": null,
+                                "protect_from_scale_in": false,
+                                "suspended_processes": null,
+                                "tag": [],
+                                "termination_policies": null,
+                                "timeouts": null,
+                                "wait_for_capacity_timeout": "10m",
+                                "wait_for_elb_capacity": null,
+                                "warm_pool": []
+                            },
+                            "sensitive_values": {
+                                "availability_zones": [
+                                    false
+                                ],
+                                "initial_lifecycle_hook": [],
+                                "instance_refresh": [],
+                                "launch_template": [
+                                    {}
+                                ],
+                                "load_balancers": [],
+                                "mixed_instances_policy": [],
+                                "tag": [],
+                                "target_group_arns": [],
+                                "traffic_source": [],
+                                "vpc_zone_identifier": [],
+                                "warm_pool": []
+                            }
+                        },
+                        {
+                            "address": "module.magento.aws_autoscaling_group.mixed",
+                            "mode": "managed",
+                            "type": "aws_autoscaling_group",
+                            "name": "mixed",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "capacity_rebalance": null,
+                                "context": null,
+                                "default_instance_warmup": null,
+                                "desired_capacity": 3,
+                                "desired_capacity_type": null,
+                                "enabled_metrics": null,
+                                "force_delete": false,
+                                "force_delete_warm_pool": false,
+                                "health_check_grace_period": 300,
+                                "initial_lifecycle_hook": [],
+                                "instance_refresh": [],
+                                "launch_configuration": null,
+                                "launch_template": [],
+                                "max_instance_lifetime": null,
+                                "max_size": 15,
+                                "metrics_granularity": "1Minute",
+                                "min_elb_capacity": null,
+                                "min_size": 2,
+                                "mixed_instances_policy": [
+                                    {
+                                        "instances_distribution": [
+                                            {
+                                                "on_demand_base_capacity": 2,
+                                                "spot_max_price": null
+                                            }
+                                        ],
+                                        "launch_template": [
+                                            {
+                                                "launch_template_specification": [
+                                                    {
+                                                        "version": "$Default"
+                                                    }
+                                                ],
+                                                "override": [
+                                                    {
+                                                        "instance_requirements": [],
+                                                        "instance_type": "c4.large",
+                                                        "launch_template_specification": [],
+                                                        "weighted_capacity": "3"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "placement_group": null,
+                                "protect_from_scale_in": false,
+                                "suspended_processes": null,
+                                "tag": [],
+                                "termination_policies": null,
+                                "timeouts": null,
+                                "wait_for_capacity_timeout": "10m",
+                                "wait_for_elb_capacity": null,
+                                "warm_pool": []
+                            },
+                            "sensitive_values": {
+                                "availability_zones": [],
+                                "initial_lifecycle_hook": [],
+                                "instance_refresh": [],
+                                "launch_template": [],
+                                "load_balancers": [],
+                                "mixed_instances_policy": [
+                                    {
+                                        "instances_distribution": [
+                                            {}
+                                        ],
+                                        "launch_template": [
+                                            {
+                                                "launch_template_specification": [
+                                                    {}
+                                                ],
+                                                "override": [
+                                                    {
+                                                        "instance_requirements": [],
+                                                        "launch_template_specification": []
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "tag": [],
+                                "target_group_arns": [],
+                                "traffic_source": [],
+                                "vpc_zone_identifier": [],
+                                "warm_pool": []
+                            }
+                        },
+                        {
+                            "address": "module.magento.aws_launch_configuration.lc",
+                            "mode": "managed",
+                            "type": "aws_launch_configuration",
+                            "name": "lc",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "enable_monitoring": true,
+                                "ephemeral_block_device": [],
+                                "iam_instance_profile": null,
+                                "image_id": "ami-123456789",
+                                "instance_type": "m4.large",
+                                "placement_tenancy": "dedicated",
+                                "security_groups": null,
+                                "spot_price": null,
+                                "user_data": null,
+                                "user_data_base64": null
+                            },
+                            "sensitive_values": {
+                                "ebs_block_device": [],
+                                "ephemeral_block_device": [],
+                                "metadata_options": [],
+                                "root_block_device": []
+                            }
+                        },
+                        {
+                            "address": "module.magento.aws_launch_template.foobar",
+                            "mode": "managed",
+                            "type": "aws_launch_template",
+                            "name": "foobar",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "block_device_mappings": [
+                                    {
+                                        "device_name": "/dev/sda1",
+                                        "ebs": [
+                                            {
+                                                "delete_on_termination": null,
+                                                "encrypted": null,
+                                                "kms_key_id": null,
+                                                "snapshot_id": null,
+                                                "volume_size": 20
+                                            }
+                                        ],
+                                        "no_device": null,
+                                        "virtual_name": null
+                                    }
+                                ],
+                                "capacity_reservation_specification": [],
+                                "cpu_options": [],
+                                "credit_specification": [
+                                    {
+                                        "cpu_credits": "unlimited"
+                                    }
+                                ],
+                                "description": null,
+                                "disable_api_stop": null,
+                                "disable_api_termination": null,
+                                "ebs_optimized": "true",
+                                "elastic_gpu_specifications": [],
+                                "elastic_inference_accelerator": [],
+                                "enclave_options": [],
+                                "hibernation_options": [],
+                                "iam_instance_profile": [],
+                                "image_id": "ami-1a2b3c",
+                                "instance_initiated_shutdown_behavior": null,
+                                "instance_market_options": [],
+                                "instance_requirements": [],
+                                "instance_type": "t3.large",
+                                "kernel_id": null,
+                                "key_name": null,
+                                "license_specification": [],
+                                "maintenance_options": [],
+                                "monitoring": [
+                                    {
+                                        "enabled": false
+                                    }
+                                ],
+                                "name_prefix": "rds-prod",
+                                "network_interfaces": [],
+                                "placement": [
+                                    {
+                                        "affinity": null,
+                                        "availability_zone": "eu-west-1c",
+                                        "group_name": null,
+                                        "host_id": null,
+                                        "host_resource_group_arn": null,
+                                        "partition_number": null,
+                                        "spread_domain": null,
+                                        "tenancy": "dedicated"
+                                    }
+                                ],
+                                "private_dns_name_options": [],
+                                "ram_disk_id": null,
+                                "security_group_names": null,
+                                "tag_specifications": [],
+                                "tags": null,
+                                "update_default_version": null,
+                                "user_data": null,
+                                "vpc_security_group_ids": null
+                            },
+                            "sensitive_values": {
+                                "block_device_mappings": [
+                                    {
+                                        "ebs": [
+                                            {}
+                                        ]
+                                    }
+                                ],
+                                "capacity_reservation_specification": [],
+                                "cpu_options": [],
+                                "credit_specification": [
+                                    {}
+                                ],
+                                "elastic_gpu_specifications": [],
+                                "elastic_inference_accelerator": [],
+                                "enclave_options": [],
+                                "hibernation_options": [],
+                                "iam_instance_profile": [],
+                                "instance_market_options": [],
+                                "instance_requirements": [],
+                                "license_specification": [],
+                                "maintenance_options": [],
+                                "metadata_options": [],
+                                "monitoring": [
+                                    {}
+                                ],
+                                "network_interfaces": [],
+                                "placement": [
+                                    {}
+                                ],
+                                "private_dns_name_options": [],
+                                "tag_specifications": [],
+                                "tags_all": {}
+                            }
+                        }
+                    ],
+                    "address": "module.magento"
+                }
+            ]
+        }
+    },
+    "resource_changes": [
+        {
+            "address": "module.magento.aws_autoscaling_group.lc",
+            "module_address": "module.magento",
+            "mode": "managed",
+            "type": "aws_autoscaling_group",
+            "name": "lc",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "availability_zones": [
+                        "eu-west-1a"
+                    ],
+                    "capacity_rebalance": null,
+                    "context": null,
+                    "default_instance_warmup": null,
+                    "desired_capacity": 3,
+                    "desired_capacity_type": null,
+                    "enabled_metrics": null,
+                    "force_delete": false,
+                    "force_delete_warm_pool": false,
+                    "health_check_grace_period": 300,
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_template": [],
+                    "max_instance_lifetime": null,
+                    "max_size": 5,
+                    "metrics_granularity": "1Minute",
+                    "min_elb_capacity": null,
+                    "min_size": 1,
+                    "mixed_instances_policy": [],
+                    "placement_group": null,
+                    "protect_from_scale_in": false,
+                    "suspended_processes": null,
+                    "tag": [],
+                    "termination_policies": null,
+                    "timeouts": null,
+                    "wait_for_capacity_timeout": "10m",
+                    "wait_for_elb_capacity": null,
+                    "warm_pool": []
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "availability_zones": [
+                        false
+                    ],
+                    "default_cooldown": true,
+                    "health_check_type": true,
+                    "id": true,
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_configuration": true,
+                    "launch_template": [],
+                    "load_balancers": true,
+                    "mixed_instances_policy": [],
+                    "name": true,
+                    "name_prefix": true,
+                    "predicted_capacity": true,
+                    "service_linked_role_arn": true,
+                    "tag": [],
+                    "target_group_arns": true,
+                    "traffic_source": true,
+                    "vpc_zone_identifier": true,
+                    "warm_pool": [],
+                    "warm_pool_size": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "availability_zones": [
+                        false
+                    ],
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_template": [],
+                    "load_balancers": [],
+                    "mixed_instances_policy": [],
+                    "tag": [],
+                    "target_group_arns": [],
+                    "traffic_source": [],
+                    "vpc_zone_identifier": [],
+                    "warm_pool": []
+                }
+            }
+        },
+        {
+            "address": "module.magento.aws_autoscaling_group.lt",
+            "module_address": "module.magento",
+            "mode": "managed",
+            "type": "aws_autoscaling_group",
+            "name": "lt",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "availability_zones": [
+                        "eu-west-1a"
+                    ],
+                    "capacity_rebalance": null,
+                    "context": null,
+                    "default_instance_warmup": null,
+                    "desired_capacity": 2,
+                    "desired_capacity_type": null,
+                    "enabled_metrics": null,
+                    "force_delete": false,
+                    "force_delete_warm_pool": false,
+                    "health_check_grace_period": 300,
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_configuration": null,
+                    "launch_template": [
+                        {
+                            "version": "$Latest"
+                        }
+                    ],
+                    "max_instance_lifetime": null,
+                    "max_size": 10,
+                    "metrics_granularity": "1Minute",
+                    "min_elb_capacity": null,
+                    "min_size": 1,
+                    "mixed_instances_policy": [],
+                    "placement_group": null,
+                    "protect_from_scale_in": false,
+                    "suspended_processes": null,
+                    "tag": [],
+                    "termination_policies": null,
+                    "timeouts": null,
+                    "wait_for_capacity_timeout": "10m",
+                    "wait_for_elb_capacity": null,
+                    "warm_pool": []
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "availability_zones": [
+                        false
+                    ],
+                    "default_cooldown": true,
+                    "health_check_type": true,
+                    "id": true,
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_template": [
+                        {
+                            "id": true,
+                            "name": true
+                        }
+                    ],
+                    "load_balancers": true,
+                    "mixed_instances_policy": [],
+                    "name": true,
+                    "name_prefix": true,
+                    "predicted_capacity": true,
+                    "service_linked_role_arn": true,
+                    "tag": [],
+                    "target_group_arns": true,
+                    "traffic_source": true,
+                    "vpc_zone_identifier": true,
+                    "warm_pool": [],
+                    "warm_pool_size": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "availability_zones": [
+                        false
+                    ],
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_template": [
+                        {}
+                    ],
+                    "load_balancers": [],
+                    "mixed_instances_policy": [],
+                    "tag": [],
+                    "target_group_arns": [],
+                    "traffic_source": [],
+                    "vpc_zone_identifier": [],
+                    "warm_pool": []
+                }
+            }
+        },
+        {
+            "address": "module.magento.aws_autoscaling_group.mixed",
+            "module_address": "module.magento",
+            "mode": "managed",
+            "type": "aws_autoscaling_group",
+            "name": "mixed",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "capacity_rebalance": null,
+                    "context": null,
+                    "default_instance_warmup": null,
+                    "desired_capacity": 3,
+                    "desired_capacity_type": null,
+                    "enabled_metrics": null,
+                    "force_delete": false,
+                    "force_delete_warm_pool": false,
+                    "health_check_grace_period": 300,
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_configuration": null,
+                    "launch_template": [],
+                    "max_instance_lifetime": null,
+                    "max_size": 15,
+                    "metrics_granularity": "1Minute",
+                    "min_elb_capacity": null,
+                    "min_size": 2,
+                    "mixed_instances_policy": [
+                        {
+                            "instances_distribution": [
+                                {
+                                    "on_demand_base_capacity": 2,
+                                    "spot_max_price": null
+                                }
+                            ],
+                            "launch_template": [
+                                {
+                                    "launch_template_specification": [
+                                        {
+                                            "version": "$Default"
+                                        }
+                                    ],
+                                    "override": [
+                                        {
+                                            "instance_requirements": [],
+                                            "instance_type": "c4.large",
+                                            "launch_template_specification": [],
+                                            "weighted_capacity": "3"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "placement_group": null,
+                    "protect_from_scale_in": false,
+                    "suspended_processes": null,
+                    "tag": [],
+                    "termination_policies": null,
+                    "timeouts": null,
+                    "wait_for_capacity_timeout": "10m",
+                    "wait_for_elb_capacity": null,
+                    "warm_pool": []
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "availability_zones": true,
+                    "default_cooldown": true,
+                    "health_check_type": true,
+                    "id": true,
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_template": [],
+                    "load_balancers": true,
+                    "mixed_instances_policy": [
+                        {
+                            "instances_distribution": [
+                                {
+                                    "on_demand_allocation_strategy": true,
+                                    "on_demand_percentage_above_base_capacity": true,
+                                    "spot_allocation_strategy": true,
+                                    "spot_instance_pools": true
+                                }
+                            ],
+                            "launch_template": [
+                                {
+                                    "launch_template_specification": [
+                                        {
+                                            "launch_template_id": true,
+                                            "launch_template_name": true
+                                        }
+                                    ],
+                                    "override": [
+                                        {
+                                            "instance_requirements": [],
+                                            "launch_template_specification": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "name": true,
+                    "name_prefix": true,
+                    "predicted_capacity": true,
+                    "service_linked_role_arn": true,
+                    "tag": [],
+                    "target_group_arns": true,
+                    "traffic_source": true,
+                    "vpc_zone_identifier": true,
+                    "warm_pool": [],
+                    "warm_pool_size": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "availability_zones": [],
+                    "initial_lifecycle_hook": [],
+                    "instance_refresh": [],
+                    "launch_template": [],
+                    "load_balancers": [],
+                    "mixed_instances_policy": [
+                        {
+                            "instances_distribution": [
+                                {}
+                            ],
+                            "launch_template": [
+                                {
+                                    "launch_template_specification": [
+                                        {}
+                                    ],
+                                    "override": [
+                                        {
+                                            "instance_requirements": [],
+                                            "launch_template_specification": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "tag": [],
+                    "target_group_arns": [],
+                    "traffic_source": [],
+                    "vpc_zone_identifier": [],
+                    "warm_pool": []
+                }
+            }
+        },
+        {
+            "address": "module.magento.aws_launch_configuration.lc",
+            "module_address": "module.magento",
+            "mode": "managed",
+            "type": "aws_launch_configuration",
+            "name": "lc",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "enable_monitoring": true,
+                    "ephemeral_block_device": [],
+                    "iam_instance_profile": null,
+                    "image_id": "ami-123456789",
+                    "instance_type": "m4.large",
+                    "placement_tenancy": "dedicated",
+                    "security_groups": null,
+                    "spot_price": null,
+                    "user_data": null,
+                    "user_data_base64": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "associate_public_ip_address": true,
+                    "ebs_block_device": true,
+                    "ebs_optimized": true,
+                    "ephemeral_block_device": [],
+                    "id": true,
+                    "key_name": true,
+                    "metadata_options": true,
+                    "name": true,
+                    "name_prefix": true,
+                    "root_block_device": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "ebs_block_device": [],
+                    "ephemeral_block_device": [],
+                    "metadata_options": [],
+                    "root_block_device": []
+                }
+            }
+        },
+        {
+            "address": "module.magento.aws_launch_template.foobar",
+            "module_address": "module.magento",
+            "mode": "managed",
+            "type": "aws_launch_template",
+            "name": "foobar",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "block_device_mappings": [
+                        {
+                            "device_name": "/dev/sda1",
+                            "ebs": [
+                                {
+                                    "delete_on_termination": null,
+                                    "encrypted": null,
+                                    "kms_key_id": null,
+                                    "snapshot_id": null,
+                                    "volume_size": 20
+                                }
+                            ],
+                            "no_device": null,
+                            "virtual_name": null
+                        }
+                    ],
+                    "capacity_reservation_specification": [],
+                    "cpu_options": [],
+                    "credit_specification": [
+                        {
+                            "cpu_credits": "unlimited"
+                        }
+                    ],
+                    "description": null,
+                    "disable_api_stop": null,
+                    "disable_api_termination": null,
+                    "ebs_optimized": "true",
+                    "elastic_gpu_specifications": [],
+                    "elastic_inference_accelerator": [],
+                    "enclave_options": [],
+                    "hibernation_options": [],
+                    "iam_instance_profile": [],
+                    "image_id": "ami-1a2b3c",
+                    "instance_initiated_shutdown_behavior": null,
+                    "instance_market_options": [],
+                    "instance_requirements": [],
+                    "instance_type": "t3.large",
+                    "kernel_id": null,
+                    "key_name": null,
+                    "license_specification": [],
+                    "maintenance_options": [],
+                    "monitoring": [
+                        {
+                            "enabled": false
+                        }
+                    ],
+                    "name_prefix": "rds-prod",
+                    "network_interfaces": [],
+                    "placement": [
+                        {
+                            "affinity": null,
+                            "availability_zone": "eu-west-1c",
+                            "group_name": null,
+                            "host_id": null,
+                            "host_resource_group_arn": null,
+                            "partition_number": null,
+                            "spread_domain": null,
+                            "tenancy": "dedicated"
+                        }
+                    ],
+                    "private_dns_name_options": [],
+                    "ram_disk_id": null,
+                    "security_group_names": null,
+                    "tag_specifications": [],
+                    "tags": null,
+                    "update_default_version": null,
+                    "user_data": null,
+                    "vpc_security_group_ids": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "block_device_mappings": [
+                        {
+                            "ebs": [
+                                {
+                                    "iops": true,
+                                    "throughput": true,
+                                    "volume_type": true
+                                }
+                            ]
+                        }
+                    ],
+                    "capacity_reservation_specification": [],
+                    "cpu_options": [],
+                    "credit_specification": [
+                        {}
+                    ],
+                    "default_version": true,
+                    "elastic_gpu_specifications": [],
+                    "elastic_inference_accelerator": [],
+                    "enclave_options": [],
+                    "hibernation_options": [],
+                    "iam_instance_profile": [],
+                    "id": true,
+                    "instance_market_options": [],
+                    "instance_requirements": [],
+                    "latest_version": true,
+                    "license_specification": [],
+                    "maintenance_options": [],
+                    "metadata_options": true,
+                    "monitoring": [
+                        {}
+                    ],
+                    "name": true,
+                    "network_interfaces": [],
+                    "placement": [
+                        {}
+                    ],
+                    "private_dns_name_options": [],
+                    "tag_specifications": [],
+                    "tags_all": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "block_device_mappings": [
+                        {
+                            "ebs": [
+                                {}
+                            ]
+                        }
+                    ],
+                    "capacity_reservation_specification": [],
+                    "cpu_options": [],
+                    "credit_specification": [
+                        {}
+                    ],
+                    "elastic_gpu_specifications": [],
+                    "elastic_inference_accelerator": [],
+                    "enclave_options": [],
+                    "hibernation_options": [],
+                    "iam_instance_profile": [],
+                    "instance_market_options": [],
+                    "instance_requirements": [],
+                    "license_specification": [],
+                    "maintenance_options": [],
+                    "metadata_options": [],
+                    "monitoring": [
+                        {}
+                    ],
+                    "network_interfaces": [],
+                    "placement": [
+                        {}
+                    ],
+                    "private_dns_name_options": [],
+                    "tag_specifications": [],
+                    "tags_all": {}
+                }
+            }
+        }
+    ],
+    "configuration": {
+        "provider_config": {
+            "aws": {
+                "name": "aws",
+                "full_name": "registry.terraform.io/hashicorp/aws",
+                "expressions": {
+                    "region": {
+                        "constant_value": "eu-west-1"
+                    }
+                }
+            }
+        },
+        "root_module": {
+            "module_calls": {
+                "magento": {
+                    "source": "./module",
+                    "expressions": {
+                        "enable_mon": {
+                            "references": [
+                                "var.enable_mon"
+                            ]
+                        },
+                        "env": {
+                            "references": [
+                                "var.env"
+                            ]
+                        },
+                        "front_ebs_optimized": {
+                            "references": [
+                                "var.front_ebs_optimized"
+                            ]
+                        }
+                    },
+                    "module": {
+                        "resources": [
+                            {
+                                "address": "aws_autoscaling_group.lc",
+                                "mode": "managed",
+                                "type": "aws_autoscaling_group",
+                                "name": "lc",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "availability_zones": {
+                                        "constant_value": [
+                                            "eu-west-1a"
+                                        ]
+                                    },
+                                    "desired_capacity": {
+                                        "constant_value": 3
+                                    },
+                                    "launch_configuration": {
+                                        "references": [
+                                            "aws_launch_configuration.lc.name",
+                                            "aws_launch_configuration.lc"
+                                        ]
+                                    },
+                                    "max_size": {
+                                        "constant_value": 5
+                                    },
+                                    "min_size": {
+                                        "constant_value": 1
+                                    }
+                                },
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "aws_autoscaling_group.lt",
+                                "mode": "managed",
+                                "type": "aws_autoscaling_group",
+                                "name": "lt",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "availability_zones": {
+                                        "constant_value": [
+                                            "eu-west-1a"
+                                        ]
+                                    },
+                                    "desired_capacity": {
+                                        "constant_value": 2
+                                    },
+                                    "launch_template": [
+                                        {
+                                            "id": {
+                                                "references": [
+                                                    "aws_launch_template.foobar.id",
+                                                    "aws_launch_template.foobar"
+                                                ]
+                                            },
+                                            "version": {
+                                                "constant_value": "$Latest"
+                                            }
+                                        }
+                                    ],
+                                    "max_size": {
+                                        "constant_value": 10
+                                    },
+                                    "min_size": {
+                                        "constant_value": 1
+                                    }
+                                },
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "aws_autoscaling_group.mixed",
+                                "mode": "managed",
+                                "type": "aws_autoscaling_group",
+                                "name": "mixed",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "desired_capacity": {
+                                        "constant_value": 3
+                                    },
+                                    "max_size": {
+                                        "constant_value": 15
+                                    },
+                                    "min_size": {
+                                        "constant_value": 2
+                                    },
+                                    "mixed_instances_policy": [
+                                        {
+                                            "instances_distribution": [
+                                                {
+                                                    "on_demand_base_capacity": {
+                                                        "constant_value": 2
+                                                    }
+                                                }
+                                            ],
+                                            "launch_template": [
+                                                {
+                                                    "launch_template_specification": [
+                                                        {
+                                                            "launch_template_name": {
+                                                                "references": [
+                                                                    "aws_launch_template.foobar.name",
+                                                                    "aws_launch_template.foobar"
+                                                                ]
+                                                            }
+                                                        }
+                                                    ],
+                                                    "override": [
+                                                        {
+                                                            "instance_type": {
+                                                                "constant_value": "c4.large"
+                                                            },
+                                                            "weighted_capacity": {
+                                                                "constant_value": "3"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "aws_launch_configuration.lc",
+                                "mode": "managed",
+                                "type": "aws_launch_configuration",
+                                "name": "lc",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "enable_monitoring": {
+                                        "constant_value": true
+                                    },
+                                    "image_id": {
+                                        "constant_value": "ami-123456789"
+                                    },
+                                    "instance_type": {
+                                        "constant_value": "m4.large"
+                                    },
+                                    "placement_tenancy": {
+                                        "constant_value": "dedicated"
+                                    }
+                                },
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "aws_launch_template.foobar",
+                                "mode": "managed",
+                                "type": "aws_launch_template",
+                                "name": "foobar",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "block_device_mappings": [
+                                        {
+                                            "device_name": {
+                                                "constant_value": "/dev/sda1"
+                                            },
+                                            "ebs": [
+                                                {
+                                                    "volume_size": {
+                                                        "constant_value": 20
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "credit_specification": [
+                                        {
+                                            "cpu_credits": {
+                                                "constant_value": "unlimited"
+                                            }
+                                        }
+                                    ],
+                                    "ebs_optimized": {
+                                        "constant_value": true
+                                    },
+                                    "image_id": {
+                                        "constant_value": "ami-1a2b3c"
+                                    },
+                                    "instance_type": {
+                                        "constant_value": "t3.large"
+                                    },
+                                    "monitoring": [
+                                        {
+                                            "enabled": {
+                                                "references": [
+                                                    "var.enable_mon"
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "name_prefix": {
+                                        "references": [
+                                            "var.env"
+                                        ]
+                                    },
+                                    "placement": [
+                                        {
+                                            "availability_zone": {
+                                                "constant_value": "eu-west-1c"
+                                            },
+                                            "tenancy": {
+                                                "constant_value": "dedicated"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "schema_version": 0
+                            }
+                        ],
+                        "variables": {
+                            "enable_mon": {},
+                            "env": {},
+                            "front_ebs_optimized": {
+                                "default": false
+                            }
+                        }
+                    }
+                }
+            },
+            "variables": {
+                "enable_mon": {},
+                "env": {},
+                "front_ebs_optimized": {
+                    "default": true
+                }
+            }
+        }
+    },
+    "relevant_attributes": [
+        {
+            "resource": "module.magento.aws_launch_template.foobar",
+            "attribute": [
+                "id"
+            ]
+        },
+        {
+            "resource": "module.magento.aws_launch_template.foobar",
+            "attribute": [
+                "name"
+            ]
+        },
+        {
+            "resource": "module.magento.aws_launch_configuration.lc",
+            "attribute": [
+                "name"
+            ]
+        }
+    ],
+    "timestamp": "2023-06-26T15:11:09Z"
+}

@@ -17,8 +17,8 @@ resource "aws_launch_template" "foo" {
 resource "aws_eks_node_group" "example" {
   cluster_name    = aws_eks_cluster.example.name
   node_group_name = "example"
-  node_role_arn   = aws_iam_role.example.arn
-  subnet_ids      = aws_subnet.example[*].id
+  node_role_arn   = "arn:aws:iam::123456789012:user/johndoe"
+  subnet_ids      = ["1", "2"]
 
   scaling_config {
     desired_size = 1
@@ -29,7 +29,8 @@ resource "aws_eks_node_group" "example" {
   instance_types = ["t3.large"]
 
   launch_template {
-    id = aws_launch_template.foo.id
+    id      = aws_launch_template.foo.id
+    version = 1
   }
   update_config {
     max_unavailable = 1

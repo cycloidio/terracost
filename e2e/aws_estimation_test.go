@@ -233,6 +233,38 @@ func TestAWSEstimation(t *testing.T) {
 			require.Len(t, diffs, 1)
 			require.Len(t, diffs[0].ComponentDiffs, 2)
 		})
+		t.Run("SuccessASG", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/asg-plan.json")
+			require.NoError(t, err)
+			defer f.Close()
+
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default)
+			require.NoError(t, err)
+
+			pcost, err := plan.PriorCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), pcost)
+
+			pcost, err = plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(665.133), "USD"), pcost)
+		})
+		t.Run("SuccessEKS", func(t *testing.T) {
+			f, err := os.Open("../testdata/aws/eks-plan.json")
+			require.NoError(t, err)
+			defer f.Close()
+
+			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default)
+			require.NoError(t, err)
+
+			pcost, err := plan.PriorCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(0), ""), pcost)
+
+			pcost, err = plan.PlannedCost()
+			assert.NoError(t, err)
+			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(99.798), "USD"), pcost)
+		})
 		t.Run("SuccessNoPrior", func(t *testing.T) {
 			f, err := os.Open("../testdata/aws/terraform-noprior-plan.json")
 			require.NoError(t, err)

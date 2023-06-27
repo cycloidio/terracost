@@ -49,29 +49,30 @@ resource "aws_autoscaling_group" "lt" {
 
 
 resource "aws_launch_configuration" "lc" {
-  image_id      = data.aws_ami.ubuntu.id
-  instance_type = "m4.large"
+  #image_id      = data.aws_ami.ubuntu.id
+  image_id          = "ami-123456789"
+  instance_type     = "m4.large"
   placement_tenancy = "dedicated"
   enable_monitoring = true
 }
 
 resource "aws_autoscaling_group" "lc" {
-  availability_zones = ["eu-west-1a"]
-  desired_capacity   = 3
-  max_size           = 5
-  min_size           = 1
+  availability_zones   = ["eu-west-1a"]
+  desired_capacity     = 3
+  max_size             = 5
+  min_size             = 1
   launch_configuration = aws_launch_configuration.lc.name
 }
 
 
 resource "aws_autoscaling_group" "mixed" {
-  desired_capacity    = 3
-  max_size            = 15
-  min_size            = 2
+  desired_capacity = 3
+  max_size         = 15
+  min_size         = 2
 
   mixed_instances_policy {
     instances_distribution {
-      on_demand_base_capacity                  = 2
+      on_demand_base_capacity = 2
     }
 
     launch_template {

@@ -1,0 +1,697 @@
+{
+    "format_version": "1.2",
+    "terraform_version": "1.5.1",
+    "planned_values": {
+        "root_module": {
+            "child_modules": [
+                {
+                    "resources": [
+                        {
+                            "address": "module.eks.aws_eks_cluster.example",
+                            "mode": "managed",
+                            "type": "aws_eks_cluster",
+                            "name": "example",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "enabled_cluster_log_types": null,
+                                "encryption_config": [],
+                                "name": "example",
+                                "outpost_config": [],
+                                "role_arn": "arn:aws:iam::123456789012:user/johndoe",
+                                "tags": null,
+                                "timeouts": null,
+                                "vpc_config": [
+                                    {
+                                        "endpoint_private_access": false,
+                                        "endpoint_public_access": true,
+                                        "security_group_ids": null,
+                                        "subnet_ids": [
+                                            "1",
+                                            "2"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "sensitive_values": {
+                                "certificate_authority": [],
+                                "encryption_config": [],
+                                "identity": [],
+                                "kubernetes_network_config": [],
+                                "outpost_config": [],
+                                "tags_all": {},
+                                "vpc_config": [
+                                    {
+                                        "public_access_cidrs": [],
+                                        "subnet_ids": [
+                                            false,
+                                            false
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "address": "module.eks.aws_eks_node_group.example",
+                            "mode": "managed",
+                            "type": "aws_eks_node_group",
+                            "name": "example",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "cluster_name": "example",
+                                "force_update_version": null,
+                                "instance_types": [
+                                    "t3.large"
+                                ],
+                                "labels": null,
+                                "launch_template": [
+                                    {
+                                        "version": "1"
+                                    }
+                                ],
+                                "node_group_name": "example",
+                                "node_role_arn": "arn:aws:iam::123456789012:user/johndoe",
+                                "remote_access": [],
+                                "scaling_config": [
+                                    {
+                                        "desired_size": 1,
+                                        "max_size": 2,
+                                        "min_size": 1
+                                    }
+                                ],
+                                "subnet_ids": [
+                                    "1",
+                                    "2"
+                                ],
+                                "tags": null,
+                                "taint": [],
+                                "timeouts": null,
+                                "update_config": [
+                                    {
+                                        "max_unavailable": 1,
+                                        "max_unavailable_percentage": null
+                                    }
+                                ]
+                            },
+                            "sensitive_values": {
+                                "instance_types": [
+                                    false
+                                ],
+                                "launch_template": [
+                                    {}
+                                ],
+                                "remote_access": [],
+                                "resources": [],
+                                "scaling_config": [
+                                    {}
+                                ],
+                                "subnet_ids": [
+                                    false,
+                                    false
+                                ],
+                                "tags_all": {},
+                                "taint": [],
+                                "update_config": [
+                                    {}
+                                ]
+                            }
+                        },
+                        {
+                            "address": "module.eks.aws_launch_template.foo",
+                            "mode": "managed",
+                            "type": "aws_launch_template",
+                            "name": "foo",
+                            "provider_name": "registry.terraform.io/hashicorp/aws",
+                            "schema_version": 0,
+                            "values": {
+                                "block_device_mappings": [
+                                    {
+                                        "device_name": "/dev/sdf",
+                                        "ebs": [
+                                            {
+                                                "delete_on_termination": null,
+                                                "encrypted": null,
+                                                "kms_key_id": null,
+                                                "snapshot_id": null,
+                                                "volume_size": 200
+                                            }
+                                        ],
+                                        "no_device": null,
+                                        "virtual_name": null
+                                    }
+                                ],
+                                "capacity_reservation_specification": [],
+                                "cpu_options": [],
+                                "credit_specification": [],
+                                "description": null,
+                                "disable_api_stop": null,
+                                "disable_api_termination": null,
+                                "ebs_optimized": "true",
+                                "elastic_gpu_specifications": [],
+                                "elastic_inference_accelerator": [],
+                                "enclave_options": [],
+                                "hibernation_options": [],
+                                "iam_instance_profile": [],
+                                "image_id": null,
+                                "instance_initiated_shutdown_behavior": null,
+                                "instance_market_options": [],
+                                "instance_requirements": [],
+                                "instance_type": "t2.micro",
+                                "kernel_id": null,
+                                "key_name": null,
+                                "license_specification": [],
+                                "maintenance_options": [],
+                                "monitoring": [],
+                                "name": "foo",
+                                "network_interfaces": [],
+                                "placement": [],
+                                "private_dns_name_options": [],
+                                "ram_disk_id": null,
+                                "security_group_names": null,
+                                "tag_specifications": [],
+                                "tags": null,
+                                "update_default_version": null,
+                                "user_data": null,
+                                "vpc_security_group_ids": null
+                            },
+                            "sensitive_values": {
+                                "block_device_mappings": [
+                                    {
+                                        "ebs": [
+                                            {}
+                                        ]
+                                    }
+                                ],
+                                "capacity_reservation_specification": [],
+                                "cpu_options": [],
+                                "credit_specification": [],
+                                "elastic_gpu_specifications": [],
+                                "elastic_inference_accelerator": [],
+                                "enclave_options": [],
+                                "hibernation_options": [],
+                                "iam_instance_profile": [],
+                                "instance_market_options": [],
+                                "instance_requirements": [],
+                                "license_specification": [],
+                                "maintenance_options": [],
+                                "metadata_options": [],
+                                "monitoring": [],
+                                "network_interfaces": [],
+                                "placement": [],
+                                "private_dns_name_options": [],
+                                "tag_specifications": [],
+                                "tags_all": {}
+                            }
+                        }
+                    ],
+                    "address": "module.eks"
+                }
+            ]
+        }
+    },
+    "resource_changes": [
+        {
+            "address": "module.eks.aws_eks_cluster.example",
+            "module_address": "module.eks",
+            "mode": "managed",
+            "type": "aws_eks_cluster",
+            "name": "example",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "enabled_cluster_log_types": null,
+                    "encryption_config": [],
+                    "name": "example",
+                    "outpost_config": [],
+                    "role_arn": "arn:aws:iam::123456789012:user/johndoe",
+                    "tags": null,
+                    "timeouts": null,
+                    "vpc_config": [
+                        {
+                            "endpoint_private_access": false,
+                            "endpoint_public_access": true,
+                            "security_group_ids": null,
+                            "subnet_ids": [
+                                "1",
+                                "2"
+                            ]
+                        }
+                    ]
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "certificate_authority": true,
+                    "cluster_id": true,
+                    "created_at": true,
+                    "encryption_config": [],
+                    "endpoint": true,
+                    "id": true,
+                    "identity": true,
+                    "kubernetes_network_config": true,
+                    "outpost_config": [],
+                    "platform_version": true,
+                    "status": true,
+                    "tags_all": true,
+                    "version": true,
+                    "vpc_config": [
+                        {
+                            "cluster_security_group_id": true,
+                            "public_access_cidrs": true,
+                            "subnet_ids": [
+                                false,
+                                false
+                            ],
+                            "vpc_id": true
+                        }
+                    ]
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "certificate_authority": [],
+                    "encryption_config": [],
+                    "identity": [],
+                    "kubernetes_network_config": [],
+                    "outpost_config": [],
+                    "tags_all": {},
+                    "vpc_config": [
+                        {
+                            "public_access_cidrs": [],
+                            "subnet_ids": [
+                                false,
+                                false
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "address": "module.eks.aws_eks_node_group.example",
+            "module_address": "module.eks",
+            "mode": "managed",
+            "type": "aws_eks_node_group",
+            "name": "example",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "cluster_name": "example",
+                    "force_update_version": null,
+                    "instance_types": [
+                        "t3.large"
+                    ],
+                    "labels": null,
+                    "launch_template": [
+                        {
+                            "version": "1"
+                        }
+                    ],
+                    "node_group_name": "example",
+                    "node_role_arn": "arn:aws:iam::123456789012:user/johndoe",
+                    "remote_access": [],
+                    "scaling_config": [
+                        {
+                            "desired_size": 1,
+                            "max_size": 2,
+                            "min_size": 1
+                        }
+                    ],
+                    "subnet_ids": [
+                        "1",
+                        "2"
+                    ],
+                    "tags": null,
+                    "taint": [],
+                    "timeouts": null,
+                    "update_config": [
+                        {
+                            "max_unavailable": 1,
+                            "max_unavailable_percentage": null
+                        }
+                    ]
+                },
+                "after_unknown": {
+                    "ami_type": true,
+                    "arn": true,
+                    "capacity_type": true,
+                    "disk_size": true,
+                    "id": true,
+                    "instance_types": [
+                        false
+                    ],
+                    "launch_template": [
+                        {
+                            "id": true,
+                            "name": true
+                        }
+                    ],
+                    "node_group_name_prefix": true,
+                    "release_version": true,
+                    "remote_access": [],
+                    "resources": true,
+                    "scaling_config": [
+                        {}
+                    ],
+                    "status": true,
+                    "subnet_ids": [
+                        false,
+                        false
+                    ],
+                    "tags_all": true,
+                    "taint": [],
+                    "update_config": [
+                        {}
+                    ],
+                    "version": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "instance_types": [
+                        false
+                    ],
+                    "launch_template": [
+                        {}
+                    ],
+                    "remote_access": [],
+                    "resources": [],
+                    "scaling_config": [
+                        {}
+                    ],
+                    "subnet_ids": [
+                        false,
+                        false
+                    ],
+                    "tags_all": {},
+                    "taint": [],
+                    "update_config": [
+                        {}
+                    ]
+                }
+            }
+        },
+        {
+            "address": "module.eks.aws_launch_template.foo",
+            "module_address": "module.eks",
+            "mode": "managed",
+            "type": "aws_launch_template",
+            "name": "foo",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "change": {
+                "actions": [
+                    "create"
+                ],
+                "before": null,
+                "after": {
+                    "block_device_mappings": [
+                        {
+                            "device_name": "/dev/sdf",
+                            "ebs": [
+                                {
+                                    "delete_on_termination": null,
+                                    "encrypted": null,
+                                    "kms_key_id": null,
+                                    "snapshot_id": null,
+                                    "volume_size": 200
+                                }
+                            ],
+                            "no_device": null,
+                            "virtual_name": null
+                        }
+                    ],
+                    "capacity_reservation_specification": [],
+                    "cpu_options": [],
+                    "credit_specification": [],
+                    "description": null,
+                    "disable_api_stop": null,
+                    "disable_api_termination": null,
+                    "ebs_optimized": "true",
+                    "elastic_gpu_specifications": [],
+                    "elastic_inference_accelerator": [],
+                    "enclave_options": [],
+                    "hibernation_options": [],
+                    "iam_instance_profile": [],
+                    "image_id": null,
+                    "instance_initiated_shutdown_behavior": null,
+                    "instance_market_options": [],
+                    "instance_requirements": [],
+                    "instance_type": "t2.micro",
+                    "kernel_id": null,
+                    "key_name": null,
+                    "license_specification": [],
+                    "maintenance_options": [],
+                    "monitoring": [],
+                    "name": "foo",
+                    "network_interfaces": [],
+                    "placement": [],
+                    "private_dns_name_options": [],
+                    "ram_disk_id": null,
+                    "security_group_names": null,
+                    "tag_specifications": [],
+                    "tags": null,
+                    "update_default_version": null,
+                    "user_data": null,
+                    "vpc_security_group_ids": null
+                },
+                "after_unknown": {
+                    "arn": true,
+                    "block_device_mappings": [
+                        {
+                            "ebs": [
+                                {
+                                    "iops": true,
+                                    "throughput": true,
+                                    "volume_type": true
+                                }
+                            ]
+                        }
+                    ],
+                    "capacity_reservation_specification": [],
+                    "cpu_options": [],
+                    "credit_specification": [],
+                    "default_version": true,
+                    "elastic_gpu_specifications": [],
+                    "elastic_inference_accelerator": [],
+                    "enclave_options": [],
+                    "hibernation_options": [],
+                    "iam_instance_profile": [],
+                    "id": true,
+                    "instance_market_options": [],
+                    "instance_requirements": [],
+                    "latest_version": true,
+                    "license_specification": [],
+                    "maintenance_options": [],
+                    "metadata_options": true,
+                    "monitoring": [],
+                    "name_prefix": true,
+                    "network_interfaces": [],
+                    "placement": [],
+                    "private_dns_name_options": [],
+                    "tag_specifications": [],
+                    "tags_all": true
+                },
+                "before_sensitive": false,
+                "after_sensitive": {
+                    "block_device_mappings": [
+                        {
+                            "ebs": [
+                                {}
+                            ]
+                        }
+                    ],
+                    "capacity_reservation_specification": [],
+                    "cpu_options": [],
+                    "credit_specification": [],
+                    "elastic_gpu_specifications": [],
+                    "elastic_inference_accelerator": [],
+                    "enclave_options": [],
+                    "hibernation_options": [],
+                    "iam_instance_profile": [],
+                    "instance_market_options": [],
+                    "instance_requirements": [],
+                    "license_specification": [],
+                    "maintenance_options": [],
+                    "metadata_options": [],
+                    "monitoring": [],
+                    "network_interfaces": [],
+                    "placement": [],
+                    "private_dns_name_options": [],
+                    "tag_specifications": [],
+                    "tags_all": {}
+                }
+            }
+        }
+    ],
+    "configuration": {
+        "provider_config": {
+            "aws": {
+                "name": "aws",
+                "full_name": "registry.terraform.io/hashicorp/aws",
+                "version_constraint": "~> 4.0",
+                "expressions": {
+                    "region": {
+                        "constant_value": "eu-west-1"
+                    }
+                }
+            }
+        },
+        "root_module": {
+            "module_calls": {
+                "eks": {
+                    "source": "./module-eks",
+                    "module": {
+                        "resources": [
+                            {
+                                "address": "aws_eks_cluster.example",
+                                "mode": "managed",
+                                "type": "aws_eks_cluster",
+                                "name": "example",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "name": {
+                                        "constant_value": "example"
+                                    },
+                                    "role_arn": {
+                                        "constant_value": "arn:aws:iam::123456789012:user/johndoe"
+                                    },
+                                    "vpc_config": [
+                                        {
+                                            "subnet_ids": {
+                                                "constant_value": [
+                                                    "1",
+                                                    "2"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "aws_eks_node_group.example",
+                                "mode": "managed",
+                                "type": "aws_eks_node_group",
+                                "name": "example",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "cluster_name": {
+                                        "references": [
+                                            "aws_eks_cluster.example.name",
+                                            "aws_eks_cluster.example"
+                                        ]
+                                    },
+                                    "instance_types": {
+                                        "constant_value": [
+                                            "t3.large"
+                                        ]
+                                    },
+                                    "launch_template": [
+                                        {
+                                            "id": {
+                                                "references": [
+                                                    "aws_launch_template.foo.id",
+                                                    "aws_launch_template.foo"
+                                                ]
+                                            },
+                                            "version": {
+                                                "constant_value": 1
+                                            }
+                                        }
+                                    ],
+                                    "node_group_name": {
+                                        "constant_value": "example"
+                                    },
+                                    "node_role_arn": {
+                                        "constant_value": "arn:aws:iam::123456789012:user/johndoe"
+                                    },
+                                    "scaling_config": [
+                                        {
+                                            "desired_size": {
+                                                "constant_value": 1
+                                            },
+                                            "max_size": {
+                                                "constant_value": 2
+                                            },
+                                            "min_size": {
+                                                "constant_value": 1
+                                            }
+                                        }
+                                    ],
+                                    "subnet_ids": {
+                                        "constant_value": [
+                                            "1",
+                                            "2"
+                                        ]
+                                    },
+                                    "update_config": [
+                                        {
+                                            "max_unavailable": {
+                                                "constant_value": 1
+                                            }
+                                        }
+                                    ]
+                                },
+                                "schema_version": 0
+                            },
+                            {
+                                "address": "aws_launch_template.foo",
+                                "mode": "managed",
+                                "type": "aws_launch_template",
+                                "name": "foo",
+                                "provider_config_key": "aws",
+                                "expressions": {
+                                    "block_device_mappings": [
+                                        {
+                                            "device_name": {
+                                                "constant_value": "/dev/sdf"
+                                            },
+                                            "ebs": [
+                                                {
+                                                    "volume_size": {
+                                                        "constant_value": 200
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "ebs_optimized": {
+                                        "constant_value": true
+                                    },
+                                    "instance_type": {
+                                        "constant_value": "t2.micro"
+                                    },
+                                    "name": {
+                                        "constant_value": "foo"
+                                    }
+                                },
+                                "schema_version": 0
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "relevant_attributes": [
+        {
+            "resource": "module.eks.aws_eks_cluster.example",
+            "attribute": [
+                "name"
+            ]
+        },
+        {
+            "resource": "module.eks.aws_launch_template.foo",
+            "attribute": [
+                "id"
+            ]
+        }
+    ],
+    "timestamp": "2023-06-26T15:22:47Z"
+}
