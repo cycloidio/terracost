@@ -4,8 +4,8 @@ import "encoding/json"
 
 // ProviderConfigExpression is a single configuration variable of a ProviderConfig.
 type ProviderConfigExpression struct {
-	ConstantValue string   `json:"constant_value"`
-	References    []string `json:"references"`
+	ConstantValue string   `json:"constant_value",mapstructure:"constant_value"`
+	References    []string `json:"references",mapstructure:"references"`
 }
 
 // ProviderConfig is configuration of a provider with the given Name.
@@ -103,6 +103,7 @@ type Variable struct {
 // ConfigurationModule is used to configure a module.
 type ConfigurationModule struct {
 	Resources   []ConfigurationResource `json:"resources"`
+	Variables   map[string]Variable     `json:"variables"`
 	ModuleCalls map[string]struct {
 		Module *ConfigurationModule `json:"module"`
 	} `json:"module_calls"`
@@ -112,4 +113,8 @@ type ConfigurationModule struct {
 type ConfigurationResource struct {
 	Address           string `json:"address"`
 	ProviderConfigKey string `json:"provider_config_key"`
+	// Expressions are really similar to the ProviderConfigExpression but we cannot use it (as map[string]ProviderConfigExpression)
+	// as some examples do not match, some are not map[string]ProviderConfigExpression but map[string][]interface{} and some constant_value are not
+	// string but other types
+	Expressions map[string]interface{} `json:"expressions"`
 }

@@ -10,6 +10,8 @@
   ([Issue #96](https://github.com/cycloidio/terracost/issues/96))
 - Added 'Usage' attribute to the cost.Component and query.Component
   ([Issue #10](https://github.com/cycloidio/terracost/issues/100))
+- Plan estimation now supports references to other resources (like in ASG or EKS)
+  ([Pull #105](https://github.com/cycloidio/terracost/pull/105))
 
 ### Fixed
 

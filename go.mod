@@ -16,7 +16,7 @@ require (
 	github.com/machinebox/progress v0.2.0
 	github.com/matryer/is v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
-	github.com/mitchellh/mapstructure v1.4.2
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/afero v1.6.0
 	github.com/stretchr/testify v1.7.0
