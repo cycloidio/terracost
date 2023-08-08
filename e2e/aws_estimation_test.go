@@ -21,6 +21,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	noModulePath      = ""
+	noForceTerragrunt bool
+)
+
 // terraformAWSTestProviderInitializer is a testing ProviderInitializer
 // pricing are directly inserted inside the database, which allows us to
 // test the processing with smaller subset of data, as well as the functioning
@@ -321,8 +326,10 @@ func TestAWSEstimation(t *testing.T) {
 	t.Run("HCL", func(t *testing.T) {
 		t.Run("Success", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", noModulePath, noForceTerragrunt, usage.Default)
 			require.NoError(t, err)
+			require.Len(t, plans, 1)
+			plan := plans[0]
 
 			assert.Nil(t, plan.Prior)
 
@@ -332,8 +339,10 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", noModulePath, noForceTerragrunt, usage.Default)
 			require.NoError(t, err)
+			require.Len(t, plans, 1)
+			plan := plans[0]
 
 			assert.Nil(t, plan.Prior)
 
@@ -343,8 +352,10 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessASG", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", noModulePath, noForceTerragrunt, usage.Default)
 			require.NoError(t, err)
+			require.Len(t, plans, 1)
+			plan := plans[0]
 
 			assert.Nil(t, plan.Prior)
 
@@ -354,8 +365,10 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessEKS", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-eks", usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-eks", noModulePath, noForceTerragrunt, usage.Default)
 			require.NoError(t, err)
+			require.Len(t, plans, 1)
+			plan := plans[0]
 
 			assert.Nil(t, plan.Prior)
 
@@ -365,14 +378,36 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessRemote", func(t *testing.T) {
 
-			plan, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote", usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote", noModulePath, noForceTerragrunt, usage.Default)
 			require.NoError(t, err)
+			require.Len(t, plans, 1)
+			plan := plans[0]
 
 			assert.Nil(t, plan.Prior)
 
 			pcost, err := plan.PlannedCost()
 			assert.NoError(t, err)
 			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(86.474), "USD"), pcost)
+		})
+		t.Run("SuccessTerragrunt", func(t *testing.T) {
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/terragrunt/", "../testdata/aws/terragrunt/non-prod/us-east-1/qa/webserver-cluster/", noForceTerragrunt, usage.Default)
+			require.NoError(t, err)
+			require.Len(t, plans, 2)
+
+			for i, plan := range plans {
+				assert.Nil(t, plan.Prior)
+				assert.NotEmpty(t, plan.Name)
+
+				pcost, err := plan.PlannedCost()
+				assert.NoError(t, err)
+				if i == 0 {
+					assert.Equal(t, plan.Name, "mysql")
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(14.41), "USD"), pcost)
+				} else {
+					assert.Equal(t, plan.Name, "webserver-cluster")
+					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(18.25), "USD"), pcost)
+				}
+			}
 		})
 	})
 }
