@@ -19,10 +19,13 @@ var Default = Usage{
 			"vcpu_count":                       2,
 		},
 		"aws_efs_file_system": map[string]interface{}{
-			"storage_gb":                         230,
-			"infrequent_access_storage_gb":       100,
-			"monthly_infrequent_access_read_gb":  50,
-			"monthly_infrequent_access_write_gb": 100,
+			"storage_gb":                         180,
+			"infrequent_access_storage_gb":       10,
+			"monthly_infrequent_access_read_gb":  20,
+			"monthly_infrequent_access_write_gb": 30,
+		},
+		"aws_nat_gateway": map[string]interface{}{
+			"monthly_data_processed_gb": 10,
 		},
 	},
 }

@@ -77,12 +77,6 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newDBInstance(vals).Components()
-	case "aws_lb", "aws_alb":
-		vals, err := decodeLBValues(tfRes.Values)
-		if err != nil {
-			return nil
-		}
-		return p.newLB(vals).Components()
 	case "aws_elb":
 		// ELB Classic does not have any special configuration.
 		vals := lbValues{LoadBalancerType: "classic"}
@@ -99,6 +93,18 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newEKSNodeGroup(rss, vals).Components()
+	case "aws_lb", "aws_alb":
+		vals, err := decodeLBValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newLB(vals).Components()
+	case "aws_nat_gateway":
+		vals, err := decodeNatGatewayValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newNatGateway(vals).Components()
 	default:
 		return nil
 	}

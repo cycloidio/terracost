@@ -51,7 +51,7 @@ func minimalFilterEC2(pp *price.WithProduct) bool {
 			}
 		}
 		return true
-	case "Storage", "System Operation":
+	case "Storage", "System Operation", "NAT Gateway":
 		return true
 	default:
 		return false
