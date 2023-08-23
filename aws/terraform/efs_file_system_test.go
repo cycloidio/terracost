@@ -32,7 +32,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 		expected := []query.Component{
 			{
 				Name:            "Storage .*-TimedStorage-ByteHrs",
-				MonthlyQuantity: decimal.NewFromFloat(230),
+				MonthlyQuantity: decimal.NewFromFloat(180),
 				Unit:            "GB",
 				Details:         []string{"EFS storage", ".*-TimedStorage-ByteHrs"},
 				Usage:           true,
@@ -74,7 +74,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 		expected := []query.Component{
 			{
 				Name:            "Storage .*-TimedStorage-ByteHrs",
-				MonthlyQuantity: decimal.NewFromFloat(230),
+				MonthlyQuantity: decimal.NewFromFloat(180),
 				Unit:            "GB",
 				Details:         []string{"EFS storage", ".*-TimedStorage-ByteHrs"},
 				Usage:           true,
@@ -90,7 +90,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Provisioned throughput",
-				MonthlyQuantity: decimal.NewFromFloat(8.5),
+				MonthlyQuantity: decimal.NewFromFloat(11),
 				Unit:            "MBps",
 				Details:         []string{"Througput"},
 				Usage:           true,
@@ -106,7 +106,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Storage .*-IATimedStorage-ByteHrs",
-				MonthlyQuantity: decimal.NewFromFloat(100),
+				MonthlyQuantity: decimal.NewFromFloat(10),
 				Unit:            "GB", Details: []string{"EFS storage", ".*-IATimedStorage-ByteHrs"},
 				Usage: true,
 				ProductFilter: &product.Filter{
@@ -121,7 +121,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Requests Read",
-				MonthlyQuantity: decimal.NewFromFloat(50),
+				MonthlyQuantity: decimal.NewFromFloat(20),
 				Unit:            "GB",
 				Details:         []string{"Requests", "Infrequent Access", "Read"},
 				Usage:           true,
@@ -138,7 +138,7 @@ func TestEFSFileSystem_Components(t *testing.T) {
 			},
 			{
 				Name:            "Requests Write",
-				MonthlyQuantity: decimal.NewFromFloat(100),
+				MonthlyQuantity: decimal.NewFromFloat(30),
 				Unit:            "GB",
 				Details:         []string{"Requests", "Infrequent Access", "Write"},
 				Usage:           true,
