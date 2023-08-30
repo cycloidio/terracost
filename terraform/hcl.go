@@ -3,11 +3,9 @@ package terraform
 import (
 	"context"
 	"fmt"
-	"io"
-	iofs "io/fs"
 	"os"
 	"path"
-	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -20,37 +18,45 @@ import (
 	"github.com/hashicorp/terraform/registry/regsrc"
 	"github.com/spf13/afero"
 	"github.com/zclconf/go-cty/cty"
+	"github.com/zclconf/go-cty/cty/gocty"
 
 	"github.com/cycloidio/terracost/query"
 	"github.com/cycloidio/terracost/usage"
+	"github.com/cycloidio/terracost/util"
 )
 
 // ExtractQueriesFromHCL returns the resources found in the module identified by the modPath.
-func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage) ([]query.Resource, error) {
+func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage, inputs map[string]interface{}) ([]query.Resource, string, error) {
 	parser := configs.NewParser(fs)
 	mod, diags := parser.LoadConfigDir(modPath)
 	if diags.HasErrors() {
-		return nil, fmt.Errorf(diags.Error())
+		return nil, "", fmt.Errorf(diags.Error())
 	}
 
-	evalCtx := getEvalCtx(mod, nil)
+	evalCtx := getEvalCtx(mod, nil, inputs)
 
 	providers, err := getHCLProviders(mod, evalCtx, providerInitializers)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
 	err = validateProviders(queries, providers)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	return queries, nil
+	modules := make([]string, 0, 0)
+	for k := range mod.ModuleCalls {
+		modules = append(modules, k)
+	}
+	sort.Strings(modules)
+
+	return queries, strings.Join(modules, ", "), nil
 }
 
 // extractHCLModule returns the resources found in the provided module.
@@ -162,7 +168,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			vars[attr.Name] = val
 		}
 
-		nextEvalCtx := getEvalCtx(child, vars)
+		nextEvalCtx := getEvalCtx(child, vars, nil)
 
 		// If the module call contains a `providers` block, it should replace the implicit provider
 		// inheritance. Instead, a new map of parent to child providers is created.
@@ -245,26 +251,7 @@ func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 	defer os.RemoveAll(dir)
 
 	fs.MkdirAll(dir, 0700)
-	err = filepath.WalkDir(dir, func(p string, d iofs.DirEntry, err error) error {
-		if d.IsDir() {
-			fs.MkdirAll(p, d.Type())
-			return nil
-		}
-		f, err := fs.Create(p)
-		if err != nil {
-			return fmt.Errorf("failed to create %s into the FS: %w", d.Name(), err)
-		}
-
-		osf, err := os.Open(p)
-		if err != nil {
-			return fmt.Errorf("failed to open %s: %w", p, err)
-		}
-
-		io.Copy(f, osf)
-		f.Close()
-		osf.Close()
-		return nil
-	})
+	err = util.FromOSToAfero(fs, dir, "")
 	if err != nil {
 		return "", fmt.Errorf("failed to copy the module to %s: %w", dir, err)
 	}
@@ -272,7 +259,7 @@ func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 }
 
 // getEvalCtx returns the evaluation context of the given module with variable values set.
-func getEvalCtx(mod *configs.Module, vars map[string]cty.Value) *hcl.EvalContext {
+func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[string]interface{}) *hcl.EvalContext {
 	// Set default values for undefined variables.
 	if vars == nil {
 		vars = make(map[string]cty.Value)
@@ -283,6 +270,17 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value) *hcl.EvalContext
 			if !vv.Default.IsNull() {
 				vars[vk] = vv.Default
 			}
+		}
+		if iv, ok := inputs[vk]; ok {
+			ty, err := gocty.ImpliedType(iv)
+			if err != nil {
+				continue
+			}
+			ctyv, err := gocty.ToCtyValue(iv, ty)
+			if err != nil {
+				continue
+			}
+			vars[vk] = ctyv
 		}
 	}
 

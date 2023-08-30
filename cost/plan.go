@@ -11,12 +11,13 @@ var isPlanned = true
 // costs. The Plan instance can be used to calculate the total cost difference of a plan, as well as cost differences
 // of each resource (and their components) separately.
 type Plan struct {
+	Name           string
 	Prior, Planned *State
 }
 
 // NewPlan returns a new Plan from Prior and Planned State.
-func NewPlan(prior, planned *State) *Plan {
-	return &Plan{Prior: prior, Planned: planned}
+func NewPlan(name string, prior, planned *State) *Plan {
+	return &Plan{Name: name, Prior: prior, Planned: planned}
 }
 
 // PriorCost returns the total cost of the Prior State or decimal.Zero if it isn't included in the plan.

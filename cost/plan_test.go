@@ -25,7 +25,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 				},
 			},
 		}
-		plan := cost.NewPlan(prior, nil)
+		plan := cost.NewPlan("name", prior, nil)
 		resourceDiffs := plan.ResourceDifferences()
 
 		require.Len(t, resourceDiffs, 1)
@@ -57,7 +57,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 				},
 			},
 		}
-		plan := cost.NewPlan(nil, planned)
+		plan := cost.NewPlan("name", nil, planned)
 		resourceDiffs := plan.ResourceDifferences()
 
 		require.Len(t, resourceDiffs, 1)
@@ -120,7 +120,7 @@ func TestPlan_ResourceDifferences(t *testing.T) {
 				},
 			},
 		}
-		plan := cost.NewPlan(prior, planned)
+		plan := cost.NewPlan("name", prior, planned)
 		resourceDiffs := plan.ResourceDifferences()
 
 		require.Len(t, resourceDiffs, 3)
@@ -186,7 +186,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 				},
 			},
 		}
-		plan := cost.NewPlan(prior, nil)
+		plan := cost.NewPlan("name", prior, nil)
 		skipped := plan.SkippedAddresses()
 		require.Len(t, skipped, 1)
 		assert.Contains(t, skipped, "aws_invalid_resource.test_skipped")
@@ -209,7 +209,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 				},
 			},
 		}
-		plan := cost.NewPlan(nil, planned)
+		plan := cost.NewPlan("name", nil, planned)
 		skipped := plan.SkippedAddresses()
 		require.Len(t, skipped, 1)
 		assert.Contains(t, skipped, "aws_invalid_resource.test_skipped")
@@ -246,7 +246,7 @@ func TestPlan_SkippedAddresses(t *testing.T) {
 				"aws_invalid_resource.skipped_planned":       {Skipped: true},
 			},
 		}
-		plan := cost.NewPlan(prior, planned)
+		plan := cost.NewPlan("name", prior, planned)
 		skipped := plan.SkippedAddresses()
 		require.Len(t, skipped, 3)
 		assert.Contains(t, skipped, "aws_invalid_resource.skipped_prior_planned")

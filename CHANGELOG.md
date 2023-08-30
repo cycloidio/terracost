@@ -14,6 +14,8 @@
   ([Issue #10](https://github.com/cycloidio/terracost/issues/100))
 - Plan estimation now supports references to other resources (like in ASG or EKS)
   ([Pull #105](https://github.com/cycloidio/terracost/pull/105))
+- Support for Terragrunt estimation on HCL
+  ([Issue #106](https://github.com/cycloidio/terracost/issues/106))
 
 ### Fixed
 

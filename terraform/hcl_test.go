@@ -15,6 +15,8 @@ import (
 	"github.com/cycloidio/terracost/usage"
 )
 
+var noInputs = make(map[string]interface{})
+
 func TestExtractQueriesFromHCL(t *testing.T) {
 	t.Run("AWS", func(t *testing.T) {
 		t.Run("Success", func(t *testing.T) {
@@ -111,7 +113,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				return nil
 			})
 
-			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Usage{
+			queries, mod, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Usage{
 				ResourceDefaultTypeUsage: map[string]interface{}{
 					"aws_instance": map[string]interface{}{
 						"usage": "set_instance",
@@ -120,13 +122,14 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 						"usage": "set_elb",
 					},
 				},
-			})
+			}, noInputs)
 			require.NoError(t, err)
 			require.Len(t, queries, 5)
 			for _, q := range queries {
 				require.Equal(t, "aws", q.Provider)
 				require.NotEmpty(t, q.Type)
 			}
+			assert.Equal(t, "ec2, rds", mod)
 		})
 
 		t.Run("BadProvider", func(t *testing.T) {
@@ -141,9 +144,10 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				},
 			}}
 
-			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default)
+			queries, mod, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default, noInputs)
 			require.Error(t, err)
 			require.Len(t, queries, 0)
+			assert.Equal(t, "", mod)
 		})
 
 		t.Run("FailedResourceComponents", func(t *testing.T) {
@@ -163,9 +167,10 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 				return nil
 			})
 
-			queries, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default)
+			queries, mod, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default, noInputs)
 			require.NoError(t, err)
 			require.Len(t, queries, 5)
+			assert.Equal(t, "ec2, rds", mod)
 
 			for _, res := range queries {
 				assert.Len(t, res.Components, 0)
