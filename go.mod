@@ -28,4 +28,4 @@ require (
 
 replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.1.9-cy
 
-replace github.com/gruntwork-io/terragrunt => github.com/cycloidio/terragrunt v0.0.0-20230802084056-66687de093be
+replace github.com/gruntwork-io/terragrunt => github.com/cycloidio/terragrunt v0.0.0-20230905115542-1fe1ff682fd9
