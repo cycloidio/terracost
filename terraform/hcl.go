@@ -251,7 +251,7 @@ func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 	defer os.RemoveAll(dir)
 
 	fs.MkdirAll(dir, 0700)
-	err = util.FromOSToAfero(fs, dir, "")
+	err = util.FromOSToAfero(fs, dir, dir)
 	if err != nil {
 		return "", fmt.Errorf("failed to copy the module to %s: %w", dir, err)
 	}
