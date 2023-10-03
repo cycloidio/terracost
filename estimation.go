@@ -150,11 +150,17 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		return nil, fmt.Errorf("failed to create terragrunt options for %s: %w", tmpdir, err)
 	}
 	tgo.RunTerragrunt = cli.RunTerragrunt
+
 	// DryRun is an specific option we added to the fork of Terragrunt we have.
 	// This fork allows us to run everything except Terraform, so we have all
 	// the Terragrunt code run that generates the modules and code so then we
 	// can read that generated code and run TerraCost
 	tgo.DryRun = true
+
+	// We fake a 'show' so it's not intrusive
+	tgo.OriginalTerraformCommand = "show"
+	tgo.TerraformCommand = "show"
+
 	// We set Writer and ErrWriter to io.Discard so we do not get
 	// any logs on the screen when running test of the tool itself
 	tgo.Writer = io.Discard
@@ -182,6 +188,18 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 
 	costs := make([]*cost.Plan, 0)
 	for _, m := range stack.Modules {
+		// We ReadTerragruntConfig so we can have the 'tgc.Inputs' which has the values+variables
+		// that we need to set to the module. Normally those inputs are passed via ENV variables
+		// when Terragrunt is running
+		// We also have access to the 'Skip' because if true we do need to do any actions
+		tgc, _ := config.ReadTerragruntConfig(m.TerragruntOptions)
+		if tgc.Skip {
+			modAddr := filepath.Base(m.TerragruntOptions.WorkingDir)
+
+			costs = append(costs, cost.NewPlan(modAddr, nil, nil))
+			continue
+		}
+
 		sourceUrl, err := config.GetTerraformSourceUrl(m.TerragruntOptions, &m.Config)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get terraform source url: %w", err)
@@ -202,10 +220,6 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 			return nil, fmt.Errorf("failed to move content from OS(%q) to Afero: %w", terraformSource.WorkingDir, err)
 		}
 
-		// We ReadTerragruntConfig so we can have the 'tgc.Inputs' which has the values+variables
-		// that we need to set to the module. Normally those inputs are passed via ENV variables
-		// when Terragrunt is running
-		tgc, _ := config.ReadTerragruntConfig(m.TerragruntOptions)
 		plannedQueries, modAddr, err := terraform.ExtractQueriesFromHCL(nfs, providerInitializers, "", u, tgc.Inputs)
 		if err != nil {
 			return nil, err
