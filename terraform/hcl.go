@@ -35,28 +35,30 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 
 	evalCtx := getEvalCtx(mod, nil, inputs)
 
-	providers, err := getHCLProviders(mod, evalCtx, providerInitializers)
-	if err != nil {
-		return nil, "", err
-	}
-
-	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
-	if err != nil {
-		return nil, "", err
-	}
-
-	err = validateProviders(queries, providers)
-	if err != nil {
-		return nil, "", err
-	}
-
 	modules := make([]string, 0, 0)
 	for k := range mod.ModuleCalls {
 		modules = append(modules, k)
 	}
 	sort.Strings(modules)
 
-	return queries, strings.Join(modules, ", "), nil
+	modName := strings.Join(modules, ", ")
+
+	providers, err := getHCLProviders(mod, evalCtx, providerInitializers)
+	if err != nil {
+		return nil, modName, err
+	}
+
+	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
+	if err != nil {
+		return nil, modName, err
+	}
+
+	err = validateProviders(queries, providers)
+	if err != nil {
+		return nil, modName, err
+	}
+
+	return queries, modName, nil
 }
 
 // extractHCLModule returns the resources found in the provided module.
@@ -319,20 +321,20 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 		switch val.Type() {
 		case cty.String:
 			// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
-			// Skip Unknow values to avoid panic.
+			// Skip Unknown values to avoid panic.
 			// Other types such bool/Number without default value ends up here too
-			if !val.IsKnown() {
+			if !val.IsKnown() || val.IsNull() {
 				continue
 			}
 			cfg[attrk] = val.AsString()
 		case cty.Number:
-			if !val.IsKnown() {
+			if !val.IsKnown() || val.IsNull() {
 				continue
 			}
 			f, _ := val.AsBigFloat().Float64()
 			cfg[attrk] = f
 		case cty.Bool:
-			if !val.IsKnown() {
+			if !val.IsKnown() || val.IsNull() {
 				continue
 			}
 			cfg[attrk] = val.True()
@@ -347,14 +349,20 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 						// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
 						// Skip Unknow values to avoid panic.
 						// Other types such bool/Number without default value ends up here too
-						if !nval.IsKnown() {
+						if !nval.IsKnown() || nval.IsNull() {
 							continue
 						}
 						values = append(values, nval.AsString())
 					case cty.Number:
+						if !nval.IsKnown() || nval.IsNull() {
+							continue
+						}
 						f, _ := nval.AsBigFloat().Float64()
 						values = append(values, f)
 					case cty.Bool:
+						if !nval.IsKnown() || nval.IsNull() {
+							continue
+						}
 						values = append(values, nval.True())
 					default:
 						vars := make([]string, 0, 0)
