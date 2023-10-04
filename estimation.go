@@ -222,6 +222,16 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 
 		plannedQueries, modAddr, err := terraform.ExtractQueriesFromHCL(nfs, providerInitializers, "", u, tgc.Inputs)
 		if err != nil {
+			if err == terraform.ErrNoKnownProvider {
+				// If we do not know the provider it means we have to skip it,
+				// the best way is to just return nil instead of the error so we
+				// can continue estimating the rest
+				if modAddr == "" {
+					modAddr = filepath.Base(m.TerragruntOptions.WorkingDir)
+				}
+				costs = append(costs, cost.NewPlan(modAddr, nil, nil))
+				continue
+			}
 			return nil, err
 		}
 		planned, err := cost.NewState(ctx, be, plannedQueries)
