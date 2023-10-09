@@ -36,6 +36,12 @@ const (
 	DeploymentOption // Deployment Option
 	LicenseModel     // License Model
 
+	// FSx fields
+	FileSystemType     // File system type
+	StorageType        // Storage type
+	ThroughputCapacity // Throughput capacity
+	Deployment_option  // Deployment option
+
 	///// Price Attributes /////
 	Currency      // Currency
 	PricePerUnit  // PricePerUnit

@@ -2,6 +2,8 @@
 
 ### Added
 
+- AWS support for `aws_fsx_lustre_file_system`, `aws_fsx_ontap_file_system`, `aws_fsx_openzfs_file_system`, `aws_fsx_windows_file_system`
+  ([Pull #115](https://github.com/cycloidio/terracost/pull/115))
 - AWS support for `aws_nat_gateway`
   ([Pull #110](https://github.com/cycloidio/terracost/pull/110))
 - AWS support for `aws_eks_cluster`, `aws_eks_node_group`, `aws_efs_file_system`

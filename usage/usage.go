@@ -24,6 +24,18 @@ var Default = Usage{
 			"monthly_infrequent_access_read_gb":  20,
 			"monthly_infrequent_access_write_gb": 30,
 		},
+		"aws_fsx_openzfs_file_system": map[string]interface{}{
+			"backup_storage_gb": 1024,
+		},
+		"aws_fsx_windows_file_system": map[string]interface{}{
+			"backup_storage_gb": 1024,
+		},
+		"aws_fsx_ontap_file_system": map[string]interface{}{
+			"backup_storage_gb": 1024,
+		},
+		"aws_fsx_lustre_file_system": map[string]interface{}{
+			"backup_storage_gb": 1024,
+		},
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
 		},

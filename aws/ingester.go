@@ -214,6 +214,12 @@ var columnProductToIngest = map[field.Field]string{
 	field.DatabaseEdition:  "DatabaseEdition",
 	field.DeploymentOption: "DeploymentOption",
 	field.LicenseModel:     "LicenseModel",
+
+	// FSx attributes
+	field.FileSystemType:     "FileSystemType",
+	field.StorageType:        "StorageType",
+	field.ThroughputCapacity: "ThroughputCapacity",
+	field.Deployment_option:  "Deployment_option",
 }
 
 // columnPriceToIngest is a mapping from column title to the price.Price attribute name under which the value will

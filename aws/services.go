@@ -5,6 +5,7 @@ var supportedServices = map[string]struct{}{
 	"AmazonEC2":         {},
 	"AmazonEFS":         {},
 	"AmazonEKS":         {},
+	"AmazonFSx":         {},
 	"AmazonRDS":         {},
 	"AmazonElastiCache": {},
 	"AmazonCloudWatch":  {},
