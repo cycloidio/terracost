@@ -41,6 +41,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newAutoscalingGroup(rss, vals).Components()
+	case "aws_db_instance":
+		vals, err := decodeDBInstanceValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newDBInstance(vals).Components()
 	case "aws_ebs_volume":
 		vals, err := decodeVolumeValues(tfRes.Values)
 		if err != nil {
@@ -71,12 +77,6 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newElasticIP(vals).Components()
-	case "aws_db_instance":
-		vals, err := decodeDBInstanceValues(tfRes.Values)
-		if err != nil {
-			return nil
-		}
-		return p.newDBInstance(vals).Components()
 	case "aws_elb":
 		// ELB Classic does not have any special configuration.
 		vals := lbValues{LoadBalancerType: "classic"}
@@ -93,6 +93,30 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newEKSNodeGroup(rss, vals).Components()
+	case "aws_fsx_lustre_file_system":
+		vals, err := decodeFSxLustreFileSystemValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newFSxLustreFileSystem(rss, vals).Components()
+	case "aws_fsx_ontap_file_system":
+		vals, err := decodeFSxOntapFileSystemValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newFSxOntapFileSystem(rss, vals).Components()
+	case "aws_fsx_openzfs_file_system":
+		vals, err := decodeFSxOpenzfsFileSystemValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newFSxOpenzfsFileSystem(rss, vals).Components()
+	case "aws_fsx_windows_file_system":
+		vals, err := decodeFSxWindowsFileSystemValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newFSxWindowsFileSystem(rss, vals).Components()
 	case "aws_lb", "aws_alb":
 		vals, err := decodeLBValues(tfRes.Values)
 		if err != nil {

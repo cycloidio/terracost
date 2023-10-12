@@ -142,13 +142,16 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 	}
 
 	// terraform HCL directory
-	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, usage.Default, terraformAWSProviderInitializer)
+
+	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, usage.Default, terraformAWSProviderInitializer)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
 	}
 
-	estimateDisplay(planhcl)
+	for _, p := range planhcl {
+		estimateDisplay(p)
+	}
 }
 
 func estimateDisplay(resourceDiff *cost.Plan) {
