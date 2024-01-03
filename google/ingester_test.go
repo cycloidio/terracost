@@ -73,4 +73,8 @@ func TestIngester(t *testing.T) {
 		_, err := google.NewIngester(ctx, cred, "service", project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()))
 		assert.EqualError(t, err, google.ErrNotSupportedService.Error())
 	})
+	t.Run("FailUnsupportedZone", func(t *testing.T) {
+		_, err := google.NewIngester(ctx, cred, google.ComputeEngine.String(), project, "zone", google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()))
+		assert.EqualError(t, err, "unable to get region from zone: invalid zone: zone")
+	})
 }

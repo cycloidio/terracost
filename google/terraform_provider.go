@@ -3,6 +3,7 @@ package google
 import (
 	googletf "github.com/cycloidio/terracost/google/terraform"
 	"github.com/cycloidio/terracost/terraform"
+	"fmt"
 )
 
 // RegistryName is the fully qualified name under which this provider is stored in the registry.
@@ -16,7 +17,10 @@ var TerraformProviderInitializer = terraform.ProviderInitializer{
 		if !ok {
 			return nil, nil
 		}
-		region := zoneToRegion(z.(string))
+		region, err := zoneToRegion(z.(string))
+		if err != nil {
+			return nil, fmt.Errorf("unable to get region from zone: %w", err)
+		}
 		return googletf.NewProvider(ProviderName, region)
 	},
 }

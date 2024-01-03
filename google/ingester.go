@@ -70,13 +70,18 @@ func NewIngester(ctx context.Context, credentialJSON []byte, service, project, z
 		return nil, ErrNotSupportedService
 	}
 
+	region, err := zoneToRegion(zone)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get region from zone: %w", err)
+	}
+
 	ing := &Ingester{
 		credentialJSON: credentialJSON,
 		service:        sid,
 
 		project: project,
 		zone:    zone,
-		region:  zoneToRegion(zone),
+		region:  region,
 
 		ingestionFilter: DefaultFilter,
 	}
@@ -317,9 +322,4 @@ func (ing *Ingester) fetchMachineTypes(ctx context.Context) <-chan *compute.Mach
 // Err returns any error that might have happened during the ingestion.
 func (ing *Ingester) Err() error {
 	return ing.err
-}
-
-// zoneToRegion will transform a europe-west1-b to europe-west1
-func zoneToRegion(z string) string {
-	return strings.Join(strings.Split(z, "-")[0:2], "-")
 }
