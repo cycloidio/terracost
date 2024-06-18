@@ -60,7 +60,7 @@ func TestGoogleEstimation(t *testing.T) {
 		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(39.7258116), "USD"), pcost)
 	})
 	t.Run("FromHCL", func(t *testing.T) {
-		plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/google/stack-compute", noModulePath, noForceTerragrunt, usage.Default)
+		plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/google/stack-compute", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
 		require.NoError(t, err)
 		require.Len(t, plans, 1)
 		plan := plans[0]

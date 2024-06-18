@@ -74,7 +74,8 @@ func EstimateTerraformPlan(ctx context.Context, be backend.Backend, plan io.Read
 // It uses the Backend to retrieve the pricing data. The modulePath is used to know if the module
 // is not defined on the root of the stack,
 // If Force Terragrunt(ftg) is set then we'll just run Terragrunt
-func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPath, modulePath string, ftg bool, u usage.Usage, providerInitializers ...terraform.ProviderInitializer) ([]*cost.Plan, error) {
+// If Parallelisim Terragrunt is set(!=0) it'll set it when running TG
+func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPath, modulePath string, ftg bool, ptg int, u usage.Usage, providerInitializers ...terraform.ProviderInitializer) ([]*cost.Plan, error) {
 	if len(providerInitializers) == 0 {
 		providerInitializers = getDefaultProviders()
 	}
@@ -150,6 +151,12 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		return nil, fmt.Errorf("failed to create terragrunt options for %s: %w", tmpdir, err)
 	}
 	tgo.RunTerragrunt = cli.RunTerragrunt
+
+	// If we have a specific Parallelisim we set it, if not
+	// we'll use the default one
+	if ptg != 0 {
+		tgo.Parallelism = ptg
+	}
 
 	// DryRun is an specific option we added to the fork of Terragrunt we have.
 	// This fork allows us to run everything except Terraform, so we have all
