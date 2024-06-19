@@ -18,6 +18,8 @@
   ([Pull #105](https://github.com/cycloidio/terracost/pull/105))
 - Support for Terragrunt estimation on HCL
   ([Issue #106](https://github.com/cycloidio/terracost/issues/106))
+- Added the option to specify Parallelism on Terragrunt
+  ([Issue #106](https://github.com/cycloidio/terracost/pull/118))
 
 ### Fixed
 
