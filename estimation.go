@@ -152,7 +152,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	}
 	tgo.RunTerragrunt = cli.RunTerragrunt
 
-	// If we have a specific Parallelisim we set it, if not
+	// If we have a specific Parallelism we set it, if not
 	// we'll use the default one
 	if ptg != 0 {
 		tgo.Parallelism = ptg
