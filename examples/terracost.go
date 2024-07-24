@@ -12,6 +12,8 @@ import (
 	"github.com/cycloidio/terracost/aws"
 	"github.com/cycloidio/terracost/aws/region"
 	awstf "github.com/cycloidio/terracost/aws/terraform"
+	"github.com/cycloidio/terracost/azurerm"
+	azurestf "github.com/cycloidio/terracost/azurerm/terraform"
 	"github.com/cycloidio/terracost/cost"
 	"github.com/cycloidio/terracost/mysql"
 	"github.com/cycloidio/terracost/terraform"
@@ -26,23 +28,25 @@ func helpUsage() {
 }
 
 var (
-	flagAWSIngest           bool   = false
-	flagAWSIngestRegion     string = "eu-west-1"
-	flagAWSIngestMinimal    bool   = false
-	flagestimatePlan        string = ""
-	flagestimateHCL         string = ""
-	flagestimateHCLProvider string = "aws"
+	flagIngest            bool   = false
+	flagIngestMinimal     bool   = true
+	flagAWSIngestRegion   string = "eu-west-1"
+	flagAzureIngestRegion string = "francecentral"
+	flagestimatePlan      string = ""
+	flagestimateHCL       string = ""
+	flagProvider          string = "aws"
 )
 
 func main() {
 
 	flag.Usage = helpUsage
-	flag.BoolVar(&flagAWSIngest, "ingest-aws", flagAWSIngest, "Run AWS price ingester")
-	flag.BoolVar(&flagAWSIngestMinimal, "minimal", flagAWSIngestMinimal, "Import the minimum amount of prices")
+	flag.BoolVar(&flagIngest, "ingest", flagIngest, "Run price ingester")
+	flag.BoolVar(&flagIngestMinimal, "ingest-minimal", flagIngestMinimal, "Minimal ingest")
 	flag.StringVar(&flagAWSIngestRegion, "ingest-aws-region", flagAWSIngestRegion, "AWS region used to ingest")
+	flag.StringVar(&flagAzureIngestRegion, "ingest-azure-region", flagAzureIngestRegion, "AWS region used to ingest")
 	flag.StringVar(&flagestimatePlan, "estimate-plan", flagestimatePlan, "terraform-plan.json file path to estimate (example: ./terraform-plan.json)")
 	flag.StringVar(&flagestimateHCL, "estimate-hcl", flagestimateHCL, "terraform HCL code path to estimate (example: ../testdata/aws/stack-aws)")
-	flag.StringVar(&flagestimateHCLProvider, "estimate-hcl-provider", flagestimateHCLProvider, "Terraform provider used")
+	flag.StringVar(&flagProvider, "provider", flagProvider, "Terraform provider used [aws|azurerm]")
 
 	flag.Parse()
 
@@ -51,7 +55,7 @@ func main() {
 	if len(args) == 0 {
 	}
 
-	if !flagAWSIngest && flagestimatePlan == "" && flagestimateHCL == "" {
+	if !flagIngest && flagestimatePlan == "" && flagestimateHCL == "" {
 		helpUsage()
 		os.Exit(0)
 	}
@@ -64,8 +68,12 @@ func main() {
 	}
 	backend := mysql.NewBackend(db)
 
-	if flagAWSIngest {
-		awsIngest(flagAWSIngestRegion, backend, db)
+	if flagIngest {
+		ingestRegion := flagAWSIngestRegion
+		if flagProvider == "azurerm" {
+			ingestRegion = flagAzureIngestRegion
+		}
+		ingest(flagProvider, ingestRegion, backend, db)
 	}
 
 	if flagestimatePlan != "" {
@@ -73,12 +81,12 @@ func main() {
 	}
 
 	if flagestimateHCL != "" {
-		estimateHCL(flagestimateHCL, flagestimateHCLProvider, backend)
+		estimateHCL(flagestimateHCL, flagProvider, backend)
 	}
 
 }
-func awsIngest(region string, backend *mysql.Backend, db *sql.DB) {
-	fmt.Printf("AWS Ingestion\n")
+func ingest(flagProvider string, region string, backend *mysql.Backend, db *sql.DB) {
+	fmt.Printf("Ingestion %s\n", flagProvider)
 
 	err := mysql.Migrate(context.Background(), db, "pricing_migrations")
 	if err != nil && !strings.Contains(err.Error(), "Error 1050") {
@@ -86,23 +94,44 @@ func awsIngest(region string, backend *mysql.Backend, db *sql.DB) {
 		os.Exit(1)
 	}
 
-	// Ingest supported services pricing data into the database
-	for _, s := range aws.GetSupportedServices() {
-		fmt.Printf("[%s] Ingestion\n", s)
-		op := []aws.Option{}
-		if flagAWSIngestMinimal {
-			op = append(op, aws.WithIngestionFilter(aws.MinimalFilter))
-		}
-		ingester, err := aws.NewIngester(s, region, op...)
-		if err != nil {
-			fmt.Printf("%s\n", err)
-			os.Exit(1)
-		}
+	if flagProvider == "aws" {
+		// Ingest supported services pricing data into the database
+		for _, s := range aws.GetSupportedServices() {
+			fmt.Printf("[%s] Ingestion\n", s)
+			op := []aws.Option{}
+			if flagIngestMinimal {
+				op = append(op, aws.WithIngestionFilter(aws.MinimalFilter))
+			}
+			ingester, err := aws.NewIngester(s, region, op...)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(1)
+			}
 
-		err = terracost.IngestPricing(context.Background(), backend, ingester)
-		if err != nil {
-			fmt.Printf("%s\n", err)
-			os.Exit(1)
+			err = terracost.IngestPricing(context.Background(), backend, ingester)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(1)
+			}
+		}
+	} else if flagProvider == "azurerm" {
+		for _, s := range azurerm.GetSupportedServices() {
+			fmt.Printf("[%s] Ingestion\n", s)
+			op := []azurerm.Option{}
+			if flagIngestMinimal {
+				op = append(op, azurerm.WithIngestionFilter(azurerm.MinimalFilter))
+			}
+			ingester, err := azurerm.NewIngester(context.Background(), s, region, op...)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(1)
+			}
+
+			err = terracost.IngestPricing(context.Background(), backend, ingester)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(1)
+			}
 		}
 	}
 }
@@ -129,21 +158,32 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 
 	// From HCL
 	// Provider to use
-	var terraformAWSProviderInitializer = terraform.ProviderInitializer{
-		MatchNames: []string{provider, fmt.Sprintf("registry.terraform.io/hashicorp/%s", provider)},
-		Provider: func(config map[string]interface{}) (terraform.Provider, error) {
-			r, ok := config["region"]
-			if !ok {
-				return nil, nil
-			}
-			regCode := region.Code(r.(string))
-			return awstf.NewProvider(provider, regCode)
-		},
+	var terraformProviderInitializer = terraform.ProviderInitializer{}
+	if provider == "aws" {
+		terraformProviderInitializer = terraform.ProviderInitializer{
+			MatchNames: []string{provider, fmt.Sprintf("registry.terraform.io/hashicorp/%s", provider)},
+			Provider: func(config map[string]interface{}) (terraform.Provider, error) {
+				r, ok := config["region"]
+				if !ok {
+					return nil, nil
+				}
+				regCode := region.Code(r.(string))
+				return awstf.NewProvider(provider, regCode)
+			},
+		}
+
+	} else if provider == "azurerm" {
+		terraformProviderInitializer = terraform.ProviderInitializer{
+			MatchNames: []string{provider, fmt.Sprintf("registry.terraform.io/hashicorp/%s", provider)},
+			Provider: func(config map[string]interface{}) (terraform.Provider, error) {
+				return azurestf.NewProvider(provider)
+			},
+		}
 	}
 
 	// terraform HCL directory
+	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, 0, usage.Default, terraformProviderInitializer)
 
-	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, usage.Default, terraformAWSProviderInitializer)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 		os.Exit(1)
