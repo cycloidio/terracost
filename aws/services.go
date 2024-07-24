@@ -1,5 +1,9 @@
 package aws
 
+import (
+	"slices"
+)
+
 // SupportedServices is a list of all AWS services that are supported by Terracost.
 var supportedServices = map[string]struct{}{
 	"AmazonEC2":         {},
@@ -24,5 +28,6 @@ func GetSupportedServices() []string {
 	for k := range supportedServices {
 		svcs = append(svcs, k)
 	}
+	slices.Sort(svcs)
 	return svcs
 }
