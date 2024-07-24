@@ -70,6 +70,6 @@ require (
 )
 
 // replace github.com/cycloidio/terracost => /opt/go/src/github.com/cycloidio/terracost
-replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.1.9-cy
+replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.4.6-cy
 
 replace github.com/gruntwork-io/terragrunt => github.com/cycloidio/terragrunt v0.0.0-20230905115542-1fe1ff682fd9

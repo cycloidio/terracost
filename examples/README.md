@@ -21,14 +21,12 @@ mysql -h 127.0.0.1 -uroot -pterracost -e "CREATE DATABASE terracost_test"
 
 ### Pricing ingestion
 
-To start prices ingestion you need to first decide which cloud provider to ingest. In the example `AWS` is available with `-ingest-aws`.
+To start prices ingestion you need to first decide which cloud provider to ingest. In the example `aws` or `azurerm` are availables with `-ingest -estimate-hcl-provider`.
 
 ```
-go run terracost.go -ingest-aws -minimal
+go run terracost.go -ingest -estimate-hcl-provider aws -ingest-aws-region eu-west-1
+go run terracost.go -ingest -estimate-hcl-provider azurerm -ingest-azure-region francecentral
 ```
-
-Here we ingest all supported services by TerraCost, ingestion could takes several minutes depending the amounts of data.
-If you don't need all services you can run it with `-minimal` which will run just the small subset needed for it work.
 
 > Note
 > Before to ingest datas, the database migrations are needed. In order to correctly run migrations, we need `?multiStatements=true` param on DB connector
