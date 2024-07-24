@@ -107,7 +107,7 @@ func (p *Plan) extractQueries(values Values, providers map[string]Provider) ([]q
 	resourceProviders := make(map[string]providerWithResourceValues)
 	err := p.extractModuleConfiguration("", &p.Configuration.RootModule, providers, resourceProviders)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract module (%s) configuraiotn: %w", "root_module", err)
+		return nil, fmt.Errorf("failed to extract module (%s) configuration: %w", "root_module", err)
 	}
 	return p.extractModuleQueries(&values.RootModule, resourceProviders), nil
 }
