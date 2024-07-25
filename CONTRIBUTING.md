@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Cycloid Team is glad to see you contributing to this project ! In this document, we will provide you some guidelines in order to help get your contribution accepted.
+Cycloid Team is glad to see you contributing to this project! In this document, we will provide you some guidelines in order to help get your contribution accepted.
 
 ## Reporting an issue
 
