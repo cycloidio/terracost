@@ -207,14 +207,14 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 			continue
 		}
 
-		sourceUrl, err := config.GetTerraformSourceUrl(m.TerragruntOptions, &m.Config)
+		sourceURL, err := config.GetTerraformSourceUrl(m.TerragruntOptions, &m.Config)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get terraform source url: %w", err)
 		}
 
 		// We need to get the terraformSource as it has the '.WorkingDir' which has the right path of the module just downloaded on the 'stack.Run'
 		// this path is not predictable so we need to get it from this 'terraformSource'
-		terraformSource, err := tfsource.NewTerraformSource(sourceUrl, m.TerragruntOptions.DownloadDir, m.TerragruntOptions.WorkingDir, m.TerragruntOptions.Logger)
+		terraformSource, err := tfsource.NewTerraformSource(sourceURL, m.TerragruntOptions.DownloadDir, m.TerragruntOptions.WorkingDir, m.TerragruntOptions.Logger)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get terraform source: %w", err)
 		}

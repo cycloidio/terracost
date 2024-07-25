@@ -31,16 +31,16 @@ const (
 	CacheEngine // Cache Engine
 
 	// RDS fields
-	DatabaseEngine   // Database Engine
-	DatabaseEdition  // Database Edition
-	DeploymentOption // Deployment Option
-	LicenseModel     // License Model
+	DatabaseEngine           // Database Engine
+	DatabaseEdition          // Database Edition
+	DatabaseDeploymentOption // Deployment Option
+	LicenseModel             // License Model
 
 	// FSx fields
-	FileSystemType     // File system type
-	StorageType        // Storage type
-	ThroughputCapacity // Throughput capacity
-	Deployment_option  // Deployment option
+	FileSystemType             // File system type
+	StorageType                // Storage type
+	ThroughputCapacity         // Throughput capacity
+	FileSystemDeploymentOption // Deployment option
 
 	///// Price Attributes /////
 	Currency      // Currency
