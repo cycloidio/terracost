@@ -17,3 +17,12 @@ var (
 		VirtualMachines.String(): struct{}{},
 	}
 )
+
+// GetSupportedServices returns all the AWS service names that Terracost supports.
+func GetSupportedServices() []string {
+	svcs := make([]string, 0, len(services))
+	for k := range services {
+		svcs = append(svcs, k)
+	}
+	return svcs
+}
