@@ -26,6 +26,7 @@ func TestMinimalFilter(t *testing.T) {
 				"PreInstalledSW":  "NA",
 				"Tenancy":         "Dedicated",
 			}}},
+			{Product: &product.Product{Service: "AmazonEC2", Family: "NAT Gateway"}},
 			{Product: &product.Product{Service: "AmazonRDS", Family: "Database Instance"}},
 			{Product: &product.Product{Service: "AmazonRDS", Family: "Database Storage"}},
 			{Product: &product.Product{Service: "AmazonRDS", Family: "Provisioned IOPS"}},
@@ -39,7 +40,6 @@ func TestMinimalFilter(t *testing.T) {
 	t.Run("Skipped", func(t *testing.T) {
 		pps := []*price.WithProduct{
 			{Product: &product.Product{Service: "AmazonEC2", Family: "Compute Instance (bare metal)"}},
-			{Product: &product.Product{Service: "AmazonEC2", Family: "NAT Gateway"}},
 			{Product: &product.Product{Service: "AmazonEC2", Family: "Fee"}},
 			{Product: &product.Product{Service: "AmazonEC2", Family: "Compute Instance", Attributes: map[string]string{
 				"CapacityStatus":  "Used",
