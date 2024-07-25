@@ -1,8 +1,8 @@
 package google
 
 import (
-	"strings"
 	"fmt"
+	"strings"
 )
 
 // zoneToRegion will transform an europe-west1-b to europe-west1

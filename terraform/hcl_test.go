@@ -147,7 +147,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 			queries, mod, err := terraform.ExtractQueriesFromHCL(fs, providerInitializers, "../testdata/aws/stack-aws", usage.Default, noInputs)
 			require.Error(t, err)
 			require.Len(t, queries, 0)
-			assert.Equal(t, "", mod)
+			assert.Equal(t, "ec2, rds", mod)
 		})
 
 		t.Run("FailedResourceComponents", func(t *testing.T) {

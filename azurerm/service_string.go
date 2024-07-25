@@ -44,8 +44,8 @@ func ServiceString(s string) (Service, error) {
 	if val, ok := _ServiceNameToValueMap[s]; ok {
 		return val, nil
 	}
-	s = strings.ToLower(s)
-	if val, ok := _ServiceNameToValueMap[s]; ok {
+
+	if val, ok := _ServiceNameToValueMap[strings.ToLower(s)]; ok {
 		return val, nil
 	}
 	return 0, fmt.Errorf("%s does not belong to Service values", s)
