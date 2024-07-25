@@ -1,9 +1,10 @@
 package google
 
 import (
+	"fmt"
+
 	googletf "github.com/cycloidio/terracost/google/terraform"
 	"github.com/cycloidio/terracost/terraform"
-	"fmt"
 )
 
 // RegistryName is the fully qualified name under which this provider is stored in the registry.

@@ -43,12 +43,12 @@ func _FieldNoOp() {
 	_ = x[CacheEngine-(16)]
 	_ = x[DatabaseEngine-(17)]
 	_ = x[DatabaseEdition-(18)]
-	_ = x[DeploymentOption-(19)]
+	_ = x[DatabaseDeploymentOption-(19)]
 	_ = x[LicenseModel-(20)]
 	_ = x[FileSystemType-(21)]
 	_ = x[StorageType-(22)]
 	_ = x[ThroughputCapacity-(23)]
-	_ = x[Deployment_option-(24)]
+	_ = x[FileSystemDeploymentOption-(24)]
 	_ = x[Currency-(25)]
 	_ = x[PricePerUnit-(26)]
 	_ = x[StartingRange-(27)]
@@ -56,7 +56,7 @@ func _FieldNoOp() {
 	_ = x[Unit-(29)]
 }
 
-var _FieldValues = []Field{SKU, CapacityStatus, Group, InstanceType, Location, OperatingSystem, PreInstalledSW, ProductFamily, ServiceCode, Tenancy, UsageType, VolumeAPIName, VolumeType, StorageClass, AccessType, ThroughputClass, CacheEngine, DatabaseEngine, DatabaseEdition, DeploymentOption, LicenseModel, FileSystemType, StorageType, ThroughputCapacity, Deployment_option, Currency, PricePerUnit, StartingRange, TermType, Unit}
+var _FieldValues = []Field{SKU, CapacityStatus, Group, InstanceType, Location, OperatingSystem, PreInstalledSW, ProductFamily, ServiceCode, Tenancy, UsageType, VolumeAPIName, VolumeType, StorageClass, AccessType, ThroughputClass, CacheEngine, DatabaseEngine, DatabaseEdition, DatabaseDeploymentOption, LicenseModel, FileSystemType, StorageType, ThroughputCapacity, FileSystemDeploymentOption, Currency, PricePerUnit, StartingRange, TermType, Unit}
 
 var _FieldNameToValueMap = map[string]Field{
 	_FieldName[0:3]:          SKU,
@@ -97,8 +97,8 @@ var _FieldNameToValueMap = map[string]Field{
 	_FieldLowerName[195:210]: DatabaseEngine,
 	_FieldName[210:226]:      DatabaseEdition,
 	_FieldLowerName[210:226]: DatabaseEdition,
-	_FieldName[226:243]:      DeploymentOption,
-	_FieldLowerName[226:243]: DeploymentOption,
+	_FieldName[226:243]:      DatabaseDeploymentOption,
+	_FieldLowerName[226:243]: DatabaseDeploymentOption,
 	_FieldName[243:256]:      LicenseModel,
 	_FieldLowerName[243:256]: LicenseModel,
 	_FieldName[256:272]:      FileSystemType,
@@ -107,8 +107,8 @@ var _FieldNameToValueMap = map[string]Field{
 	_FieldLowerName[272:284]: StorageType,
 	_FieldName[284:303]:      ThroughputCapacity,
 	_FieldLowerName[284:303]: ThroughputCapacity,
-	_FieldName[303:320]:      Deployment_option,
-	_FieldLowerName[303:320]: Deployment_option,
+	_FieldName[303:320]:      FileSystemDeploymentOption,
+	_FieldLowerName[303:320]: FileSystemDeploymentOption,
 	_FieldName[320:328]:      Currency,
 	_FieldLowerName[320:328]: Currency,
 	_FieldName[328:340]:      PricePerUnit,

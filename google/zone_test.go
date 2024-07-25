@@ -1,9 +1,10 @@
 package google
 
 import (
-	"github.com/stretchr/testify/assert"
-	"testing"
 	"fmt"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestZoneToRegion(t *testing.T) {

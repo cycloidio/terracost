@@ -210,16 +210,16 @@ var columnProductToIngest = map[field.Field]string{
 	field.CacheEngine: "CacheEngine",
 
 	// RDS attributes
-	field.DatabaseEngine:   "DatabaseEngine",
-	field.DatabaseEdition:  "DatabaseEdition",
-	field.DeploymentOption: "DeploymentOption",
-	field.LicenseModel:     "LicenseModel",
+	field.DatabaseEngine:           "DatabaseEngine",
+	field.DatabaseEdition:          "DatabaseEdition",
+	field.DatabaseDeploymentOption: "DeploymentOption",
+	field.LicenseModel:             "LicenseModel",
 
 	// FSx attributes
-	field.FileSystemType:     "FileSystemType",
-	field.StorageType:        "StorageType",
-	field.ThroughputCapacity: "ThroughputCapacity",
-	field.Deployment_option:  "Deployment_option",
+	field.FileSystemType:             "FileSystemType",
+	field.StorageType:                "StorageType",
+	field.ThroughputCapacity:         "ThroughputCapacity",
+	field.FileSystemDeploymentOption: "Deployment_option",
 }
 
 // columnPriceToIngest is a mapping from column title to the price.Price attribute name under which the value will
