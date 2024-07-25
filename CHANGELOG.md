@@ -33,6 +33,8 @@
   ([Pull #94](https://github.com/cycloidio/terracost/pull/94))
 - The documentation to install is has been updated to display the needed `replace` of `terraform`
   ([Issue #90](https://github.com/cycloidio/terracost/issues/90)), ([Issue #74](https://github.com/cycloidio/terracost/issues/74))
+- The dependencies to use terraform `v1.4.6-cy`
+  ([Pull #121](https://github.com/cycloidio/terracost/pull/121))
 
 ## [0.5.1] _2023-03-08_
 
