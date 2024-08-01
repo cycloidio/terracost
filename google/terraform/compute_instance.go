@@ -12,9 +12,8 @@ import (
 // ComputeInstance is the entity that holds the logic to calculate price
 // of the google_compute_instance
 type ComputeInstance struct {
-	provider     *Provider
-	region       string
-	instanceType string
+	provider *Provider
+	region   string
 
 	machineType string
 }

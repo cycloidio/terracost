@@ -3,6 +3,8 @@ package e2e
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
 
@@ -214,18 +216,17 @@ func TestAWSEstimation(t *testing.T) {
 			tfpi := terraform.ProviderInitializer{
 				MatchNames: []string{aws.ProviderName, aws.RegistryName},
 				Provider: func(values map[string]interface{}) (terraform.Provider, error) {
-					r, ok := values["region"]
-					if !ok {
-						r = "eu-west-1"
-					} else {
+					_, ok := values["region"]
+					if ok {
 						return nil, nil
 					}
-					regCode := region.Code(r.(string))
+					regCode := region.Code("eu-west-1")
 					return awstf.NewProvider(aws.ProviderName, regCode)
 				},
 			}
 			plan, err := costestimation.EstimateTerraformPlan(ctx, backend, f, usage.Default, tfpi)
 			require.NoError(t, err)
+			fmt.Println("#####################################\n", JSON(plan))
 
 			pcost, err := plan.PriorCost()
 			assert.NoError(t, err)
@@ -416,4 +417,12 @@ func TestAWSEstimation(t *testing.T) {
 func assertCostEqual(t *testing.T, expected, actual cost.Cost) {
 	assert.Truef(t, expected.Equal(actual.Decimal), "Not equal:\nexpected value: %s\nactual value: %s", expected, actual)
 	assert.Truef(t, expected.Currency == actual.Currency, "Not equal:\nexpected currency: %s\nactual currency: %s", expected.Currency, actual.Currency)
+}
+
+func JSON(v any) string {
+	b, err := json.MarshalIndent(v, "", "  ")
+	if err != nil {
+		return err.Error()
+	}
+	return string(b)
 }

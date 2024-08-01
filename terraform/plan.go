@@ -142,7 +142,7 @@ func (p *Plan) extractModuleConfiguration(prefix string, module *ConfigurationMo
 			resPrefix := fmt.Sprintf("module.%s", prefix)
 			rv, err := p.evaluateResourceExpressions(resPrefix, res.Expressions, module.Variables)
 			if err != nil {
-				return fmt.Errorf("failed to evaluate resource expresions: %w", err)
+				return fmt.Errorf("failed to evaluate resource expressions: %w", err)
 			}
 			resourceProviders[addr] = providerWithResourceValues{
 				Provider: prov,
@@ -329,7 +329,7 @@ func (p *Plan) evaluateResourceExpressions(prefix string, config map[string]inte
 
 		ref := strings.Split(refs[0].(string), ".")
 		if len(ref) < 2 {
-			return nil, fmt.Errorf("refernce %q has invalid format", refs[0])
+			return nil, fmt.Errorf("reference %q has invalid format", refs[0])
 		}
 
 		// "local" variables are not set on the plan
