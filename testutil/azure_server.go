@@ -1,6 +1,7 @@
 package testutil
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -25,6 +26,9 @@ func StartAzureServer(t *testing.T) *httptest.Server {
 		default:
 			t.Fatalf("URL %s not handled", r.URL)
 		}
-		w.Write(b)
+		_, err = w.Write(b)
+		if err != nil {
+			fmt.Printf("failed writing HTTP response: %+v", err)
+		}
 	}))
 }
