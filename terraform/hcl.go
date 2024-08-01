@@ -252,7 +252,10 @@ func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 	// Once everything is copied we can remove it
 	defer os.RemoveAll(dir)
 
-	fs.MkdirAll(dir, 0700)
+	err = fs.MkdirAll(dir, 0700)
+	if err != nil {
+		return "", fmt.Errorf("could not create path %q: %w", dir, err)
+	}
 	err = util.FromOSToAfero(fs, dir, dir)
 	if err != nil {
 		return "", fmt.Errorf("failed to copy the module to %s: %w", dir, err)
