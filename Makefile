@@ -1,4 +1,5 @@
 IS_CI ?= 0
+TOOL_BIN := $(PWD)/bin
 
 DOCKER_COMPOSE_CMD := docker-compose
 GO_CMD := go
@@ -12,7 +13,7 @@ MYSQL_DUMP ?= mysql/testdata/2023-02-23-pricing.sql.gz
 
 BIN_DIR := $(GOPATH)/bin
 
-GOLINT := $(BIN_DIR)/golinter
+GOLINT := $(TOOL_BIN)/golangci-lint
 GOIMPORTS := $(BIN_DIR)/goimports
 ENUMER := $(BIN_DIR)/enumer
 MOCKGEN := $(BIN_DIR)/mockgen
@@ -36,7 +37,7 @@ $(ENUMER):
 	@go install github.com/dmarkham/enumer
 
 $(GOLINT):
-	@go install golang.org/x/lint/golint
+	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.59.1
 
 $(GOIMPORTS):
 	@go install golang.org/x/tools/cmd/goimports
@@ -46,7 +47,7 @@ $(MOCKGEN):
 
 .PHONY: lint
 lint: $(GOLINT) $(GOIMPORTS)
-	@golint -set_exit_status ./... && test -z "`$(GO_CMD) list -f {{.Dir}} ./... | xargs goimports -l | tee /dev/stderr`"
+	@golangci-lint run -v
 
 .PHONY: db-up
 db-up: # Start the DB server

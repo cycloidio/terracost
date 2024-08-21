@@ -11,7 +11,7 @@ Go library for estimating Terraform costs using ingested cloud vendor prices. It
 ## Installation
 
 ```shell
-go mod edit -replace github.com/hashicorp/terraform=github.com/cycloidio/terraform@v1.1.9-cy && go get github.com/cycloidio/terracost
+go mod edit -replace github.com/hashicorp/terraform=github.com/cycloidio/terraform@v1.4.6-cy && go get github.com/cycloidio/terracost
 ```
 
 We need to do a `-replace` because of https://github.com/golang/go/issues/30354#issuecomment-466557015. We have a custom fork of Terraform and in order
@@ -19,7 +19,7 @@ to use TerraCost it needs to be replaced when importing also.
 
 ## Requirements
 
-- Go 1.16 or newer
+- Go 1.22 or newer
 - MySQL database
 
 ## Provider support

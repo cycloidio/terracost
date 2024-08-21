@@ -1,11 +1,14 @@
 package terraform
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // ProviderConfigExpression is a single configuration variable of a ProviderConfig.
 type ProviderConfigExpression struct {
-	ConstantValue string   `json:"constant_value",mapstructure:"constant_value"`
-	References    []string `json:"references",mapstructure:"references"`
+	ConstantValue string   `json:"constant_value" mapstructure:"constant_value"`
+	References    []string `json:"references" mapstructure:"references"`
 }
 
 // ProviderConfig is configuration of a provider with the given Name.
@@ -50,7 +53,10 @@ func (cfg *ProviderConfig) UnmarshalJSON(b []byte) error {
 			}
 
 			var e ProviderConfigExpression
-			json.Unmarshal(bv, &e)
+			err = json.Unmarshal(bv, &e)
+			if err != nil {
+				return fmt.Errorf("could unmarshal JSON: %w", err)
+			}
 			cfg.Expressions[k] = e
 		}
 	}

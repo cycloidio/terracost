@@ -18,7 +18,6 @@ type FSxFileSystem struct {
 
 	storageCapacity              decimal.Decimal
 	storageType                  string
-	deploymentType               string
 	throughputCapacity           decimal.Decimal
 	automaticBackupRetentionDays decimal.Decimal
 

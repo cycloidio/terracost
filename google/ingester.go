@@ -275,7 +275,7 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 	return results
 }
 
-// fetchSKUs returns a channel where the Sku are beeing sent and pulls all the
+// fetchSKUs returns a channel where the Sku are being sent and pulls all the
 // data from the Skus paginating through all the API
 func (ing *Ingester) fetchSKUs(ctx context.Context) <-chan *cloudbilling.Sku {
 	results := make(chan *cloudbilling.Sku, 100)
@@ -297,7 +297,7 @@ func (ing *Ingester) fetchSKUs(ctx context.Context) <-chan *cloudbilling.Sku {
 	return results
 }
 
-// fetchMachineTypes returns a channel where the machine types are beeing sent and pulls all the
+// fetchMachineTypes returns a channel where the machine types are being sent and pulls all the
 // data from the machine types paginating through all the API
 func (ing *Ingester) fetchMachineTypes(ctx context.Context) <-chan *compute.MachineType {
 	results := make(chan *compute.MachineType, 100)

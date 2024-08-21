@@ -44,7 +44,7 @@ var Default = Usage{
 
 // Usage is the struct defining all the configure usages
 type Usage struct {
-	ResourceDefaultTypeUsage map[string]interface{} `json:"resource_default_type_usage",yaml:"resource_default_type_usage"`
+	ResourceDefaultTypeUsage map[string]interface{} `json:"resource_default_type_usage" yaml:"resource_default_type_usage"`
 }
 
 // GetUsage will return the usage from the resource rt (ex: aws_instance)
