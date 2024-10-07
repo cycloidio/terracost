@@ -1,0 +1,3925 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.6.1",
+  "variables": {
+    "ami": {
+      "value": "ami-07355fe79b493752d"
+    },
+    "app_code": {
+      "value": "APP00000"
+    },
+    "app_env": {
+      "value": "prd"
+    },
+    "app_name": {
+      "value": "cycloid"
+    },
+    "app_project": {
+      "value": "cycloid"
+    },
+    "archiving": {
+      "value": false
+    },
+    "aws_account_id": {
+      "value": "925975919351"
+    },
+    "aws_env": {
+      "value": "prd"
+    },
+    "aws_id": {
+      "value": "XXXXXXXXXXXXXXXXXXXX"
+    },
+    "aws_region": {
+      "value": "eu-west-1"
+    },
+    "backup": {
+      "value": "no"
+    },
+    "data_classification": {
+      "value": "C1"
+    },
+    "ebs_block_device_map": {
+      "value": {}
+    },
+    "enable_shutdown_protection": {
+      "value": false
+    },
+    "enable_termination_protection": {
+      "value": false
+    },
+    "extra_tags": {
+      "value": {
+        "test": true
+      }
+    },
+    "iam_instance_profile": {
+      "value": ""
+    },
+    "instance_name": {
+      "value": "test-latam"
+    },
+    "instance_type": {
+      "value": "t3.micro"
+    },
+    "key_pair": {
+      "value": ""
+    },
+    "kms_key_id": {
+      "value": "arn:aws:kms:eu-west-1:925975919351:key/465fc77a-8d0a-4740-b69f-30f90194a4a8"
+    },
+    "msp": {
+      "value": "cma-cgm"
+    },
+    "root_block_device_size": {
+      "value": "55"
+    },
+    "root_block_device_type": {
+      "value": "gp3"
+    },
+    "security_group_egress_rules": {
+      "value": {}
+    },
+    "security_group_ingress_rules": {
+      "value": {}
+    },
+    "subnet_id": {
+      "value": "subnet-0138590ca64dcafea"
+    },
+    "vpc_security_group_ids": {
+      "value": [
+        "sg-0a7894db7381ca8f4"
+      ]
+    }
+  },
+  "planned_values": {
+    "outputs": {
+      "arn": {
+        "sensitive": false,
+        "type": "dynamic",
+        "value": null
+      },
+      "id": {
+        "sensitive": false,
+        "type": "dynamic",
+        "value": null
+      },
+      "private_dns": {
+        "sensitive": false,
+        "type": "dynamic",
+        "value": null
+      }
+    },
+    "root_module": {
+      "child_modules": [
+        {
+          "resources": [
+            {
+              "address": "module.instance.aws_instance.this[0]",
+              "mode": "managed",
+              "type": "aws_instance",
+              "name": "this",
+              "index": 0,
+              "provider_name": "registry.terraform.io/hashicorp/aws",
+              "schema_version": 1,
+              "values": {
+                "ami": "ami-07355fe79b493752d",
+                "credit_specification": [
+                  {
+                    "cpu_credits": null
+                  }
+                ],
+                "disable_api_stop": false,
+                "disable_api_termination": false,
+                "enclave_options": [
+                  {}
+                ],
+                "get_password_data": false,
+                "hibernation": null,
+                "instance_type": "t3.micro",
+                "launch_template": [],
+                "metadata_options": [
+                  {
+                    "http_endpoint": "enabled",
+                    "http_protocol_ipv6": "disabled",
+                    "http_put_response_hop_limit": 1,
+                    "http_tokens": "required"
+                  }
+                ],
+                "root_block_device": [
+                  {
+                    "delete_on_termination": true,
+                    "encrypted": true,
+                    "kms_key_id": "arn:aws:kms:eu-west-1:925975919351:key/465fc77a-8d0a-4740-b69f-30f90194a4a8",
+                    "tags": null,
+                    "volume_size": 55,
+                    "volume_type": "gp3"
+                  }
+                ],
+                "source_dest_check": true,
+                "subnet_id": "subnet-0138590ca64dcafea",
+                "timeouts": {
+                  "create": null,
+                  "delete": null,
+                  "update": null
+                },
+                "user_data_replace_on_change": false,
+                "vpc_security_group_ids": [
+                  "sg-0a7894db7381ca8f4"
+                ]
+              },
+              "sensitive_values": {
+                "capacity_reservation_specification": [],
+                "cpu_options": [],
+                "credit_specification": [
+                  {}
+                ],
+                "ebs_block_device": [],
+                "enclave_options": [
+                  {}
+                ],
+                "ephemeral_block_device": [],
+                "instance_market_options": [],
+                "ipv6_addresses": [],
+                "launch_template": [],
+                "maintenance_options": [],
+                "metadata_options": [
+                  {}
+                ],
+                "network_interface": [],
+                "private_dns_name_options": [],
+                "root_block_device": [
+                  {}
+                ],
+                "secondary_private_ips": [],
+                "security_groups": [],
+                "tags": {},
+                "tags_all": {},
+                "timeouts": {},
+                "volume_tags": {},
+                "vpc_security_group_ids": [
+                  false
+                ]
+              }
+            }
+          ],
+          "address": "module.instance"
+        }
+      ]
+    }
+  },
+  "resource_drift": [
+    {
+      "address": "module.instance.aws_instance.this[0]",
+      "module_address": "module.instance",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "this",
+      "index": 0,
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "delete"
+        ],
+        "before": {
+          "ami": "ami-07355fe79b493752d",
+          "arn": "arn:aws:ec2:eu-west-1:925975919351:instance/i-05c28ff3646566ad2",
+          "associate_public_ip_address": false,
+          "availability_zone": "eu-west-1b",
+          "capacity_reservation_specification": [
+            {
+              "capacity_reservation_preference": "open",
+              "capacity_reservation_target": []
+            }
+          ],
+          "cpu_core_count": 1,
+          "cpu_options": [
+            {
+              "amd_sev_snp": "",
+              "core_count": 1,
+              "threads_per_core": 2
+            }
+          ],
+          "cpu_threads_per_core": 2,
+          "credit_specification": [
+            {
+              "cpu_credits": "unlimited"
+            }
+          ],
+          "disable_api_stop": false,
+          "disable_api_termination": false,
+          "ebs_block_device": [],
+          "ebs_optimized": false,
+          "enclave_options": [
+            {
+              "enabled": false
+            }
+          ],
+          "ephemeral_block_device": [],
+          "get_password_data": false,
+          "hibernation": false,
+          "host_id": "",
+          "host_resource_group_arn": null,
+          "iam_instance_profile": "",
+          "id": "i-05c28ff3646566ad2",
+          "instance_initiated_shutdown_behavior": "stop",
+          "instance_lifecycle": "",
+          "instance_market_options": [],
+          "instance_state": "running",
+          "instance_type": "t3.micro",
+          "ipv6_address_count": 0,
+          "ipv6_addresses": [],
+          "key_name": "",
+          "launch_template": [],
+          "maintenance_options": [
+            {
+              "auto_recovery": "default"
+            }
+          ],
+          "metadata_options": [
+            {
+              "http_endpoint": "enabled",
+              "http_protocol_ipv6": "disabled",
+              "http_put_response_hop_limit": 1,
+              "http_tokens": "required",
+              "instance_metadata_tags": "disabled"
+            }
+          ],
+          "monitoring": false,
+          "network_interface": [],
+          "outpost_arn": "",
+          "password_data": "",
+          "placement_group": "",
+          "placement_partition_number": 0,
+          "primary_network_interface_id": "eni-00f37a070510b6f40",
+          "private_dns": "ip-10-0-2-175.eu-west-1.compute.internal",
+          "private_dns_name_options": [
+            {
+              "enable_resource_name_dns_a_record": false,
+              "enable_resource_name_dns_aaaa_record": false,
+              "hostname_type": "ip-name"
+            }
+          ],
+          "private_ip": "10.0.2.175",
+          "public_dns": "",
+          "public_ip": "",
+          "root_block_device": [
+            {
+              "delete_on_termination": true,
+              "device_name": "/dev/xvda",
+              "encrypted": true,
+              "iops": 3000,
+              "kms_key_id": "arn:aws:kms:eu-west-1:925975919351:key/465fc77a-8d0a-4740-b69f-30f90194a4a8",
+              "tags": {},
+              "throughput": 125,
+              "volume_id": "vol-04828d3ea1e824e4e",
+              "volume_size": 55,
+              "volume_type": "gp3"
+            }
+          ],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "source_dest_check": true,
+          "spot_instance_request_id": "",
+          "subnet_id": "subnet-0138590ca64dcafea",
+          "tags": {
+            "AppEnv": "prd",
+            "AppName": "cycloid",
+            "AwsEnv": "PRD",
+            "AwsId": "XXXXXXXXXXXXXXXXXXXX",
+            "EOL": "01-03-2024",
+            "Name": "test-latam",
+            "Owner": "service-catalog@cma-cgm.com",
+            "Project": "cycloid",
+            "Terraform": "true",
+            "archiving": "no",
+            "backup": "no",
+            "data-confidentiality": "C1",
+            "msp": "cma-cgm",
+            "test": "true"
+          },
+          "tags_all": {
+            "AppEnv": "prd",
+            "AppName": "cycloid",
+            "AwsEnv": "PRD",
+            "AwsId": "XXXXXXXXXXXXXXXXXXXX",
+            "EOL": "01-03-2024",
+            "Name": "test-latam",
+            "Owner": "service-catalog@cma-cgm.com",
+            "Project": "cycloid",
+            "Terraform": "true",
+            "archiving": "no",
+            "backup": "no",
+            "data-confidentiality": "C1",
+            "msp": "cma-cgm",
+            "test": "true"
+          },
+          "tenancy": "default",
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "update": null
+          },
+          "user_data": null,
+          "user_data_base64": null,
+          "user_data_replace_on_change": false,
+          "volume_tags": {
+            "AppEnv": "prd",
+            "AppName": "cycloid",
+            "AwsEnv": "PRD",
+            "AwsId": "XXXXXXXXXXXXXXXXXXXX",
+            "EOL": "01-03-2024",
+            "Name": "cycloid-prd-EBS-main",
+            "Owner": "service-catalog@cma-cgm.com",
+            "Project": "cycloid",
+            "Terraform": "true",
+            "archiving": "no",
+            "backup": "no",
+            "data-confidentiality": "C1",
+            "msp": "cma-cgm",
+            "test": "true"
+          },
+          "vpc_security_group_ids": [
+            "sg-0a7894db7381ca8f4"
+          ]
+        },
+        "after": null,
+        "after_unknown": {},
+        "before_sensitive": {
+          "capacity_reservation_specification": [
+            {
+              "capacity_reservation_target": []
+            }
+          ],
+          "cpu_options": [
+            {}
+          ],
+          "credit_specification": [
+            {}
+          ],
+          "ebs_block_device": [],
+          "enclave_options": [
+            {}
+          ],
+          "ephemeral_block_device": [],
+          "instance_market_options": [],
+          "ipv6_addresses": [],
+          "launch_template": [],
+          "maintenance_options": [
+            {}
+          ],
+          "metadata_options": [
+            {}
+          ],
+          "network_interface": [],
+          "private_dns_name_options": [
+            {}
+          ],
+          "root_block_device": [
+            {
+              "tags": {}
+            }
+          ],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "tags": {},
+          "tags_all": {},
+          "timeouts": {},
+          "volume_tags": {},
+          "vpc_security_group_ids": [
+            false
+          ]
+        },
+        "after_sensitive": false
+      }
+    }
+  ],
+  "resource_changes": [
+    {
+      "address": "module.instance.aws_instance.this[0]",
+      "module_address": "module.instance",
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "this",
+      "index": 0,
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "ami": "ami-07355fe79b493752d",
+          "credit_specification": [
+            {
+              "cpu_credits": null
+            }
+          ],
+          "disable_api_stop": false,
+          "disable_api_termination": false,
+          "enclave_options": [
+            {}
+          ],
+          "get_password_data": false,
+          "hibernation": null,
+          "instance_type": "t3.micro",
+          "launch_template": [],
+          "metadata_options": [
+            {
+              "http_endpoint": "enabled",
+              "http_protocol_ipv6": "disabled",
+              "http_put_response_hop_limit": 1,
+              "http_tokens": "required"
+            }
+          ],
+          "root_block_device": [
+            {
+              "delete_on_termination": true,
+              "encrypted": true,
+              "kms_key_id": "arn:aws:kms:eu-west-1:925975919351:key/465fc77a-8d0a-4740-b69f-30f90194a4a8",
+              "tags": null,
+              "volume_size": 55,
+              "volume_type": "gp3"
+            }
+          ],
+          "source_dest_check": true,
+          "subnet_id": "subnet-0138590ca64dcafea",
+          "timeouts": {
+            "create": null,
+            "delete": null,
+            "update": null
+          },
+          "user_data_replace_on_change": false,
+          "vpc_security_group_ids": [
+            "sg-0a7894db7381ca8f4"
+          ]
+        },
+        "after_unknown": {
+          "arn": true,
+          "associate_public_ip_address": true,
+          "availability_zone": true,
+          "capacity_reservation_specification": true,
+          "cpu_core_count": true,
+          "cpu_options": true,
+          "cpu_threads_per_core": true,
+          "credit_specification": [
+            {}
+          ],
+          "ebs_block_device": true,
+          "ebs_optimized": true,
+          "enclave_options": [
+            {
+              "enabled": true
+            }
+          ],
+          "ephemeral_block_device": true,
+          "host_id": true,
+          "host_resource_group_arn": true,
+          "iam_instance_profile": true,
+          "id": true,
+          "instance_initiated_shutdown_behavior": true,
+          "instance_lifecycle": true,
+          "instance_market_options": true,
+          "instance_state": true,
+          "ipv6_address_count": true,
+          "ipv6_addresses": true,
+          "key_name": true,
+          "launch_template": [],
+          "maintenance_options": true,
+          "metadata_options": [
+            {
+              "instance_metadata_tags": true
+            }
+          ],
+          "monitoring": true,
+          "network_interface": true,
+          "outpost_arn": true,
+          "password_data": true,
+          "placement_group": true,
+          "placement_partition_number": true,
+          "primary_network_interface_id": true,
+          "private_dns": true,
+          "private_dns_name_options": true,
+          "private_ip": true,
+          "public_dns": true,
+          "public_ip": true,
+          "root_block_device": [
+            {
+              "device_name": true,
+              "iops": true,
+              "throughput": true,
+              "volume_id": true
+            }
+          ],
+          "secondary_private_ips": true,
+          "security_groups": true,
+          "spot_instance_request_id": true,
+          "tags": true,
+          "tags_all": true,
+          "tenancy": true,
+          "timeouts": {},
+          "user_data": true,
+          "user_data_base64": true,
+          "volume_tags": true,
+          "vpc_security_group_ids": [
+            false
+          ]
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "capacity_reservation_specification": [],
+          "cpu_options": [],
+          "credit_specification": [
+            {}
+          ],
+          "ebs_block_device": [],
+          "enclave_options": [
+            {}
+          ],
+          "ephemeral_block_device": [],
+          "instance_market_options": [],
+          "ipv6_addresses": [],
+          "launch_template": [],
+          "maintenance_options": [],
+          "metadata_options": [
+            {}
+          ],
+          "network_interface": [],
+          "private_dns_name_options": [],
+          "root_block_device": [
+            {}
+          ],
+          "secondary_private_ips": [],
+          "security_groups": [],
+          "tags": {},
+          "tags_all": {},
+          "timeouts": {},
+          "volume_tags": {},
+          "vpc_security_group_ids": [
+            false
+          ]
+        }
+      }
+    }
+  ],
+  "output_changes": {
+    "arn": {
+      "actions": [
+        "no-op"
+      ],
+      "before": null,
+      "after": null,
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "id": {
+      "actions": [
+        "no-op"
+      ],
+      "before": null,
+      "after": null,
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    },
+    "private_dns": {
+      "actions": [
+        "no-op"
+      ],
+      "before": null,
+      "after": null,
+      "after_unknown": false,
+      "before_sensitive": false,
+      "after_sensitive": false
+    }
+  },
+  "prior_state": {
+    "format_version": "1.0",
+    "terraform_version": "1.6.1",
+    "values": {
+      "root_module": {
+        "resources": [
+          {
+            "address": "data.aws_secretsmanager_secret.external_id",
+            "mode": "data",
+            "type": "aws_secretsmanager_secret",
+            "name": "external_id",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "schema_version": 0,
+            "values": {
+              "arn": "arn:aws:secretsmanager:eu-west-1:333230080375:secret:cycloid/infra/external_id-KkOKGt",
+              "description": "",
+              "id": "arn:aws:secretsmanager:eu-west-1:333230080375:secret:cycloid/infra/external_id-KkOKGt",
+              "kms_key_id": "arn:aws:kms:eu-west-1:333230080375:key/5a5d1035-a89a-4e20-867d-3eb130bc01ab",
+              "name": "cycloid/infra/external_id",
+              "policy": "",
+              "tags": {
+                "AppEnv": "prd",
+                "AppName": "cycloid",
+                "AwsEnv": "PRD",
+                "AwsId": "3pb7m9olnpw758mwpbub",
+                "Project": "cycloid",
+                "Terraform": "true",
+                "app-code": "APP06534",
+                "msp": "cma-cgm"
+              }
+            },
+            "sensitive_values": {
+              "tags": {}
+            }
+          },
+          {
+            "address": "data.aws_secretsmanager_secret_version.external_id",
+            "mode": "data",
+            "type": "aws_secretsmanager_secret_version",
+            "name": "external_id",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "schema_version": 0,
+            "values": {
+              "arn": "arn:aws:secretsmanager:eu-west-1:333230080375:secret:cycloid/infra/external_id-KkOKGt",
+              "id": "arn:aws:secretsmanager:eu-west-1:333230080375:secret:cycloid/infra/external_id-KkOKGt|AWSCURRENT",
+              "secret_binary": "",
+              "secret_id": "arn:aws:secretsmanager:eu-west-1:333230080375:secret:cycloid/infra/external_id-KkOKGt",
+              "secret_string": "{\"external_id\":\"U7wc5RSfYErAPhi9\"}",
+              "version_id": "4E3A8B10-8AAA-492E-A818-50FF0875C105",
+              "version_stage": "AWSCURRENT",
+              "version_stages": [
+                "AWSCURRENT"
+              ]
+            },
+            "sensitive_values": {
+              "secret_binary": true,
+              "secret_string": true,
+              "version_stages": [
+                false
+              ]
+            }
+          },
+          {
+            "address": "data.aws_subnet.selected",
+            "mode": "data",
+            "type": "aws_subnet",
+            "name": "selected",
+            "provider_name": "registry.terraform.io/hashicorp/aws",
+            "schema_version": 0,
+            "values": {
+              "arn": "arn:aws:ec2:eu-west-1:925975919351:subnet/subnet-0138590ca64dcafea",
+              "assign_ipv6_address_on_creation": false,
+              "availability_zone": "eu-west-1b",
+              "availability_zone_id": "euw1-az2",
+              "available_ip_address_count": 250,
+              "cidr_block": "10.0.2.0/24",
+              "customer_owned_ipv4_pool": "",
+              "default_for_az": false,
+              "enable_dns64": false,
+              "enable_lni_at_device_index": 0,
+              "enable_resource_name_dns_a_record_on_launch": false,
+              "enable_resource_name_dns_aaaa_record_on_launch": false,
+              "filter": null,
+              "id": "subnet-0138590ca64dcafea",
+              "ipv6_cidr_block": "",
+              "ipv6_cidr_block_association_id": "",
+              "ipv6_native": false,
+              "map_customer_owned_ip_on_launch": false,
+              "map_public_ip_on_launch": false,
+              "outpost_arn": "",
+              "owner_id": "925975919351",
+              "private_dns_hostname_type_on_launch": "ip-name",
+              "state": "available",
+              "tags": {
+                "AwsEnv": "SBX",
+                "AwsId": "KGiw3IkRQpU3F4M3npGA",
+                "EOL": "10-10-2024",
+                "Owner": "oslimi@cma-cgm.com",
+                "Terraform": "true",
+                "msp": "cma-cgm"
+              },
+              "timeouts": null,
+              "vpc_id": "vpc-0160a5f792843f49c"
+            },
+            "sensitive_values": {
+              "tags": {}
+            }
+          }
+        ],
+        "child_modules": [
+          {
+            "resources": [
+              {
+                "address": "module.instance.data.aws_partition.current",
+                "mode": "data",
+                "type": "aws_partition",
+                "name": "current",
+                "provider_name": "registry.terraform.io/hashicorp/aws",
+                "schema_version": 0,
+                "values": {
+                  "dns_suffix": "amazonaws.com",
+                  "id": "aws",
+                  "partition": "aws",
+                  "reverse_dns_prefix": "com.amazonaws"
+                },
+                "sensitive_values": {}
+              }
+            ],
+            "address": "module.instance"
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "full_name": "registry.terraform.io/hashicorp/aws",
+        "version_constraint": "5.29.0",
+        "expressions": {
+          "assume_role": [
+            {
+              "external_id": {
+                "references": [
+                  "local.external_id"
+                ]
+              },
+              "role_arn": {
+                "references": [
+                  "var.aws_account_id"
+                ]
+              }
+            }
+          ],
+          "default_tags": [
+            {
+              "tags": {
+                "references": [
+                  "module.naming.default_tags",
+                  "module.naming"
+                ]
+              }
+            }
+          ],
+          "region": {
+            "references": [
+              "var.aws_region"
+            ]
+          }
+        }
+      },
+      "aws.bootstrap": {
+        "name": "aws",
+        "full_name": "registry.terraform.io/hashicorp/aws",
+        "alias": "bootstrap",
+        "version_constraint": "5.29.0",
+        "expressions": {
+          "region": {
+            "constant_value": "eu-west-1"
+          }
+        }
+      },
+      "random": {
+        "name": "random",
+        "full_name": "registry.terraform.io/hashicorp/random",
+        "version_constraint": "3.5.1"
+      }
+    },
+    "root_module": {
+      "outputs": {
+        "arn": {
+          "expression": {
+            "references": [
+              "module.instance.aws_instance.this[0].arn",
+              "module.instance.aws_instance.this[0]",
+              "module.instance.aws_instance.this",
+              "module.instance.aws_instance",
+              "module.instance",
+              "module.instance.aws_instance.ignore_ami[0].arn",
+              "module.instance.aws_instance.ignore_ami[0]",
+              "module.instance.aws_instance.ignore_ami",
+              "module.instance.aws_instance",
+              "module.instance",
+              "module.instance.aws_spot_instance_request.this[0].arn",
+              "module.instance.aws_spot_instance_request.this[0]",
+              "module.instance.aws_spot_instance_request.this",
+              "module.instance.aws_spot_instance_request",
+              "module.instance"
+            ]
+          },
+          "description": "The ARN of the instance"
+        },
+        "id": {
+          "expression": {
+            "references": [
+              "module.instance.aws_instance.this[0].id",
+              "module.instance.aws_instance.this[0]",
+              "module.instance.aws_instance.this",
+              "module.instance.aws_instance",
+              "module.instance",
+              "module.instance.aws_instance.ignore_ami[0].id",
+              "module.instance.aws_instance.ignore_ami[0]",
+              "module.instance.aws_instance.ignore_ami",
+              "module.instance.aws_instance",
+              "module.instance",
+              "module.instance.aws_spot_instance_request.this[0].id",
+              "module.instance.aws_spot_instance_request.this[0]",
+              "module.instance.aws_spot_instance_request.this",
+              "module.instance.aws_spot_instance_request",
+              "module.instance"
+            ]
+          },
+          "description": "The ID of the instance"
+        },
+        "private_dns": {
+          "expression": {
+            "references": [
+              "module.instance.aws_instance.this[0].private_dns",
+              "module.instance.aws_instance.this[0]",
+              "module.instance.aws_instance.this",
+              "module.instance.aws_instance",
+              "module.instance",
+              "module.instance.aws_instance.ignore_ami[0].private_dns",
+              "module.instance.aws_instance.ignore_ami[0]",
+              "module.instance.aws_instance.ignore_ami",
+              "module.instance.aws_instance",
+              "module.instance",
+              "module.instance.aws_spot_instance_request.this[0].private_dns",
+              "module.instance.aws_spot_instance_request.this[0]",
+              "module.instance.aws_spot_instance_request.this",
+              "module.instance.aws_spot_instance_request",
+              "module.instance"
+            ]
+          },
+          "description": "The private DNS name assigned to the instance. Can only be used inside the Amazon EC2, and only available if you've enabled DNS hostnames for your VPC"
+        }
+      },
+      "resources": [
+        {
+          "address": "data.aws_secretsmanager_secret.external_id",
+          "mode": "data",
+          "type": "aws_secretsmanager_secret",
+          "name": "external_id",
+          "provider_config_key": "aws.bootstrap",
+          "expressions": {
+            "arn": {
+              "constant_value": "arn:aws:secretsmanager:eu-west-1:333230080375:secret:cycloid/infra/external_id-KkOKGt"
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "data.aws_secretsmanager_secret_version.external_id",
+          "mode": "data",
+          "type": "aws_secretsmanager_secret_version",
+          "name": "external_id",
+          "provider_config_key": "aws.bootstrap",
+          "expressions": {
+            "secret_id": {
+              "references": [
+                "data.aws_secretsmanager_secret.external_id.id",
+                "data.aws_secretsmanager_secret.external_id"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "data.aws_subnet.selected",
+          "mode": "data",
+          "type": "aws_subnet",
+          "name": "selected",
+          "provider_config_key": "aws",
+          "expressions": {
+            "id": {
+              "references": [
+                "var.subnet_id"
+              ]
+            }
+          },
+          "schema_version": 0
+        }
+      ],
+      "module_calls": {
+        "instance": {
+          "source": "git::https://oauth2:JA11kRNVdENkTHaVET2x@integration.shared-services-prd.aws.cld.cma-cgm.com/gitlab/terraform/registry/terraform-aws-ec2-instance.git?ref=v5.5.0",
+          "expressions": {
+            "ami": {
+              "references": [
+                "var.ami"
+              ]
+            },
+            "disable_api_stop": {
+              "references": [
+                "var.enable_shutdown_protection"
+              ]
+            },
+            "disable_api_termination": {
+              "references": [
+                "var.enable_termination_protection"
+              ]
+            },
+            "ebs_block_device": {
+              "references": [
+                "local.ebs_block_device"
+              ]
+            },
+            "iam_instance_profile": {
+              "references": [
+                "var.iam_instance_profile"
+              ]
+            },
+            "instance_type": {
+              "references": [
+                "var.instance_type"
+              ]
+            },
+            "key_name": {
+              "references": [
+                "var.key_pair"
+              ]
+            },
+            "metadata_options": {
+              "constant_value": {
+                "http_endpoint": "enabled",
+                "http_put_response_hop_limit": 1,
+                "http_tokens": "required"
+              }
+            },
+            "name": {
+              "references": [
+                "var.instance_name"
+              ]
+            },
+            "root_block_device": {
+              "references": [
+                "var.kms_key_id",
+                "var.root_block_device_size",
+                "var.root_block_device_type"
+              ]
+            },
+            "subnet_id": {
+              "references": [
+                "var.subnet_id"
+              ]
+            },
+            "tags": {
+              "references": [
+                "module.naming.aws_ec2_instance_tags",
+                "module.naming",
+                "var.instance_name"
+              ]
+            },
+            "volume_tags": {
+              "references": [
+                "module.naming.aws_ebs_volume_tags",
+                "module.naming"
+              ]
+            },
+            "vpc_security_group_ids": {
+              "references": [
+                "var.vpc_security_group_ids"
+              ]
+            }
+          },
+          "module": {
+            "outputs": {
+              "ami": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].ami",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].ami",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].ami",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "AMI ID that was used to create the instance"
+              },
+              "arn": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].arn",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].arn",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].arn",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The ARN of the instance"
+              },
+              "availability_zone": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].availability_zone",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].availability_zone",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].availability_zone",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The availability zone of the created instance"
+              },
+              "capacity_reservation_specification": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].capacity_reservation_specification",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].capacity_reservation_specification",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].capacity_reservation_specification",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "Capacity reservation specification of the instance"
+              },
+              "ebs_block_device": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].ebs_block_device",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].ebs_block_device",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].ebs_block_device",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "EBS block device information"
+              },
+              "ephemeral_block_device": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].ephemeral_block_device",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].ephemeral_block_device",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].ephemeral_block_device",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "Ephemeral block device information"
+              },
+              "iam_instance_profile_arn": {
+                "expression": {
+                  "references": [
+                    "aws_iam_instance_profile.this[0].arn",
+                    "aws_iam_instance_profile.this[0]",
+                    "aws_iam_instance_profile.this"
+                  ]
+                },
+                "description": "ARN assigned by AWS to the instance profile"
+              },
+              "iam_instance_profile_id": {
+                "expression": {
+                  "references": [
+                    "aws_iam_instance_profile.this[0].id",
+                    "aws_iam_instance_profile.this[0]",
+                    "aws_iam_instance_profile.this"
+                  ]
+                },
+                "description": "Instance profile's ID"
+              },
+              "iam_instance_profile_unique": {
+                "expression": {
+                  "references": [
+                    "aws_iam_instance_profile.this[0].unique_id",
+                    "aws_iam_instance_profile.this[0]",
+                    "aws_iam_instance_profile.this"
+                  ]
+                },
+                "description": "Stable and unique string identifying the IAM instance profile"
+              },
+              "iam_role_arn": {
+                "expression": {
+                  "references": [
+                    "aws_iam_role.this[0].arn",
+                    "aws_iam_role.this[0]",
+                    "aws_iam_role.this"
+                  ]
+                },
+                "description": "The Amazon Resource Name (ARN) specifying the IAM role"
+              },
+              "iam_role_name": {
+                "expression": {
+                  "references": [
+                    "aws_iam_role.this[0].name",
+                    "aws_iam_role.this[0]",
+                    "aws_iam_role.this"
+                  ]
+                },
+                "description": "The name of the IAM role"
+              },
+              "iam_role_unique_id": {
+                "expression": {
+                  "references": [
+                    "aws_iam_role.this[0].unique_id",
+                    "aws_iam_role.this[0]",
+                    "aws_iam_role.this"
+                  ]
+                },
+                "description": "Stable and unique string identifying the IAM role"
+              },
+              "id": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].id",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].id",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].id",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The ID of the instance"
+              },
+              "instance_state": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].instance_state",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].instance_state",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].instance_state",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The state of the instance"
+              },
+              "ipv6_addresses": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].ipv6_addresses",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].ipv6_addresses",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].ipv6_addresses",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The IPv6 address assigned to the instance, if applicable"
+              },
+              "outpost_arn": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].outpost_arn",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].outpost_arn",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].outpost_arn",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The ARN of the Outpost the instance is assigned to"
+              },
+              "password_data": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].password_data",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].password_data",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].password_data",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "Base-64 encoded encrypted password data for the instance. Useful for getting the administrator password for instances running Microsoft Windows. This attribute is only exported if `get_password_data` is true"
+              },
+              "primary_network_interface_id": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].primary_network_interface_id",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].primary_network_interface_id",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].primary_network_interface_id",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The ID of the instance's primary network interface"
+              },
+              "private_dns": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].private_dns",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].private_dns",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].private_dns",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The private DNS name assigned to the instance. Can only be used inside the Amazon EC2, and only available if you've enabled DNS hostnames for your VPC"
+              },
+              "private_ip": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].private_ip",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].private_ip",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].private_ip",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The private IP address assigned to the instance"
+              },
+              "public_dns": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].public_dns",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].public_dns",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].public_dns",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The public DNS name assigned to the instance. For EC2-VPC, this is only available if you've enabled DNS hostnames for your VPC"
+              },
+              "public_ip": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].public_ip",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].public_ip",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].public_ip",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The public IP address assigned to the instance, if applicable. NOTE: If you are using an aws_eip with your instance, you should refer to the EIP's address directly and not use `public_ip` as this field will change after the EIP is attached"
+              },
+              "root_block_device": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].root_block_device",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].root_block_device",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].root_block_device",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "Root block device information"
+              },
+              "spot_bid_status": {
+                "expression": {
+                  "references": [
+                    "aws_spot_instance_request.this[0].spot_bid_status",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The current bid status of the Spot Instance Request"
+              },
+              "spot_instance_id": {
+                "expression": {
+                  "references": [
+                    "aws_spot_instance_request.this[0].spot_instance_id",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The Instance ID (if any) that is currently fulfilling the Spot Instance request"
+              },
+              "spot_request_state": {
+                "expression": {
+                  "references": [
+                    "aws_spot_instance_request.this[0].spot_request_state",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "The current request state of the Spot Instance Request"
+              },
+              "tags_all": {
+                "expression": {
+                  "references": [
+                    "aws_instance.this[0].tags_all",
+                    "aws_instance.this[0]",
+                    "aws_instance.this",
+                    "aws_instance.ignore_ami[0].tags_all",
+                    "aws_instance.ignore_ami[0]",
+                    "aws_instance.ignore_ami",
+                    "aws_spot_instance_request.this[0].tags_all",
+                    "aws_spot_instance_request.this[0]",
+                    "aws_spot_instance_request.this"
+                  ]
+                },
+                "description": "A map of tags assigned to the resource, including those inherited from the provider default_tags configuration block"
+              }
+            },
+            "resources": [
+              {
+                "address": "aws_iam_instance_profile.this",
+                "mode": "managed",
+                "type": "aws_iam_instance_profile",
+                "name": "this",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "name": {
+                    "references": [
+                      "var.iam_role_use_name_prefix",
+                      "local.iam_role_name"
+                    ]
+                  },
+                  "name_prefix": {
+                    "references": [
+                      "var.iam_role_use_name_prefix",
+                      "local.iam_role_name"
+                    ]
+                  },
+                  "path": {
+                    "references": [
+                      "var.iam_role_path"
+                    ]
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.this[0].name",
+                      "aws_iam_role.this[0]",
+                      "aws_iam_role.this"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "var.tags",
+                      "var.iam_role_tags"
+                    ]
+                  }
+                },
+                "schema_version": 0,
+                "count_expression": {
+                  "references": [
+                    "var.create",
+                    "var.create_iam_instance_profile"
+                  ]
+                }
+              },
+              {
+                "address": "aws_iam_role.this",
+                "mode": "managed",
+                "type": "aws_iam_role",
+                "name": "this",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "assume_role_policy": {
+                    "references": [
+                      "data.aws_iam_policy_document.assume_role_policy[0].json",
+                      "data.aws_iam_policy_document.assume_role_policy[0]",
+                      "data.aws_iam_policy_document.assume_role_policy"
+                    ]
+                  },
+                  "description": {
+                    "references": [
+                      "var.iam_role_description"
+                    ]
+                  },
+                  "force_detach_policies": {
+                    "constant_value": true
+                  },
+                  "name": {
+                    "references": [
+                      "var.iam_role_use_name_prefix",
+                      "local.iam_role_name"
+                    ]
+                  },
+                  "name_prefix": {
+                    "references": [
+                      "var.iam_role_use_name_prefix",
+                      "local.iam_role_name"
+                    ]
+                  },
+                  "path": {
+                    "references": [
+                      "var.iam_role_path"
+                    ]
+                  },
+                  "permissions_boundary": {
+                    "references": [
+                      "var.iam_role_permissions_boundary"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "var.tags",
+                      "var.iam_role_tags"
+                    ]
+                  }
+                },
+                "schema_version": 0,
+                "count_expression": {
+                  "references": [
+                    "var.create",
+                    "var.create_iam_instance_profile"
+                  ]
+                }
+              },
+              {
+                "address": "aws_iam_role_policy_attachment.this",
+                "mode": "managed",
+                "type": "aws_iam_role_policy_attachment",
+                "name": "this",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "policy_arn": {
+                    "references": [
+                      "each.value"
+                    ]
+                  },
+                  "role": {
+                    "references": [
+                      "aws_iam_role.this[0].name",
+                      "aws_iam_role.this[0]",
+                      "aws_iam_role.this"
+                    ]
+                  }
+                },
+                "schema_version": 0,
+                "for_each_expression": {
+                  "references": [
+                    "var.iam_role_policies",
+                    "var.create",
+                    "var.create_iam_instance_profile"
+                  ]
+                }
+              },
+              {
+                "address": "aws_instance.ignore_ami",
+                "mode": "managed",
+                "type": "aws_instance",
+                "name": "ignore_ami",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "ami": {
+                    "references": [
+                      "local.ami"
+                    ]
+                  },
+                  "associate_public_ip_address": {
+                    "references": [
+                      "var.associate_public_ip_address"
+                    ]
+                  },
+                  "availability_zone": {
+                    "references": [
+                      "var.availability_zone"
+                    ]
+                  },
+                  "cpu_core_count": {
+                    "references": [
+                      "var.cpu_core_count"
+                    ]
+                  },
+                  "cpu_threads_per_core": {
+                    "references": [
+                      "var.cpu_threads_per_core"
+                    ]
+                  },
+                  "credit_specification": [
+                    {
+                      "cpu_credits": {
+                        "references": [
+                          "local.is_t_instance_type",
+                          "var.cpu_credits"
+                        ]
+                      }
+                    }
+                  ],
+                  "disable_api_stop": {
+                    "references": [
+                      "var.disable_api_stop"
+                    ]
+                  },
+                  "disable_api_termination": {
+                    "references": [
+                      "var.disable_api_termination"
+                    ]
+                  },
+                  "ebs_optimized": {
+                    "references": [
+                      "var.ebs_optimized"
+                    ]
+                  },
+                  "enclave_options": [
+                    {
+                      "enabled": {
+                        "references": [
+                          "var.enclave_options_enabled"
+                        ]
+                      }
+                    }
+                  ],
+                  "get_password_data": {
+                    "references": [
+                      "var.get_password_data"
+                    ]
+                  },
+                  "hibernation": {
+                    "references": [
+                      "var.hibernation"
+                    ]
+                  },
+                  "host_id": {
+                    "references": [
+                      "var.host_id"
+                    ]
+                  },
+                  "iam_instance_profile": {
+                    "references": [
+                      "var.create_iam_instance_profile",
+                      "aws_iam_instance_profile.this[0].name",
+                      "aws_iam_instance_profile.this[0]",
+                      "aws_iam_instance_profile.this",
+                      "var.iam_instance_profile"
+                    ]
+                  },
+                  "instance_initiated_shutdown_behavior": {
+                    "references": [
+                      "var.instance_initiated_shutdown_behavior"
+                    ]
+                  },
+                  "instance_type": {
+                    "references": [
+                      "var.instance_type"
+                    ]
+                  },
+                  "ipv6_address_count": {
+                    "references": [
+                      "var.ipv6_address_count"
+                    ]
+                  },
+                  "ipv6_addresses": {
+                    "references": [
+                      "var.ipv6_addresses"
+                    ]
+                  },
+                  "key_name": {
+                    "references": [
+                      "var.key_name"
+                    ]
+                  },
+                  "monitoring": {
+                    "references": [
+                      "var.monitoring"
+                    ]
+                  },
+                  "placement_group": {
+                    "references": [
+                      "var.placement_group"
+                    ]
+                  },
+                  "private_ip": {
+                    "references": [
+                      "var.private_ip"
+                    ]
+                  },
+                  "secondary_private_ips": {
+                    "references": [
+                      "var.secondary_private_ips"
+                    ]
+                  },
+                  "source_dest_check": {
+                    "references": [
+                      "var.network_interface",
+                      "var.source_dest_check"
+                    ]
+                  },
+                  "subnet_id": {
+                    "references": [
+                      "var.subnet_id"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "var.name",
+                      "var.instance_tags",
+                      "var.tags"
+                    ]
+                  },
+                  "tenancy": {
+                    "references": [
+                      "var.tenancy"
+                    ]
+                  },
+                  "timeouts": {
+                    "create": {
+                      "references": [
+                        "var.timeouts.create",
+                        "var.timeouts"
+                      ]
+                    },
+                    "delete": {
+                      "references": [
+                        "var.timeouts.delete",
+                        "var.timeouts"
+                      ]
+                    },
+                    "update": {
+                      "references": [
+                        "var.timeouts.update",
+                        "var.timeouts"
+                      ]
+                    }
+                  },
+                  "user_data": {
+                    "references": [
+                      "var.user_data"
+                    ]
+                  },
+                  "user_data_base64": {
+                    "references": [
+                      "var.user_data_base64"
+                    ]
+                  },
+                  "user_data_replace_on_change": {
+                    "references": [
+                      "var.user_data_replace_on_change"
+                    ]
+                  },
+                  "volume_tags": {
+                    "references": [
+                      "var.enable_volume_tags",
+                      "var.name",
+                      "var.volume_tags"
+                    ]
+                  },
+                  "vpc_security_group_ids": {
+                    "references": [
+                      "var.vpc_security_group_ids"
+                    ]
+                  }
+                },
+                "schema_version": 1,
+                "count_expression": {
+                  "references": [
+                    "local.create",
+                    "var.ignore_ami_changes",
+                    "var.create_spot_instance"
+                  ]
+                }
+              },
+              {
+                "address": "aws_instance.this",
+                "mode": "managed",
+                "type": "aws_instance",
+                "name": "this",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "ami": {
+                    "references": [
+                      "local.ami"
+                    ]
+                  },
+                  "associate_public_ip_address": {
+                    "references": [
+                      "var.associate_public_ip_address"
+                    ]
+                  },
+                  "availability_zone": {
+                    "references": [
+                      "var.availability_zone"
+                    ]
+                  },
+                  "cpu_core_count": {
+                    "references": [
+                      "var.cpu_core_count"
+                    ]
+                  },
+                  "cpu_threads_per_core": {
+                    "references": [
+                      "var.cpu_threads_per_core"
+                    ]
+                  },
+                  "credit_specification": [
+                    {
+                      "cpu_credits": {
+                        "references": [
+                          "local.is_t_instance_type",
+                          "var.cpu_credits"
+                        ]
+                      }
+                    }
+                  ],
+                  "disable_api_stop": {
+                    "references": [
+                      "var.disable_api_stop"
+                    ]
+                  },
+                  "disable_api_termination": {
+                    "references": [
+                      "var.disable_api_termination"
+                    ]
+                  },
+                  "ebs_optimized": {
+                    "references": [
+                      "var.ebs_optimized"
+                    ]
+                  },
+                  "enclave_options": [
+                    {
+                      "enabled": {
+                        "references": [
+                          "var.enclave_options_enabled"
+                        ]
+                      }
+                    }
+                  ],
+                  "get_password_data": {
+                    "references": [
+                      "var.get_password_data"
+                    ]
+                  },
+                  "hibernation": {
+                    "references": [
+                      "var.hibernation"
+                    ]
+                  },
+                  "host_id": {
+                    "references": [
+                      "var.host_id"
+                    ]
+                  },
+                  "iam_instance_profile": {
+                    "references": [
+                      "var.create_iam_instance_profile",
+                      "aws_iam_instance_profile.this[0].name",
+                      "aws_iam_instance_profile.this[0]",
+                      "aws_iam_instance_profile.this",
+                      "var.iam_instance_profile"
+                    ]
+                  },
+                  "instance_initiated_shutdown_behavior": {
+                    "references": [
+                      "var.instance_initiated_shutdown_behavior"
+                    ]
+                  },
+                  "instance_type": {
+                    "references": [
+                      "var.instance_type"
+                    ]
+                  },
+                  "ipv6_address_count": {
+                    "references": [
+                      "var.ipv6_address_count"
+                    ]
+                  },
+                  "ipv6_addresses": {
+                    "references": [
+                      "var.ipv6_addresses"
+                    ]
+                  },
+                  "key_name": {
+                    "references": [
+                      "var.key_name"
+                    ]
+                  },
+                  "monitoring": {
+                    "references": [
+                      "var.monitoring"
+                    ]
+                  },
+                  "placement_group": {
+                    "references": [
+                      "var.placement_group"
+                    ]
+                  },
+                  "private_ip": {
+                    "references": [
+                      "var.private_ip"
+                    ]
+                  },
+                  "secondary_private_ips": {
+                    "references": [
+                      "var.secondary_private_ips"
+                    ]
+                  },
+                  "source_dest_check": {
+                    "references": [
+                      "var.network_interface",
+                      "var.source_dest_check"
+                    ]
+                  },
+                  "subnet_id": {
+                    "references": [
+                      "var.subnet_id"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "var.name",
+                      "var.instance_tags",
+                      "var.tags"
+                    ]
+                  },
+                  "tenancy": {
+                    "references": [
+                      "var.tenancy"
+                    ]
+                  },
+                  "timeouts": {
+                    "create": {
+                      "references": [
+                        "var.timeouts.create",
+                        "var.timeouts"
+                      ]
+                    },
+                    "delete": {
+                      "references": [
+                        "var.timeouts.delete",
+                        "var.timeouts"
+                      ]
+                    },
+                    "update": {
+                      "references": [
+                        "var.timeouts.update",
+                        "var.timeouts"
+                      ]
+                    }
+                  },
+                  "user_data": {
+                    "references": [
+                      "var.user_data"
+                    ]
+                  },
+                  "user_data_base64": {
+                    "references": [
+                      "var.user_data_base64"
+                    ]
+                  },
+                  "user_data_replace_on_change": {
+                    "references": [
+                      "var.user_data_replace_on_change"
+                    ]
+                  },
+                  "volume_tags": {
+                    "references": [
+                      "var.enable_volume_tags",
+                      "var.name",
+                      "var.volume_tags"
+                    ]
+                  },
+                  "vpc_security_group_ids": {
+                    "references": [
+                      "var.vpc_security_group_ids"
+                    ]
+                  }
+                },
+                "schema_version": 1,
+                "count_expression": {
+                  "references": [
+                    "local.create",
+                    "var.ignore_ami_changes",
+                    "var.create_spot_instance"
+                  ]
+                }
+              },
+              {
+                "address": "aws_spot_instance_request.this",
+                "mode": "managed",
+                "type": "aws_spot_instance_request",
+                "name": "this",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "ami": {
+                    "references": [
+                      "local.ami"
+                    ]
+                  },
+                  "associate_public_ip_address": {
+                    "references": [
+                      "var.associate_public_ip_address"
+                    ]
+                  },
+                  "availability_zone": {
+                    "references": [
+                      "var.availability_zone"
+                    ]
+                  },
+                  "block_duration_minutes": {
+                    "references": [
+                      "var.spot_block_duration_minutes"
+                    ]
+                  },
+                  "cpu_core_count": {
+                    "references": [
+                      "var.cpu_core_count"
+                    ]
+                  },
+                  "cpu_threads_per_core": {
+                    "references": [
+                      "var.cpu_threads_per_core"
+                    ]
+                  },
+                  "credit_specification": [
+                    {
+                      "cpu_credits": {
+                        "references": [
+                          "local.is_t_instance_type",
+                          "var.cpu_credits"
+                        ]
+                      }
+                    }
+                  ],
+                  "disable_api_termination": {
+                    "references": [
+                      "var.disable_api_termination"
+                    ]
+                  },
+                  "ebs_optimized": {
+                    "references": [
+                      "var.ebs_optimized"
+                    ]
+                  },
+                  "enclave_options": [
+                    {
+                      "enabled": {
+                        "references": [
+                          "var.enclave_options_enabled"
+                        ]
+                      }
+                    }
+                  ],
+                  "get_password_data": {
+                    "references": [
+                      "var.get_password_data"
+                    ]
+                  },
+                  "hibernation": {
+                    "references": [
+                      "var.hibernation"
+                    ]
+                  },
+                  "host_id": {
+                    "references": [
+                      "var.host_id"
+                    ]
+                  },
+                  "iam_instance_profile": {
+                    "references": [
+                      "var.create_iam_instance_profile",
+                      "aws_iam_instance_profile.this[0].name",
+                      "aws_iam_instance_profile.this[0]",
+                      "aws_iam_instance_profile.this",
+                      "var.iam_instance_profile"
+                    ]
+                  },
+                  "instance_initiated_shutdown_behavior": {
+                    "references": [
+                      "var.instance_initiated_shutdown_behavior"
+                    ]
+                  },
+                  "instance_interruption_behavior": {
+                    "references": [
+                      "var.spot_instance_interruption_behavior"
+                    ]
+                  },
+                  "instance_type": {
+                    "references": [
+                      "var.instance_type"
+                    ]
+                  },
+                  "ipv6_address_count": {
+                    "references": [
+                      "var.ipv6_address_count"
+                    ]
+                  },
+                  "ipv6_addresses": {
+                    "references": [
+                      "var.ipv6_addresses"
+                    ]
+                  },
+                  "key_name": {
+                    "references": [
+                      "var.key_name"
+                    ]
+                  },
+                  "launch_group": {
+                    "references": [
+                      "var.spot_launch_group"
+                    ]
+                  },
+                  "monitoring": {
+                    "references": [
+                      "var.monitoring"
+                    ]
+                  },
+                  "placement_group": {
+                    "references": [
+                      "var.placement_group"
+                    ]
+                  },
+                  "private_ip": {
+                    "references": [
+                      "var.private_ip"
+                    ]
+                  },
+                  "secondary_private_ips": {
+                    "references": [
+                      "var.secondary_private_ips"
+                    ]
+                  },
+                  "source_dest_check": {
+                    "references": [
+                      "var.network_interface",
+                      "var.source_dest_check"
+                    ]
+                  },
+                  "spot_price": {
+                    "references": [
+                      "var.spot_price"
+                    ]
+                  },
+                  "spot_type": {
+                    "references": [
+                      "var.spot_type"
+                    ]
+                  },
+                  "subnet_id": {
+                    "references": [
+                      "var.subnet_id"
+                    ]
+                  },
+                  "tags": {
+                    "references": [
+                      "var.name",
+                      "var.instance_tags",
+                      "var.tags"
+                    ]
+                  },
+                  "tenancy": {
+                    "references": [
+                      "var.tenancy"
+                    ]
+                  },
+                  "timeouts": {
+                    "create": {
+                      "references": [
+                        "var.timeouts.create",
+                        "var.timeouts"
+                      ]
+                    },
+                    "delete": {
+                      "references": [
+                        "var.timeouts.delete",
+                        "var.timeouts"
+                      ]
+                    }
+                  },
+                  "user_data": {
+                    "references": [
+                      "var.user_data"
+                    ]
+                  },
+                  "user_data_base64": {
+                    "references": [
+                      "var.user_data_base64"
+                    ]
+                  },
+                  "user_data_replace_on_change": {
+                    "references": [
+                      "var.user_data_replace_on_change"
+                    ]
+                  },
+                  "valid_from": {
+                    "references": [
+                      "var.spot_valid_from"
+                    ]
+                  },
+                  "valid_until": {
+                    "references": [
+                      "var.spot_valid_until"
+                    ]
+                  },
+                  "volume_tags": {
+                    "references": [
+                      "var.enable_volume_tags",
+                      "var.name",
+                      "var.volume_tags"
+                    ]
+                  },
+                  "vpc_security_group_ids": {
+                    "references": [
+                      "var.vpc_security_group_ids"
+                    ]
+                  },
+                  "wait_for_fulfillment": {
+                    "references": [
+                      "var.spot_wait_for_fulfillment"
+                    ]
+                  }
+                },
+                "schema_version": 0,
+                "count_expression": {
+                  "references": [
+                    "local.create",
+                    "var.create_spot_instance"
+                  ]
+                }
+              },
+              {
+                "address": "data.aws_iam_policy_document.assume_role_policy",
+                "mode": "data",
+                "type": "aws_iam_policy_document",
+                "name": "assume_role_policy",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "statement": [
+                    {
+                      "actions": {
+                        "constant_value": [
+                          "sts:AssumeRole"
+                        ]
+                      },
+                      "principals": [
+                        {
+                          "identifiers": {
+                            "references": [
+                              "data.aws_partition.current.dns_suffix",
+                              "data.aws_partition.current"
+                            ]
+                          },
+                          "type": {
+                            "constant_value": "Service"
+                          }
+                        }
+                      ],
+                      "sid": {
+                        "constant_value": "EC2AssumeRole"
+                      }
+                    }
+                  ]
+                },
+                "schema_version": 0,
+                "count_expression": {
+                  "references": [
+                    "var.create",
+                    "var.create_iam_instance_profile"
+                  ]
+                }
+              },
+              {
+                "address": "data.aws_partition.current",
+                "mode": "data",
+                "type": "aws_partition",
+                "name": "current",
+                "provider_config_key": "aws",
+                "schema_version": 0
+              },
+              {
+                "address": "data.aws_ssm_parameter.this",
+                "mode": "data",
+                "type": "aws_ssm_parameter",
+                "name": "this",
+                "provider_config_key": "aws",
+                "expressions": {
+                  "name": {
+                    "references": [
+                      "var.ami_ssm_parameter"
+                    ]
+                  }
+                },
+                "schema_version": 0,
+                "count_expression": {
+                  "references": [
+                    "local.create",
+                    "var.ami"
+                  ]
+                }
+              }
+            ],
+            "variables": {
+              "ami": {
+                "default": null,
+                "description": "ID of AMI to use for the instance"
+              },
+              "ami_ssm_parameter": {
+                "default": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+                "description": "SSM parameter name for the AMI ID. For Amazon Linux AMI SSM parameters see [reference](https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-public-parameters-ami.html)"
+              },
+              "associate_public_ip_address": {
+                "default": null,
+                "description": "Whether to associate a public IP address with an instance in a VPC"
+              },
+              "availability_zone": {
+                "default": null,
+                "description": "AZ to start the instance in"
+              },
+              "capacity_reservation_specification": {
+                "default": {},
+                "description": "Describes an instance's Capacity Reservation targeting option"
+              },
+              "cpu_core_count": {
+                "default": null,
+                "description": "Sets the number of CPU cores for an instance"
+              },
+              "cpu_credits": {
+                "default": null,
+                "description": "The credit option for CPU usage (unlimited or standard)"
+              },
+              "cpu_options": {
+                "default": {},
+                "description": "Defines CPU options to apply to the instance at launch time."
+              },
+              "cpu_threads_per_core": {
+                "default": null,
+                "description": "Sets the number of CPU threads per core for an instance (has no effect unless cpu_core_count is also set)"
+              },
+              "create": {
+                "default": true,
+                "description": "Whether to create an instance"
+              },
+              "create_iam_instance_profile": {
+                "default": false,
+                "description": "Determines whether an IAM instance profile is created or to use an existing IAM instance profile"
+              },
+              "create_spot_instance": {
+                "default": false,
+                "description": "Depicts if the instance is a spot instance"
+              },
+              "disable_api_stop": {
+                "default": null,
+                "description": "If true, enables EC2 Instance Stop Protection"
+              },
+              "disable_api_termination": {
+                "default": null,
+                "description": "If true, enables EC2 Instance Termination Protection"
+              },
+              "ebs_block_device": {
+                "default": [],
+                "description": "Additional EBS block devices to attach to the instance"
+              },
+              "ebs_optimized": {
+                "default": null,
+                "description": "If true, the launched EC2 instance will be EBS-optimized"
+              },
+              "enable_volume_tags": {
+                "default": true,
+                "description": "Whether to enable volume tags (if enabled it conflicts with root_block_device tags)"
+              },
+              "enclave_options_enabled": {
+                "default": null,
+                "description": "Whether Nitro Enclaves will be enabled on the instance. Defaults to `false`"
+              },
+              "ephemeral_block_device": {
+                "default": [],
+                "description": "Customize Ephemeral (also known as Instance Store) volumes on the instance"
+              },
+              "get_password_data": {
+                "default": null,
+                "description": "If true, wait for password data to become available and retrieve it"
+              },
+              "hibernation": {
+                "default": null,
+                "description": "If true, the launched EC2 instance will support hibernation"
+              },
+              "host_id": {
+                "default": null,
+                "description": "ID of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host"
+              },
+              "iam_instance_profile": {
+                "default": null,
+                "description": "IAM Instance Profile to launch the instance with. Specified as the name of the Instance Profile"
+              },
+              "iam_role_description": {
+                "default": null,
+                "description": "Description of the role"
+              },
+              "iam_role_name": {
+                "default": null,
+                "description": "Name to use on IAM role created"
+              },
+              "iam_role_path": {
+                "default": null,
+                "description": "IAM role path"
+              },
+              "iam_role_permissions_boundary": {
+                "default": null,
+                "description": "ARN of the policy that is used to set the permissions boundary for the IAM role"
+              },
+              "iam_role_policies": {
+                "default": {},
+                "description": "Policies attached to the IAM role"
+              },
+              "iam_role_tags": {
+                "default": {},
+                "description": "A map of additional tags to add to the IAM role/profile created"
+              },
+              "iam_role_use_name_prefix": {
+                "default": true,
+                "description": "Determines whether the IAM role name (`iam_role_name` or `name`) is used as a prefix"
+              },
+              "ignore_ami_changes": {
+                "default": false,
+                "description": "Whether changes to the AMI ID changes should be ignored by Terraform. Note - changing this value will result in the replacement of the instance"
+              },
+              "instance_initiated_shutdown_behavior": {
+                "default": null,
+                "description": "Shutdown behavior for the instance. Amazon defaults this to stop for EBS-backed instances and terminate for instance-store instances. Cannot be set on instance-store instance"
+              },
+              "instance_tags": {
+                "default": {},
+                "description": "Additional tags for the instance"
+              },
+              "instance_type": {
+                "default": "t3.micro",
+                "description": "The type of instance to start"
+              },
+              "ipv6_address_count": {
+                "default": null,
+                "description": "A number of IPv6 addresses to associate with the primary network interface. Amazon EC2 chooses the IPv6 addresses from the range of your subnet"
+              },
+              "ipv6_addresses": {
+                "default": null,
+                "description": "Specify one or more IPv6 addresses from the range of the subnet to associate with the primary network interface"
+              },
+              "key_name": {
+                "default": null,
+                "description": "Key name of the Key Pair to use for the instance; which can be managed using the `aws_key_pair` resource"
+              },
+              "launch_template": {
+                "default": {},
+                "description": "Specifies a Launch Template to configure the instance. Parameters configured on this resource will override the corresponding parameters in the Launch Template"
+              },
+              "maintenance_options": {
+                "default": {},
+                "description": "The maintenance options for the instance"
+              },
+              "metadata_options": {
+                "default": {
+                  "http_endpoint": "enabled",
+                  "http_put_response_hop_limit": "1",
+                  "http_tokens": "optional"
+                },
+                "description": "Customize the metadata options of the instance"
+              },
+              "monitoring": {
+                "default": null,
+                "description": "If true, the launched EC2 instance will have detailed monitoring enabled"
+              },
+              "name": {
+                "default": "",
+                "description": "Name to be used on EC2 instance created"
+              },
+              "network_interface": {
+                "default": [],
+                "description": "Customize network interfaces to be attached at instance boot time"
+              },
+              "placement_group": {
+                "default": null,
+                "description": "The Placement Group to start the instance in"
+              },
+              "private_ip": {
+                "default": null,
+                "description": "Private IP address to associate with the instance in a VPC"
+              },
+              "putin_khuylo": {
+                "default": true,
+                "description": "Do you agree that Putin doesn't respect Ukrainian sovereignty and territorial integrity? More info: https://en.wikipedia.org/wiki/Putin_khuylo!"
+              },
+              "root_block_device": {
+                "default": [],
+                "description": "Customize details about the root block device of the instance. See Block Devices below for details"
+              },
+              "secondary_private_ips": {
+                "default": null,
+                "description": "A list of secondary private IPv4 addresses to assign to the instance's primary network interface (eth0) in a VPC. Can only be assigned to the primary network interface (eth0) attached at instance creation, not a pre-existing network interface i.e. referenced in a `network_interface block`"
+              },
+              "source_dest_check": {
+                "default": null,
+                "description": "Controls if traffic is routed to the instance when the destination address does not match the instance. Used for NAT or VPNs"
+              },
+              "spot_block_duration_minutes": {
+                "default": null,
+                "description": "The required duration for the Spot instances, in minutes. This value must be a multiple of 60 (60, 120, 180, 240, 300, or 360)"
+              },
+              "spot_instance_interruption_behavior": {
+                "default": null,
+                "description": "Indicates Spot instance behavior when it is interrupted. Valid values are `terminate`, `stop`, or `hibernate`"
+              },
+              "spot_launch_group": {
+                "default": null,
+                "description": "A launch group is a group of spot instances that launch together and terminate together. If left empty instances are launched and terminated individually"
+              },
+              "spot_price": {
+                "default": null,
+                "description": "The maximum price to request on the spot market. Defaults to on-demand price"
+              },
+              "spot_type": {
+                "default": null,
+                "description": "If set to one-time, after the instance is terminated, the spot request will be closed. Default `persistent`"
+              },
+              "spot_valid_from": {
+                "default": null,
+                "description": "The start date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
+              },
+              "spot_valid_until": {
+                "default": null,
+                "description": "The end date and time of the request, in UTC RFC3339 format(for example, YYYY-MM-DDTHH:MM:SSZ)"
+              },
+              "spot_wait_for_fulfillment": {
+                "default": null,
+                "description": "If set, Terraform will wait for the Spot Request to be fulfilled, and will throw an error if the timeout of 10m is reached"
+              },
+              "subnet_id": {
+                "default": null,
+                "description": "The VPC Subnet ID to launch in"
+              },
+              "tags": {
+                "default": {},
+                "description": "A mapping of tags to assign to the resource"
+              },
+              "tenancy": {
+                "default": null,
+                "description": "The tenancy of the instance (if the instance is running in a VPC). Available values: default, dedicated, host"
+              },
+              "timeouts": {
+                "default": {},
+                "description": "Define maximum timeout for creating, updating, and deleting EC2 instance resources"
+              },
+              "user_data": {
+                "default": null,
+                "description": "The user data to provide when launching the instance. Do not pass gzip-compressed data via this argument; see user_data_base64 instead"
+              },
+              "user_data_base64": {
+                "default": null,
+                "description": "Can be used instead of user_data to pass base64-encoded binary data directly. Use this instead of user_data whenever the value is not a valid UTF-8 string. For example, gzip-encoded user data must be base64-encoded and passed via this argument to avoid corruption"
+              },
+              "user_data_replace_on_change": {
+                "default": null,
+                "description": "When used in combination with user_data or user_data_base64 will trigger a destroy and recreate when set to true. Defaults to false if not set"
+              },
+              "volume_tags": {
+                "default": {},
+                "description": "A mapping of tags to assign to the devices created by the instance at launch time"
+              },
+              "vpc_security_group_ids": {
+                "default": null,
+                "description": "A list of security group IDs to associate with"
+              }
+            }
+          }
+        },
+        "naming": {
+          "source": "git::https://oauth2:JA11kRNVdENkTHaVET2x@integration.shared-services-prd.aws.cld.cma-cgm.com/gitlab/terraform/registry/terraform-aws-naming.git?ref=3.3.2-v2-beta",
+          "expressions": {
+            "app_code": {
+              "references": [
+                "var.app_code"
+              ]
+            },
+            "app_env": {
+              "references": [
+                "var.app_env"
+              ]
+            },
+            "app_name": {
+              "references": [
+                "var.app_name"
+              ]
+            },
+            "archiving": {
+              "references": [
+                "var.archiving"
+              ]
+            },
+            "aws_env": {
+              "references": [
+                "var.aws_env"
+              ]
+            },
+            "aws_id": {
+              "references": [
+                "var.aws_id"
+              ]
+            },
+            "backup": {
+              "references": [
+                "var.backup"
+              ]
+            },
+            "data_classification": {
+              "references": [
+                "var.data_classification"
+              ]
+            },
+            "extra_tags": {
+              "references": [
+                "var.extra_tags"
+              ]
+            },
+            "msp": {
+              "references": [
+                "var.msp"
+              ]
+            },
+            "project": {
+              "references": [
+                "var.app_project"
+              ]
+            },
+            "sandbox_end_of_life": {
+              "references": [
+                "var.aws_account_id",
+                "local.next_month_date"
+              ]
+            },
+            "sandbox_owner": {
+              "references": [
+                "var.aws_account_id"
+              ]
+            },
+            "tagging_policy": {
+              "constant_value": "v1"
+            }
+          },
+          "module": {
+            "outputs": {
+              "app_env": {
+                "expression": {
+                  "references": [
+                    "local.core_attributes.AppEnv",
+                    "local.core_attributes"
+                  ]
+                },
+                "description": "Application Environment"
+              },
+              "app_name": {
+                "expression": {
+                  "references": [
+                    "local.core_attributes.AppName",
+                    "local.core_attributes"
+                  ]
+                },
+                "description": "Application Name"
+              },
+              "aws_autoscaling_group_tags": {
+                "expression": {
+                  "references": [
+                    "local.autoscaling_group_tags"
+                  ]
+                },
+                "description": "Autoscaling Group Tags"
+              },
+              "aws_cloudwatch_log_group_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_cloudwatch_log_group_name"
+                  ]
+                },
+                "description": "Cloudwatch log group name"
+              },
+              "aws_cloudwatch_log_group_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "Cloudwatch log group tags"
+              },
+              "aws_db_instance_identifier": {
+                "expression": {
+                  "references": [
+                    "local.aws_db_instance_identifier"
+                  ]
+                },
+                "description": "RDS instance identifier"
+              },
+              "aws_db_instance_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_db_instance_name"
+                  ]
+                },
+                "description": "RDS instance name"
+              },
+              "aws_db_instance_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_db_instance_tags"
+                  ]
+                },
+                "description": "RDS instance tags"
+              },
+              "aws_db_subnet_group_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_db_subnet_group_name"
+                  ]
+                },
+                "description": "RDS DB Subnet group name"
+              },
+              "aws_db_subnet_group_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "RDS DB Subnet group tags"
+              },
+              "aws_dynamodb_table_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_dynamodb_table_tags"
+                  ]
+                },
+                "description": "DynamoDB table tags"
+              },
+              "aws_ebs_volume_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_ebs_volume_tags"
+                  ]
+                },
+                "description": "EBS volume tags"
+              },
+              "aws_ec2_instance_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_ec2_instance_name"
+                  ]
+                },
+                "description": "EC2 instance name"
+              },
+              "aws_ec2_instance_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_ec2_instance_tags"
+                  ]
+                },
+                "description": "EC2 Instance tags"
+              },
+              "aws_efs_volume_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_efs_volume_tags"
+                  ]
+                },
+                "description": "EFS volume tags"
+              },
+              "aws_fsx_filesystem_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_fsx_filesystem_tags"
+                  ]
+                },
+                "description": "FSX Filesystem tags"
+              },
+              "aws_iam_group_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_iam_group_name"
+                  ]
+                },
+                "description": "IAM Group name"
+              },
+              "aws_iam_instance_profile_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_iam_instance_profile_name"
+                  ]
+                },
+                "description": "IAM Instance Profile Name"
+              },
+              "aws_iam_policy_name_readonly": {
+                "expression": {
+                  "references": [
+                    "local.aws_iam_policy_name_readonly"
+                  ]
+                },
+                "description": "IAM ReadOnly policy name"
+              },
+              "aws_iam_policy_name_readwrite": {
+                "expression": {
+                  "references": [
+                    "local.aws_iam_policy_name_readwrite"
+                  ]
+                },
+                "description": "IAM ReadWrite policy name"
+              },
+              "aws_iam_role_name_readonly": {
+                "expression": {
+                  "references": [
+                    "local.aws_iam_role_name_readonly"
+                  ]
+                },
+                "description": "IAM Role ReadOnly name"
+              },
+              "aws_iam_role_name_readwrite": {
+                "expression": {
+                  "references": [
+                    "local.aws_iam_role_name_readwrite"
+                  ]
+                },
+                "description": "IAM Role ReadWrite name"
+              },
+              "aws_iam_role_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "IAM Role tags"
+              },
+              "aws_id": {
+                "expression": {
+                  "references": [
+                    "local.core_attributes.AwsId",
+                    "local.core_attributes"
+                  ]
+                },
+                "description": "AWS ID"
+              },
+              "aws_internet_gateway_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_internet_gateway_tags"
+                  ]
+                },
+                "description": "VPC Internet Gateway Tags"
+              },
+              "aws_launch_config_name_prefix": {
+                "expression": {
+                  "references": [
+                    "local.aws_launch_config_name_prefix"
+                  ]
+                },
+                "description": "Launch config name prefix"
+              },
+              "aws_lb_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_lb_name"
+                  ]
+                },
+                "description": "LB Name"
+              },
+              "aws_lb_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "LB Tags"
+              },
+              "aws_lb_target_group_name_prefix": {
+                "expression": {
+                  "references": [
+                    "local.aws_lb_target_group_name_prefix"
+                  ]
+                },
+                "description": "Target Group Name prefix"
+              },
+              "aws_lb_target_group_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "LB Target group tags"
+              },
+              "aws_s3_bucket_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_s3_bucket_name"
+                  ]
+                },
+                "description": "S3 bucket name"
+              },
+              "aws_s3_bucket_object_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_tags_for_storage"
+                  ]
+                },
+                "description": "S3 bucket object tags"
+              },
+              "aws_s3_bucket_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_s3_bucket_tags"
+                  ]
+                },
+                "description": "S3 bucket tags"
+              },
+              "aws_security_group_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_security_group_name"
+                  ]
+                },
+                "description": "Security group name"
+              },
+              "aws_security_group_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "Security group tags"
+              },
+              "aws_ssm_parameter_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "SSM Parameter tags"
+              },
+              "aws_subnet_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_subnet_name"
+                  ]
+                },
+                "description": "Subnet Name"
+              },
+              "aws_subnet_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "Subnet Tags"
+              },
+              "aws_vpc_name": {
+                "expression": {
+                  "references": [
+                    "local.aws_vpc_name"
+                  ]
+                },
+                "description": "VPC Name"
+              },
+              "aws_vpc_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_vpc_tags"
+                  ]
+                },
+                "description": "VPC Tags"
+              },
+              "base_naming_pattern": {
+                "expression": {
+                  "references": [
+                    "local.naming_pattern"
+                  ]
+                },
+                "description": "Base Naming Pattern"
+              },
+              "data_classification": {
+                "expression": {
+                  "references": [
+                    "var.data_classification"
+                  ]
+                },
+                "description": "Data Classification"
+              },
+              "ddi_subnet_name": {
+                "expression": {
+                  "references": [
+                    "local.core_attributes.AppName",
+                    "local.core_attributes",
+                    "local.core_attributes.AppEnv",
+                    "local.core_attributes"
+                  ]
+                },
+                "description": "DDI Subnet name"
+              },
+              "ddi_vpc_name": {
+                "expression": {
+                  "references": [
+                    "local.core_attributes.AppName",
+                    "local.core_attributes",
+                    "local.core_attributes.AppEnv",
+                    "local.core_attributes"
+                  ]
+                },
+                "description": "DDI VPC Name"
+              },
+              "default_storage_tags": {
+                "expression": {
+                  "references": [
+                    "local.aws_tags_for_storage"
+                  ]
+                },
+                "description": "Default Tags for Storage resources"
+              },
+              "default_tags": {
+                "expression": {
+                  "references": [
+                    "local.attributes"
+                  ]
+                },
+                "description": "Default Tags"
+              },
+              "dns_private_domain": {
+                "expression": {
+                  "references": [
+                    "local.route53_private_domain"
+                  ]
+                },
+                "description": "DNS private domain"
+              },
+              "dns_public_domain": {
+                "expression": {
+                  "references": [
+                    "local.route53_public_domain"
+                  ]
+                },
+                "description": "DNS public domain"
+              },
+              "msp": {
+                "expression": {
+                  "references": [
+                    "local.core_attributes.msp",
+                    "local.core_attributes"
+                  ]
+                },
+                "description": "MSP"
+              },
+              "not_used": {
+                "expression": {
+                  "references": [
+                    "local.not_used"
+                  ]
+                },
+                "description": "Not Used"
+              },
+              "project": {
+                "expression": {
+                  "references": [
+                    "local.optional_attrs.Project",
+                    "local.optional_attrs"
+                  ]
+                },
+                "description": "Project"
+              },
+              "support_contact": {
+                "expression": {
+                  "constant_value": ""
+                },
+                "description": "Support Contact email"
+              },
+              "team_contact": {
+                "expression": {
+                  "constant_value": ""
+                },
+                "description": "TeamContact email"
+              }
+            },
+            "variables": {
+              "app_code": {
+                "default": "APP00000",
+                "description": "Owner  : Operations\nMeaning: Application Code\nUsage  : Provisioned in Hopex, used to Link Hopex, AWS and SNOW\n"
+              },
+              "app_component": {
+                "default": "",
+                "description": "Owner  : Operations\nMeaning: Application Component (used for EC2 Naming)\n"
+              },
+              "app_cpcode": {
+                "default": "IS00000",
+                "description": "Owner  : Operations\nMeaning: App Component Code\nUsage  : Provisioned in Hopex, used to Link Hopex, AWS and SNOW\n"
+              },
+              "app_env": {
+                "description": "Owner  : Operations\nMeaning: Application Environment\n"
+              },
+              "app_name": {
+                "description": "Owner  : Operations\nMeaning: Application Name\n"
+              },
+              "app_version": {
+                "default": "",
+                "description": "DEPRECATED. Use extra_tags variable"
+              },
+              "archiving": {
+                "default": "no",
+                "description": "Owner  : FinOps / Operation\nMeaning: Archiving - For compliance or legal requirements Data needs to be retained\n"
+              },
+              "aws_env": {
+                "description": "Owner  : FinOps/Assets Management\nMeaning: Provisioned in Hopex, used to Link Hopex, AWS and SNOW\nTag    : AwsEnv\nReference: https://cmacgm.atlassian.net/l/c/GGSLysPe\n"
+              },
+              "aws_id": {
+                "description": "Owner  : FinOps\nMeaning: AWS Identification\nTag    : AwsId\nReference: https://cmacgm.atlassian.net/l/c/GGSLysPe\n"
+              },
+              "backup": {
+                "default": "no",
+                "description": "Owner  : FinOps / Operation\nMeaning: Backup resource (https://cmacgm.atlassian.net/wiki/spaces/CCOE/pages/2320662534/Backup+with+AWS+Backup)\n"
+              },
+              "business_hours": {
+                "default": "",
+                "description": "DEPRECATED. Use extra_tags variable"
+              },
+              "company": {
+                "default": "",
+                "description": "DEPRECATED. Use extra_tags variable"
+              },
+              "data_classification": {
+                "default": "C1",
+                "description": "Owner  : Security\nMeaning: Data confidentiality\nReference: https://cmacgm.atlassian.net/l/c/GGSLysPe\n"
+              },
+              "disable_agents": {
+                "default": "",
+                "description": "Owner  : Operations\nMeaning: Disable agents installation on instance\nUsage  : Put comma separated list of agents to be ommited. `all` to disable all agents\n"
+              },
+              "end_of_life": {
+                "default": "00-00-0000",
+                "description": "DEPRECATED. Use sandbox_end_of_life variable"
+              },
+              "extra_tags": {
+                "default": {},
+                "description": "Additional tags values"
+              },
+              "functional_domain": {
+                "default": "",
+                "description": "DEPRECATED. Use extra_tags variable"
+              },
+              "maintenance_patch_group": {
+                "default": "none",
+                "description": "Owner  : Operations\nMeaning: Patching Service\nUsage  : Select Maintenance Patch Group\n"
+              },
+              "monitoring": {
+                "default": "none",
+                "description": "Owner     : Operations\nMeaning   : Indicate if agents installation is disabled for this Instance\n"
+              },
+              "msp": {
+                "description": "Owner  : Operations\nMeaning: Managed Service Provider in charge of BUILD/RUN activities\nAccepted value : [\"infosys\", \"kyndryl\", \"cma-cgm\", \"lti\"]\n"
+              },
+              "network_tier": {
+                "default": "",
+                "description": "Owner  : Operations\nMeaning: Network tier\nUsage  : Identify subnets\n"
+              },
+              "owner": {
+                "default": "__NONE__@__NONE__",
+                "description": "DEPRECATED. Use sandbox_owner variable"
+              },
+              "patch_group": {
+                "default": "none-0day",
+                "description": "Owner  : Operations\nMeaning: Patching Service\nUsage  : Select patching policy\n"
+              },
+              "project": {
+                "default": "",
+                "description": "Owner  : Operations\nMeaning: Project name\n"
+              },
+              "sandbox_end_of_life": {
+                "default": "00-00-0000",
+                "description": "Owner  : FinOps / Operation\nMeaning: When does the resource can be terminated. Applicable only for sandbox resources\n"
+              },
+              "sandbox_owner": {
+                "default": "__NONE__@__NONE__",
+                "description": "Owner  : FinOps / Operation\nMeaning: Person to contact for the resource tagged 'EOL'. Applicable only for sandbox resources\n"
+              },
+              "schedule": {
+                "default": "none",
+                "description": "Owner  : FinOps\nMeaning: Scheduler\nUsage  : Determine downtime policy.\nFirst three letters of the day of the week, 24h Time format\nexample:\n  value : mon-fri9-17-sat9-12\n  meaning: instances start at 9:00 and stop at 17:00 Monday through Friday. Instances also start at 9:00 and stop at 12:00 on Saturday.\n"
+              },
+              "secret_access_role": {
+                "default": "developer",
+                "description": "Owner       : Security / Operation\nMeaning     : Constraints Roles are based on Identity Manager profile\n"
+              },
+              "software_instance_id": {
+                "default": "SI0000000",
+                "description": "Owner  : Operations\nMeaning: Software Installation  ID\nUsage  : Provisioned in Hopex, used to Link Hopex, AWS and SNOW\n"
+              },
+              "support_contact": {
+                "default": "",
+                "description": "DEPRECATED. Use optional_attrs variable"
+              },
+              "tagging_policy": {
+                "default": "v1",
+                "description": "Tagging policy version"
+              },
+              "team_contact": {
+                "default": "",
+                "description": "DEPRECATED. Use optional_attrs variable"
+              },
+              "termination_date": {
+                "default": "",
+                "description": "DEPRECATED. Use end_of_life variable"
+              }
+            }
+          }
+        }
+      },
+      "variables": {
+        "ami": {
+          "description": "ID of AMI to use for the instance"
+        },
+        "app_code": {
+          "default": "APP00000"
+        },
+        "app_env": {},
+        "app_name": {},
+        "app_project": {},
+        "archiving": {
+          "default": "no"
+        },
+        "aws_account_id": {
+          "description": "The aws account id to deploy the module."
+        },
+        "aws_env": {},
+        "aws_id": {},
+        "aws_region": {
+          "description": "The aws region of the provider."
+        },
+        "backup": {
+          "default": "no"
+        },
+        "data_classification": {
+          "default": "C1"
+        },
+        "ebs_block_device_map": {
+          "default": {},
+          "description": "List of additional disks"
+        },
+        "enable_shutdown_protection": {
+          "default": false,
+          "description": "Enable shutdown protection on the instance"
+        },
+        "enable_termination_protection": {
+          "default": false,
+          "description": "Enable termination protection on the instance"
+        },
+        "extra_tags": {
+          "default": {},
+          "description": "Extra tags to be added to the resources."
+        },
+        "iam_instance_profile": {
+          "description": "Name of the IAM instance profile to associate with the EC2 instance"
+        },
+        "instance_name": {
+          "description": "The name of the instance."
+        },
+        "instance_type": {
+          "description": "The type of instance to start"
+        },
+        "key_pair": {
+          "description": "The name of the key pair to associate with the EC2 instance"
+        },
+        "kms_key_id": {
+          "description": "The KMS key ID to encrypt EBS"
+        },
+        "msp": {
+          "default": "cma-cgm"
+        },
+        "root_block_device_size": {
+          "default": 30,
+          "description": "The size of the main volume for the root filesystem"
+        },
+        "root_block_device_type": {
+          "default": "gp3",
+          "description": "The type of storage volume for the root filesystem"
+        },
+        "security_group_egress_rules": {
+          "default": {}
+        },
+        "security_group_ingress_rules": {
+          "default": {}
+        },
+        "subnet_id": {
+          "description": "The VPC Subnet ID to launch in"
+        },
+        "vpc_security_group_ids": {
+          "description": "A list of security group IDs to associate with"
+        }
+      }
+    }
+  },
+  "relevant_attributes": [
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "password_data"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "root_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "public_ip"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "primary_network_interface_id"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "primary_network_interface_id"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "availability_zone"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "public_ip"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "public_ip"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "ipv6_addresses"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "outpost_arn"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "instance_state"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_iam_instance_profile.this[0]",
+      "attribute": [
+        "name"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "ebs_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "ebs_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "ami"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "private_dns"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "private_dns"
+      ]
+    },
+    {
+      "resource": "module.instance.data.aws_ssm_parameter.this[0]",
+      "attribute": [
+        "value"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "capacity_reservation_specification"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "outpost_arn"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "ami"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "capacity_reservation_specification"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "password_data"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "instance_state"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "root_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "availability_zone"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "public_dns"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "ebs_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "arn"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "ephemeral_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "tags_all"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "public_dns"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "ephemeral_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "tags_all"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "arn"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "primary_network_interface_id"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "public_dns"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "outpost_arn"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "private_dns"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "arn"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "instance_state"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "private_ip"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "ipv6_addresses"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "tags_all"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "ephemeral_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "availability_zone"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "ipv6_addresses"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "root_block_device"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "ami"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.ignore_ami[0]",
+      "attribute": [
+        "private_ip"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_spot_instance_request.this[0]",
+      "attribute": [
+        "private_ip"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "capacity_reservation_specification"
+      ]
+    },
+    {
+      "resource": "module.instance.aws_instance.this[0]",
+      "attribute": [
+        "password_data"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "app_code",
+        "to_display": "module.naming.var.app_code"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.app_code"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "app_cpcode",
+        "to_display": "module.naming.var.app_cpcode"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.app_cpcode"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "archiving",
+        "to_display": "module.naming.var.archiving"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.archiving"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "aws_env",
+        "to_display": "module.naming.var.aws_env"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.aws_env"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "aws_id",
+        "to_display": "module.naming.var.aws_id"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.aws_id"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "backup",
+        "to_display": "module.naming.var.backup"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.backup"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "data_classification",
+        "to_display": "module.naming.var.data_classification"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.data_classification"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "end_of_life",
+        "to_display": "module.naming.var.end_of_life"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.end_of_life"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "monitoring",
+        "to_display": "module.naming.var.monitoring"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.monitoring"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "msp",
+        "to_display": "module.naming.var.msp"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.msp"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "owner",
+        "to_display": "module.naming.var.owner"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.owner"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "patch_group",
+        "to_display": "module.naming.var.patch_group"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.patch_group"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "sandbox_end_of_life",
+        "to_display": "module.naming.var.sandbox_end_of_life"
+      },
+      "status": "unknown",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.sandbox_end_of_life"
+          },
+          "status": "unknown"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "sandbox_owner",
+        "to_display": "module.naming.var.sandbox_owner"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.sandbox_owner"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "secret_access_role",
+        "to_display": "module.naming.var.secret_access_role"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.secret_access_role"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "software_instance_id",
+        "to_display": "module.naming.var.software_instance_id"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.software_instance_id"
+          },
+          "status": "pass"
+        }
+      ]
+    },
+    {
+      "address": {
+        "kind": "var",
+        "module": "module.naming",
+        "name": "tagging_policy",
+        "to_display": "module.naming.var.tagging_policy"
+      },
+      "status": "pass",
+      "instances": [
+        {
+          "address": {
+            "module": "module.naming",
+            "to_display": "module.naming.var.tagging_policy"
+          },
+          "status": "pass"
+        }
+      ]
+    }
+  ],
+  "timestamp": "2024-02-13T13:42:24Z",
+  "errored": false
+}
