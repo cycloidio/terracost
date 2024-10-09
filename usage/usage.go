@@ -9,6 +9,7 @@ const (
 // Default is the default Usage that will be used if none is configured
 var Default = Usage{
 	ResourceDefaultTypeUsage: map[string]interface{}{
+		// AWS
 		"aws_eks_node_group": map[string]interface{}{
 			"instances":                        15,
 			"operating_system":                 "linux",
@@ -38,6 +39,11 @@ var Default = Usage{
 		},
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
+		},
+
+		// Azure
+		"azurerm_virtual_network_gateway": map[string]interface{}{
+			"monthly_data_transfer_gb": 150,
 		},
 	},
 }

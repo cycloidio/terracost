@@ -19,6 +19,9 @@ type VirtualNetworkGateway struct {
 	location  string
 	sku       string
 	meterName string
+
+	// Usage
+	monthlyDataTransferGB decimal.Decimal
 }
 
 // virtualNetworkGatewayValues is holds the values that we need to be able
@@ -26,6 +29,10 @@ type VirtualNetworkGateway struct {
 type virtualNetworkGatewayValues struct {
 	SKU      string `mapstructure:"sku"`
 	Location string `mapstructure:"location"`
+
+	Usage struct {
+		MonthlyDataTransferGB float64 `mapstructure:"monthly_data_transfer_gb"`
+	} `mapstructure:"tc_usage"`
 }
 
 // decodeVirtualNetworkGatewayValues decodes and returns computeInstanceValues from a Terraform values map.
@@ -55,6 +62,9 @@ func (p *Provider) newVirtualNetworkGateway(vals virtualNetworkGatewayValues) *V
 		location:  getLocationName(vals.Location),
 		sku:       vals.SKU,
 		meterName: vals.SKU,
+
+		// From Usage
+		monthlyDataTransferGB: decimal.NewFromFloat(vals.Usage.MonthlyDataTransferGB),
 	}
 
 	if vals.SKU == "Basic" {
@@ -66,7 +76,11 @@ func (p *Provider) newVirtualNetworkGateway(vals virtualNetworkGatewayValues) *V
 
 // Components returns the price component queries that make up this Instance.
 func (inst *VirtualNetworkGateway) Components() []query.Component {
-	components := []query.Component{inst.virtualNetworkGatewayComponent(inst.provider.key, inst.location, inst.sku, inst.meterName)}
+	components := []query.Component{
+		inst.virtualNetworkGatewayComponent(inst.provider.key, inst.location, inst.sku, inst.meterName),
+		inst.virtualNetworkGatewayP2SComponent(inst.provider.key, inst.location, inst.sku),
+		inst.virtualNetworkGatewayDataTransfersComponent(inst.provider.key, inst.location),
+	}
 
 	return components
 }
@@ -86,6 +100,53 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent(key, location,
 		},
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("1 Hour"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "type", Value: util.StringPtr("Consumption")},
+			},
+		},
+	}
+}
+
+func (inst *VirtualNetworkGateway) virtualNetworkGatewayP2SComponent(key, location, sku string) query.Component {
+	return query.Component{
+		Name:           "VPN gateway P2S tunnels (over 128)",
+		HourlyQuantity: decimal.NewFromInt(1),
+		ProductFilter: &product.Filter{
+			Provider: util.StringPtr(key),
+			Service:  util.StringPtr("VPN Gateway"),
+			Family:   util.StringPtr("Networking"),
+			Location: util.StringPtr(location),
+			AttributeFilters: []*product.AttributeFilter{
+				{Key: "sku_name", Value: util.StringPtr(sku)},
+				{Key: "meter_name", Value: util.StringPtr("P2S Connection")},
+			},
+		},
+		PriceFilter: &price.Filter{
+			Unit: util.StringPtr("1 Hour"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "type", Value: util.StringPtr("Consumption")},
+			},
+		},
+	}
+}
+
+func (inst *VirtualNetworkGateway) virtualNetworkGatewayDataTransfersComponent(key string, location string) query.Component {
+	return query.Component{
+		Name:            "VPN gateway data tranfer",
+		MonthlyQuantity: inst.monthlyDataTransferGB,
+		Usage:           true,
+		ProductFilter: &product.Filter{
+			Provider: util.StringPtr(key),
+			Service:  util.StringPtr("VPN Gateway"),
+			Family:   util.StringPtr("Networking"),
+			Location: util.StringPtr(getRegionToVNETZone(location)),
+			AttributeFilters: []*product.AttributeFilter{
+				{Key: "product_name", Value: util.StringPtr("VPN Gateway Bandwidth")},
+				{Key: "meter_name", Value: util.StringPtr("Standard Inter-Virtual Network Data Transfer Out")},
+			},
+		},
+		PriceFilter: &price.Filter{
+			Unit: util.StringPtr("1 GB"),
 			AttributeFilters: []*price.AttributeFilter{
 				{Key: "type", Value: util.StringPtr("Consumption")},
 			},
