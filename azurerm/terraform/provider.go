@@ -95,6 +95,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newVirtualNetworkGateway(vals).Components()
+	case "azurerm_virtual_network_gateway_connection":
+		vals, err := decodeVirtualNetworkGatewayConnectionValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newVirtualNetworkGatewayConnection(rss, vals).Components()
 	default:
 		return nil
 	}
@@ -108,4 +114,95 @@ func getLocationName(l string) string {
 		return l
 	}
 	return ln
+}
+
+// Mapped based on the values here: https://azure.microsoft.com/en-us/pricing/details/virtual-network/#faq
+func getRegionToVNETZone(region string) string {
+	return map[string]string{
+		"eastus":              "Zone 1",
+		"eastus2":             "Zone 1",
+		"southcentralus":      "Zone 1",
+		"westus2":             "Zone 1",
+		"westus3":             "Zone 1",
+		"australiaeast":       "Zone 2",
+		"southeastasia":       "Zone 2",
+		"northeurope":         "Zone 1",
+		"swedencentral":       "Zone 1",
+		"uksouth":             "Zone 1",
+		"westeurope":          "Zone 1",
+		"centralus":           "Zone 1",
+		"southafricanorth":    "Zone 3",
+		"centralindia":        "Zone 2",
+		"eastasia":            "Zone 2",
+		"japaneast":           "Zone 2",
+		"koreacentral":        "Zone 2",
+		"canadacentral":       "Zone 1",
+		"francecentral":       "Zone 1",
+		"germanywestcentral":  "Zone 1",
+		"italynorth":          "Zone 1",
+		"norwayeast":          "Zone 1",
+		"polandcentral":       "Zone 1",
+		"switzerlandnorth":    "Zone 1",
+		"uaenorth":            "Zone 3",
+		"brazilsouth":         "Zone 3",
+		"centraluseuap":       "Zone 1",
+		"israelcentral":       "Zone 1",
+		"qatarcentral":        "Zone 1",
+		"centralusstage":      "Zone 1",
+		"eastusstage":         "Zone 1",
+		"eastus2stage":        "Zone 1",
+		"northcentralusstage": "Zone 1",
+		"southcentralusstage": "Zone 1",
+		"westusstage":         "Zone 1",
+		"westus2stage":        "Zone 1",
+		"asia":                "Zone 1",
+		"asiapacific":         "Zone 1",
+		"australia":           "Zone 1",
+		"brazil":              "Zone 3",
+		"canada":              "Zone 1",
+		"europe":              "Zone 1",
+		"france":              "Zone 1",
+		"germany":             "Zone 1",
+		"india":               "Zone 2",
+		"japan":               "Zone 2",
+		"korea":               "Zone 2",
+		"norway":              "Zone 1",
+		"singapore":           "Zone 1",
+		"southafrica":         "Zone 3",
+		"sweden":              "Zone 1",
+		"switzerland":         "Zone 1",
+		"uae":                 "Zone 3",
+		"uk":                  "Zone 1",
+		"unitedstates":        "Zone 1",
+		"unitedstateseuap":    "Zone 1",
+		"eastasiastage":       "Zone 2",
+		"southeastasiastage":  "Zone 2",
+		"brazilus":            "Zone 1",
+		"eastusstg":           "Zone 1",
+		"northcentralus":      "Zone 1",
+		"westus":              "Zone 1",
+		"japanwest":           "Zone 2",
+		"jioindiawest":        "Zone 1",
+		"eastus2euap":         "Zone 1",
+		"westcentralus":       "Zone 1",
+		"southafricawest":     "Zone 3",
+		"australiacentral":    "Zone 1",
+		"australiacentral2":   "Zone 1",
+		"australiasoutheast":  "Zone 2",
+		"jioindiacentral":     "Zone 2",
+		"koreasouth":          "Zone 2",
+		"southindia":          "Zone 2",
+		"westindia":           "Zone 2",
+		"canadaeast":          "Zone 1",
+		"francesouth":         "Zone 1",
+		"germanynorth":        "Zone 1",
+		"norwaywest":          "Zone 1",
+		"switzerlandwest":     "Zone 1",
+		"ukwest":              "Zone 1",
+		"uaecentral":          "Zone 3",
+		"brazilsoutheast":     "Zone 3",
+		"usgovvirginia":       "US Gov Zone 1",
+		"usgovarizona":        "US Gov Zone 1",
+		"usgovtexas":          "US Gov Zone 1",
+	}[region]
 }
