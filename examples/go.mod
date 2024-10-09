@@ -168,7 +168,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/cycloidio/terracost => /opt/go/src/github.com/cycloidio/terracost
+replace github.com/cycloidio/terracost => ../
 
 replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.4.6-cy
 

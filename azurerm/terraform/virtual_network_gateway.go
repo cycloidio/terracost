@@ -2,7 +2,9 @@ package terraform
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
@@ -17,9 +19,9 @@ type VirtualNetworkGateway struct {
 	provider *Provider
 
 	location  string
-	sku       string
 	meterName string
-
+	sku       string
+	gwType    string
 	// Usage
 	monthlyDataTransferGB decimal.Decimal
 }
@@ -29,6 +31,7 @@ type VirtualNetworkGateway struct {
 type virtualNetworkGatewayValues struct {
 	SKU      string `mapstructure:"sku"`
 	Location string `mapstructure:"location"`
+	Type     string `mapstructure:"type"`
 
 	Usage struct {
 		MonthlyDataTransferGB float64 `mapstructure:"monthly_data_transfer_gb"`
@@ -59,15 +62,15 @@ func (p *Provider) newVirtualNetworkGateway(vals virtualNetworkGatewayValues) *V
 	inst := &VirtualNetworkGateway{
 		provider: p,
 
-		location:  getLocationName(vals.Location),
-		sku:       vals.SKU,
+		location:  region.GetLocationName(vals.Location),
 		meterName: vals.SKU,
-
+		sku:       vals.SKU,
+		gwType:    vals.Type,
 		// From Usage
 		monthlyDataTransferGB: decimal.NewFromFloat(vals.Usage.MonthlyDataTransferGB),
 	}
 
-	if vals.SKU == "Basic" {
+	if strings.ToLower(vals.SKU) == "basic" {
 		inst.meterName = "Basic Gateway"
 	}
 
@@ -139,7 +142,7 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayDataTransfersComponent(k
 			Provider: util.StringPtr(key),
 			Service:  util.StringPtr("VPN Gateway"),
 			Family:   util.StringPtr("Networking"),
-			Location: util.StringPtr(getRegionToVNETZone(location)),
+			Location: util.StringPtr(region.GetRegionToVNETZone(location)),
 			AttributeFilters: []*product.AttributeFilter{
 				{Key: "product_name", Value: util.StringPtr("VPN Gateway Bandwidth")},
 				{Key: "meter_name", Value: util.StringPtr("Standard Inter-Virtual Network Data Transfer Out")},
