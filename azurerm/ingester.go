@@ -109,7 +109,7 @@ func (ing *Ingester) fetchPrices(ctx context.Context) <-chan retailPrice {
 	go func() {
 		defer close(results)
 		// Docs: https://docs.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices
-		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and armRegionName eq '%s'", ing.service, ing.region))
+		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and armRegionName eq '%s' or armRegionName eq 'Zone 1' or armRegionName eq 'Zone 2' or armRegionName eq 'Zone 3'", ing.service, ing.region))
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s?$filter=%s", ing.buildPricesURL(), f), nil)
 		if err != nil {
 			ing.err = err
