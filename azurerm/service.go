@@ -12,6 +12,7 @@ type Service uint8
 // List of all the supported services
 const (
 	VirtualMachines Service = iota // Virtual Machines
+	VPNGateway      Service = iota // VPN Gateway
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 	// the Family and the main content is the Services
 	services = map[string]struct{}{
 		VirtualMachines.String(): struct{}{},
+		VPNGateway.String():      struct{}{},
 	}
 )
 
