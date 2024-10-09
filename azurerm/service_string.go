@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _ServiceName = "Virtual Machines"
+const _ServiceName = "Azure BastionAzure DNSNAT GatewayStorageVirtual MachinesVirtual NetworkVPN Gateway"
 
-var _ServiceIndex = [...]uint8{0, 16}
+var _ServiceIndex = [...]uint8{0, 13, 22, 33, 40, 56, 71, 82}
 
-const _ServiceLowerName = "virtual machines"
+const _ServiceLowerName = "azure bastionazure dnsnat gatewaystoragevirtual machinesvirtual networkvpn gateway"
 
 func (i Service) String() string {
 	if i >= Service(len(_ServiceIndex)-1) {
@@ -24,18 +24,42 @@ func (i Service) String() string {
 // Re-run the stringer command to generate them again.
 func _ServiceNoOp() {
 	var x [1]struct{}
-	_ = x[VirtualMachines-(0)]
+	_ = x[AzureBastion-(0)]
+	_ = x[AzureDNS-(1)]
+	_ = x[NATGateway-(2)]
+	_ = x[Storage-(3)]
+	_ = x[VirtualMachines-(4)]
+	_ = x[VirtualNetwork-(5)]
+	_ = x[VPNGateway-(6)]
 }
 
-var _ServiceValues = []Service{VirtualMachines}
+var _ServiceValues = []Service{AzureBastion, AzureDNS, NATGateway, Storage, VirtualMachines, VirtualNetwork, VPNGateway}
 
 var _ServiceNameToValueMap = map[string]Service{
-	_ServiceName[0:16]:      VirtualMachines,
-	_ServiceLowerName[0:16]: VirtualMachines,
+	_ServiceName[0:13]:       AzureBastion,
+	_ServiceLowerName[0:13]:  AzureBastion,
+	_ServiceName[13:22]:      AzureDNS,
+	_ServiceLowerName[13:22]: AzureDNS,
+	_ServiceName[22:33]:      NATGateway,
+	_ServiceLowerName[22:33]: NATGateway,
+	_ServiceName[33:40]:      Storage,
+	_ServiceLowerName[33:40]: Storage,
+	_ServiceName[40:56]:      VirtualMachines,
+	_ServiceLowerName[40:56]: VirtualMachines,
+	_ServiceName[56:71]:      VirtualNetwork,
+	_ServiceLowerName[56:71]: VirtualNetwork,
+	_ServiceName[71:82]:      VPNGateway,
+	_ServiceLowerName[71:82]: VPNGateway,
 }
 
 var _ServiceNames = []string{
-	_ServiceName[0:16],
+	_ServiceName[0:13],
+	_ServiceName[13:22],
+	_ServiceName[22:33],
+	_ServiceName[33:40],
+	_ServiceName[40:56],
+	_ServiceName[56:71],
+	_ServiceName[71:82],
 }
 
 // ServiceString retrieves an enum value from the enum constants string name.
