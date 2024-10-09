@@ -66,19 +66,12 @@ func (p *Provider) newVirtualNetworkGateway(vals virtualNetworkGatewayValues) *V
 
 // Components returns the price component queries that make up this Instance.
 func (inst *VirtualNetworkGateway) Components() []query.Component {
-	components := []query.Component{inst.virtualNetworkGatewayComponent()}
+	components := []query.Component{inst.virtualNetworkGatewayComponent(inst.provider.key, inst.location, inst.sku, inst.meterName)}
 
 	return components
 }
 
-// virtualNetworkGatewayComponent returns the query needed to be able to calculate the price
-func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent() query.Component {
-	return virtualNetworkGatewayComponent(inst.provider.key, inst.location, inst.sku, inst.meterName)
-}
-
-// virtualNetworkGatewayComponent is the abstraction of the same VirtualNetworkGateway.virtualNetworkGatewayComponent
-// so it can be reused
-func virtualNetworkGatewayComponent(key, location, sku string, meterName string) query.Component {
+func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent(key, location, sku string, meterName string) query.Component {
 	return query.Component{
 		Name:           fmt.Sprintf("VPN gateway (%s)", sku),
 		HourlyQuantity: decimal.NewFromInt(1),
