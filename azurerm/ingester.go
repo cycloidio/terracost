@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
@@ -71,23 +70,18 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 		defer close(results)
 
 		for rp := range ing.fetchPrices(ctx) {
-			priority := "regular"
-			if strings.HasSuffix(rp.MeterName, " Spot") {
-				priority = "spot"
-			} else if strings.HasSuffix(rp.MeterName, " Low Priority") {
-				priority = "low"
-			}
+
 			prod := &product.Product{
 				Provider: ProviderName,
-				SKU:      rp.SkuID,
+				SKU:      fmt.Sprintf("%s-%s", rp.SkuID, rp.MeterID),
 				Service:  rp.ServiceName,
 				Family:   rp.ServiceFamily,
 				Location: rp.ArmRegionName,
 				Attributes: map[string]string{
 					"arm_sku_name": rp.ArmSkuName,
+					"meter_name":   rp.MeterName,
 					"product_name": rp.ProductName,
 					"sku_name":     rp.SkuName,
-					"priority":     priority,
 				},
 			}
 			pwp := &price.WithProduct{
@@ -106,7 +100,6 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 			}
 		}
 	}()
-
 	return results
 }
 
