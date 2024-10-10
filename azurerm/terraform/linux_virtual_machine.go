@@ -1,6 +1,7 @@
 package terraform
 
 import (
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
@@ -49,7 +50,7 @@ func (p *Provider) newLinuxVirtualMachine(vals linuxVirtualMachineValues) *Linux
 	inst := &LinuxVirtualMachine{
 		provider: p,
 
-		location: getLocationName(vals.Location),
+		location: region.GetLocationName(vals.Location),
 		size:     vals.Size,
 	}
 
