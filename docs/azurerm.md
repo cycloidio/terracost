@@ -45,8 +45,9 @@ Azure pricing attributes can be referenced from the [official documentation](htt
 Example to get the attributes available for your specific service:
 ```bash
 REQ="https://prices.azure.com/api/retail/prices?\$filter=serviceName eq 'Virtual Machines'"
+# REQ="https://prices.azure.com/api/retail/prices?\$filter=serviceName eq 'Virtual Machines' and (armRegionName eq 'northeurope' or armRegionName eq 'Zone 1')"
 # repalce escape and quote
-REQ=$(echo $REQ | sed "s/ /%20/g;s/'/%27/")
+REQ=$(echo $REQ | sed "s/ /%20/g;s/'/%27/;s/(/%28/g;s/)/%29/g")
 
 curl $REQ | jq .
 ```
