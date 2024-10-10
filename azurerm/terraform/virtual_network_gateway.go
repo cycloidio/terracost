@@ -3,6 +3,7 @@ package terraform
 import (
 	"fmt"
 
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
@@ -59,7 +60,7 @@ func (p *Provider) newVirtualNetworkGateway(vals virtualNetworkGatewayValues) *V
 	inst := &VirtualNetworkGateway{
 		provider: p,
 
-		location:  getLocationName(vals.Location),
+		location:  region.GetLocationName(vals.Location),
 		sku:       vals.SKU,
 		meterName: vals.SKU,
 
@@ -139,7 +140,7 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayDataTransfersComponent(k
 			Provider: util.StringPtr(key),
 			Service:  util.StringPtr("VPN Gateway"),
 			Family:   util.StringPtr("Networking"),
-			Location: util.StringPtr(getRegionToVNETZone(location)),
+			Location: util.StringPtr(region.GetRegionToVNETZone(location)),
 			AttributeFilters: []*product.AttributeFilter{
 				{Key: "product_name", Value: util.StringPtr("VPN Gateway Bandwidth")},
 				{Key: "meter_name", Value: util.StringPtr("Standard Inter-Virtual Network Data Transfer Out")},
