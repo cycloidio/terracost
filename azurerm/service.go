@@ -13,6 +13,7 @@ type Service uint8
 const (
 	VirtualMachines Service = iota // Virtual Machines
 	VPNGateway      Service = iota // VPN Gateway
+	Storage         Service = iota // Storage
 )
 
 var (
@@ -21,6 +22,7 @@ var (
 	services = map[string]struct{}{
 		VirtualMachines.String(): struct{}{},
 		VPNGateway.String():      struct{}{},
+		Storage.String():         struct{}{},
 	}
 )
 
