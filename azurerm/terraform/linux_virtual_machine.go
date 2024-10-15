@@ -14,9 +14,9 @@ import (
 // of the google_compute_instance
 type LinuxVirtualMachine struct {
 	provider *Provider
-
 	location string
-	size     string
+
+	size string
 }
 
 // linuxVirtualMachineValues is holds the values that we need to be able
@@ -24,6 +24,16 @@ type LinuxVirtualMachine struct {
 type linuxVirtualMachineValues struct {
 	Size     string `mapstructure:"size"`
 	Location string `mapstructure:"location"`
+
+	OSDisk []struct {
+		StorageAccountType string  `mapstructure:"storage_account_type"`
+		DiskSizeGB         float64 `mapstructure:"disk_size_gb"`
+	} `mapstructure:"os_disk"`
+
+	AdditionalCapabilities []struct {
+		UltraSSDEnabled bool `mapstructure:"ultra_ssd_enabled"`
+		UltraSSDLRS     bool `mapstructure:"UltraSSD_LRS"`
+	} `mapstructure:"additional_capabilities"`
 }
 
 // decodeLinuxVirtualMachineValues decodes and returns computeInstanceValues from a Terraform values map.
