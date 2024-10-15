@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _ServiceName = "Virtual MachinesVPN Gateway"
+const _ServiceName = "Virtual MachinesVPN GatewayStorage"
 
-var _ServiceIndex = [...]uint8{0, 16, 27}
+var _ServiceIndex = [...]uint8{0, 16, 27, 34}
 
-const _ServiceLowerName = "virtual machinesvpn gateway"
+const _ServiceLowerName = "virtual machinesvpn gatewaystorage"
 
 func (i Service) String() string {
 	if i >= Service(len(_ServiceIndex)-1) {
@@ -26,20 +26,24 @@ func _ServiceNoOp() {
 	var x [1]struct{}
 	_ = x[VirtualMachines-(0)]
 	_ = x[VPNGateway-(1)]
+	_ = x[Storage-(2)]
 }
 
-var _ServiceValues = []Service{VirtualMachines, VPNGateway}
+var _ServiceValues = []Service{VirtualMachines, VPNGateway, Storage}
 
 var _ServiceNameToValueMap = map[string]Service{
 	_ServiceName[0:16]:       VirtualMachines,
 	_ServiceLowerName[0:16]:  VirtualMachines,
 	_ServiceName[16:27]:      VPNGateway,
 	_ServiceLowerName[16:27]: VPNGateway,
+	_ServiceName[27:34]:      Storage,
+	_ServiceLowerName[27:34]: Storage,
 }
 
 var _ServiceNames = []string{
 	_ServiceName[0:16],
 	_ServiceName[16:27],
+	_ServiceName[27:34],
 }
 
 // ServiceString retrieves an enum value from the enum constants string name.
