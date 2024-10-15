@@ -30,7 +30,7 @@ sed 's/LinuxVirtualMachine/NewResource/g'
 sed 's/linuxVirtualMachine/newResource/g'
 ```
 4. Add the resource in the `azurerm/terraform/provider.go` on the `ResourceComponents`
-5. Go back to your resource file and update the `{newResource}Values` struct
+5. Go back to your resource file and update the `{newResource}` and `{newResource}Values`struct.
 The `decode{RESOURCE}Values` function utilizes the `{newResource}Values` struct to map the values defined in the Terraform.
 These mapped values are then used to calculate the resource's pricing based on the relevant attributes defined in Terraform, such as `size` mapped with `mapstructure:"size"`
 
