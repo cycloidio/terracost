@@ -80,7 +80,7 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 				Family:   rp.ServiceFamily,
 				Location: rp.ArmRegionName,
 				Attributes: map[string]string{
-					"armSkuName":   rp.ArmSkuName,
+					"armSkuName":  rp.ArmSkuName,
 					"meterName":   rp.MeterName,
 					"productName": rp.ProductName,
 					"skuName":     rp.SkuName,
