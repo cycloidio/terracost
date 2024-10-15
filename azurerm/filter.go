@@ -20,7 +20,7 @@ func MinimalFilter(pp *price.WithProduct) bool {
 
 	// Ignore Spot and Reserved Virtual Machines
 	if pp.Product.Service == "Virtual Machines" && pp.Product.Family == "Compute" {
-		if strings.HasSuffix(pp.Product.Attributes["meter_name"], " Spot") || strings.HasSuffix(pp.Product.Attributes["meter_name"], " Low Priority") {
+		if strings.HasSuffix(pp.Product.Attributes["meterName"], " Spot") || strings.HasSuffix(pp.Product.Attributes["meterName"], " Low Priority") {
 			return false
 		}
 	}

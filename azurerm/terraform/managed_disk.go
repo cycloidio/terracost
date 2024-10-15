@@ -126,11 +126,9 @@ func (inst *ManagedDisk) managedDiskStandardPremiumOperationsComponent(key, loca
 			Family:   util.StringPtr("Storage"),
 			Location: util.StringPtr(location),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "product_name", Value: util.StringPtr(productName)},
-				{Key: "sku_name", Value: util.StringPtr(fmt.Sprintf("%s %s", diskName, storageReplicationType))},
-				{Key: "meter_name", Value: util.StringPtr("Disk Operations")},
-				// {Key: "meterName", ValueRegex: regexPtr("Disk Operations$")},
-
+				{Key: "productName", Value: util.StringPtr(productName)},
+				{Key: "skuName", Value: util.StringPtr(fmt.Sprintf("%s %s", diskName, storageReplicationType))},
+				{Key: "meterName", ValueRegex: util.StringPtr(".*Disk Operations")},
 			},
 		},
 		PriceFilter: &price.Filter{

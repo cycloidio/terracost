@@ -91,7 +91,7 @@ func linuxVirtualMachineComponent(key, location, size string) query.Component {
 			Family:   util.StringPtr("Compute"),
 			Location: util.StringPtr(location),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "arm_sku_name", Value: util.StringPtr(size)},
+				{Key: "armSkuName", Value: util.StringPtr(size)},
 			},
 		},
 		PriceFilter: &price.Filter{
