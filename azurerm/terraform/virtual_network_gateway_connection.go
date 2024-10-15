@@ -86,8 +86,8 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayConnectionS2SComponent(k
 			Family:   util.StringPtr("Networking"),
 			Location: util.StringPtr(location),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "sku_name", Value: util.StringPtr(sku)},
-				{Key: "meter_name", Value: util.StringPtr("S2S Connection")},
+				{Key: "skuName", Value: util.StringPtr(sku)},
+				{Key: "meterName", Value: util.StringPtr("S2S Connection")},
 			},
 		},
 		PriceFilter: &price.Filter{

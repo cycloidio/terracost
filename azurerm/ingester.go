@@ -75,15 +75,16 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 
 			prod := &product.Product{
 				Provider: ProviderName,
-				SKU:      fmt.Sprintf("%s-%s", rp.SkuID, rp.MeterID),
+				SKU:      fmt.Sprintf("%s-%s-%.2f", rp.SkuID, rp.MeterID, rp.TierMinimumUnits),
 				Service:  rp.ServiceName,
 				Family:   rp.ServiceFamily,
 				Location: rp.ArmRegionName,
 				Attributes: map[string]string{
-					"arm_sku_name": rp.ArmSkuName,
-					"meter_name":   rp.MeterName,
-					"product_name": rp.ProductName,
-					"sku_name":     rp.SkuName,
+					"armSkuName":       rp.ArmSkuName,
+					"meterName":        rp.MeterName,
+					"productName":      rp.ProductName,
+					"skuName":          rp.SkuName,
+					"tierMinimumUnits": fmt.Sprintf("%f", rp.TierMinimumUnits),
 				},
 			}
 			pwp := &price.WithProduct{
