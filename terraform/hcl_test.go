@@ -70,6 +70,7 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, "front", res.Name)
 					assert.Equal(t, map[string]interface{}{
 						"instances": []interface{}{"module.ec2.aws_instance.front[0]"},
+						"count":     float64(1),
 						"listener": []interface{}{
 							map[string]interface{}{
 								"instance_port":     float64(80),

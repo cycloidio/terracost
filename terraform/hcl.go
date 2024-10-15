@@ -25,6 +25,13 @@ import (
 	"github.com/cycloidio/terracost/util"
 )
 
+const (
+	// hclRefPrefix is used to prefix all the attributes of the resource that are
+	// references to another resource, so then on the second iteration we can
+	// replace it if it has the value
+	hclRefPrefix = "_tc_ref"
+)
+
 // ExtractQueriesFromHCL returns the resources found in the module identified by the modPath.
 func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage, inputs map[string]interface{}) ([]query.Resource, string, error) {
 	parser := configs.NewParser(fs)
@@ -115,7 +122,48 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		}
 	}
 
-	for _, r := range rss {
+	for kr, r := range rss {
+		for k, v := range r.Values {
+			switch vv := v.(type) {
+			case string:
+				if strings.HasPrefix(vv, hclRefPrefix) {
+					vv = strings.Replace(vv, hclRefPrefix, "", -1)
+					vsp := strings.Split(vv, ".")
+					attr := vsp[len(vsp)-1]
+					refk := strings.Join(vsp[0:len(vsp)-1], ".")
+					if refr, ok := rss[refk]; ok {
+						if a, ok := refr.Values[attr]; ok {
+							rss[kr].Values[k] = a
+							continue
+						}
+					}
+					rss[kr].Values[k] = refk
+				}
+			case []interface{}:
+				vals := make([]interface{}, 0, 0)
+				for _, v := range vv {
+					switch vv := v.(type) {
+					case string:
+						if strings.HasPrefix(vv, hclRefPrefix) {
+							vv = strings.Replace(vv, hclRefPrefix, "", -1)
+							vsp := strings.Split(vv, ".")
+							attr := vsp[len(vsp)-1]
+							refk := strings.Join(vsp[0:len(vsp)-1], ".")
+							if refr, ok := rss[refk]; ok {
+								if a, ok := refr.Values[attr]; ok {
+									vals = append(vals, a)
+									continue
+								}
+							}
+							vals = append(vals, refk)
+						}
+					default:
+						vals = append(vals, v)
+					}
+				}
+				rss[kr].Values[k] = vals
+			}
+		}
 		r.Values[usage.Key] = u.GetUsage(r.Type)
 		provider := providers[r.ProviderName]
 		queries = append(queries, query.Resource{
@@ -320,7 +368,6 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			continue
 		}
-
 		switch val.Type() {
 		case cty.String:
 			// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
@@ -380,8 +427,13 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 							}
 							// With this we remove the last element of the reference, which is the
 							// attribute it's linking to from the resource
-							v = strings.Join(sv[0:len(sv)-1], ".")
-							vars = append(vars, fmt.Sprintf("%s.%s", modulePrefix, v))
+							//v = strings.Join(sv[0:len(sv)-1], ".")
+
+							// We prefix this attribute with the hclRefPrefix so then
+							// we know it's a reference and we can use it
+							v = strings.Join(sv, ".")
+							vars = append(vars, fmt.Sprintf("%s%s.%s", hclRefPrefix, modulePrefix, v))
+							// TODO: Here is where the references are
 						}
 						if len(vars) != 0 {
 							values = append(values, vars[0])
@@ -402,8 +454,12 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 					}
 					// With this we remove the last element of the reference, which is the
 					// attribute it's linking to from the resource
-					v = strings.Join(sv[0:len(sv)-1], ".")
-					vars = append(vars, fmt.Sprintf("%s.%s", modulePrefix, v))
+					//v = strings.Join(sv[0:len(sv)-1], ".")
+
+					// We prefix this attribute with the hclRefPrefix so then
+					// we know it's a reference and we can use it
+					v = strings.Join(sv, ".")
+					vars = append(vars, fmt.Sprintf("%s%s.%s", hclRefPrefix, modulePrefix, v))
 				}
 				if len(vars) != 0 {
 					cfg[attrk] = vars[0]

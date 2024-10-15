@@ -2,6 +2,7 @@ package terracost
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -10,6 +11,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/afero"
 
@@ -96,6 +98,8 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		afs = afero.NewOsFs()
 	}
 
+	spew.Dump("stackPath", stackPath)
+	spew.Dump("relModulePath", relModulePath)
 	if !ftg {
 		var hasTG bool
 		// We first check if the main main modulePath has a Terragrunt file to know what we have to run
@@ -177,7 +181,8 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// config has any of the functions like 'get_repo_root' it would fail if it's not
 	// a git repository
 	_, err = git.PlainInit(tmpdir, false)
-	if err != nil {
+	if err != nil && !errors.Is(git.ErrRepositoryAlreadyExists, err) {
+		//if err != nil {
 		return nil, fmt.Errorf("failed to initialize git repo %q: %w", tmpdir, err)
 	}
 

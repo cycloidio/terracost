@@ -1,21 +1,22 @@
 resource "aws_instance" "front" {
   ami = data.aws_ami.debian.id
 
-  count = var.instance_count
+  count         = var.instance_count
   instance_type = var.instance_type
 
   root_block_device {
-    volume_size = var.disk_size
-    volume_type = var.disk_type
+    volume_size           = var.disk_size
+    volume_type           = var.disk_type
     delete_on_termination = true
   }
 }
 
 resource "aws_elb" "front" {
+  count = aws_instance.front.count
   listener {
-    lb_port = 80
-    lb_protocol = "tcp"
-    instance_port = 80
+    lb_port           = 80
+    lb_protocol       = "tcp"
+    instance_port     = 80
     instance_protocol = "tcp"
   }
 
@@ -23,7 +24,7 @@ resource "aws_elb" "front" {
 }
 
 module "ebs" {
-  source = "./module-ebs"
+  source            = "./module-ebs"
   availability_zone = aws_instance.front[0].availability_zone
 }
 
