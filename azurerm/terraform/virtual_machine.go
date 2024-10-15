@@ -1,6 +1,7 @@
 package terraform
 
 import (
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/query"
 	"github.com/mitchellh/mapstructure"
 )
@@ -45,7 +46,7 @@ func (p *Provider) newVirtualMachine(vals virtualMachineValues) *VirtualMachine 
 	inst := &VirtualMachine{
 		provider: p,
 
-		location: getLocationName(vals.Location),
+		location: region.GetLocationName(vals.Location),
 		vmSize:   vals.VMSize,
 	}
 

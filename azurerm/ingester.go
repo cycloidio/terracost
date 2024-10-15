@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/shopspring/decimal"
@@ -108,8 +110,18 @@ func (ing *Ingester) fetchPrices(ctx context.Context) <-chan retailPrice {
 
 	go func() {
 		defer close(results)
+
+		// Azure also use Zones as location. Get Zones to ingest depending of the region
+		zones := map[string]bool{}
+		zones[region.GetRegionToVNETZone(ing.region)] = true
+		zones[region.GetRegionToCDNZone(ing.region)] = true
+		var zonesFilter strings.Builder
+		for zone := range zones {
+			zonesFilter.WriteString(fmt.Sprintf(" or armRegionName eq '%s'", zone))
+		}
+
 		// Docs: https://docs.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices
-		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and armRegionName eq '%s' or armRegionName eq 'Zone 1' or armRegionName eq 'Zone 2' or armRegionName eq 'Zone 3'", ing.service, ing.region))
+		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and (armRegionName eq '%s'%s)", ing.service, ing.region, zonesFilter.String()))
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s?$filter=%s", ing.buildPricesURL(), f), nil)
 		if err != nil {
 			ing.err = err
