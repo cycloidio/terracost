@@ -45,6 +45,9 @@ var Default = Usage{
 		"azurerm_virtual_network_gateway": map[string]interface{}{
 			"monthly_data_transfer_gb": 150,
 		},
+		"azurerm_managed_disk": map[string]interface{}{
+			"monthly_disk_operations": 100000000,
+		},
 	},
 }
 

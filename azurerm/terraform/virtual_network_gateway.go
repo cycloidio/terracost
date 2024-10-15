@@ -98,7 +98,7 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent(key, location,
 			Family:   util.StringPtr("Networking"),
 			Location: util.StringPtr(location),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "meter_name", Value: util.StringPtr(meterName)},
+				{Key: "meterName", Value: util.StringPtr(meterName)},
 			},
 		},
 		PriceFilter: &price.Filter{
@@ -120,8 +120,8 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayP2SComponent(key, locati
 			Family:   util.StringPtr("Networking"),
 			Location: util.StringPtr(location),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "sku_name", Value: util.StringPtr(sku)},
-				{Key: "meter_name", Value: util.StringPtr("P2S Connection")},
+				{Key: "skuName", Value: util.StringPtr(sku)},
+				{Key: "meterName", Value: util.StringPtr("P2S Connection")},
 			},
 		},
 		PriceFilter: &price.Filter{
@@ -144,8 +144,8 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayDataTransfersComponent(k
 			Family:   util.StringPtr("Networking"),
 			Location: util.StringPtr(region.GetRegionToVNETZone(location)),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "product_name", Value: util.StringPtr("VPN Gateway Bandwidth")},
-				{Key: "meter_name", Value: util.StringPtr("Standard Inter-Virtual Network Data Transfer Out")},
+				{Key: "productName", Value: util.StringPtr("VPN Gateway Bandwidth")},
+				{Key: "meterName", Value: util.StringPtr("Standard Inter-Virtual Network Data Transfer Out")},
 			},
 		},
 		PriceFilter: &price.Filter{
