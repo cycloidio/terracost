@@ -6,9 +6,35 @@ For the AzureRM services pricing we have to be aware of this 2 APIs:
 * [List of Services](https://azure.microsoft.com/en-us/services/): The left side are the Families and the content of the page are the services
 * [List of Service SKUs](https://docs.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
 
-If you need to add a **new resource**, the first step is to determine **which service** it belongs to. You can retrieve a list of available services from the Azure Prices API using the following command:
+If you need to add a **new resource**, the first step is to determine **which service** it belongs to. You can retrieve a list of available services from the Azure Prices API using the following script:
 
-`curl https://prices.azure.com/api/retail/prices | jq -r .Items[].serviceName | sort -u`
+```
+#!/bin/bash
+
+# Initial API URL
+url="https://prices.azure.com/api/retail/prices"
+
+:> /tmp/azuresvc
+# Loop to paginate through all the results
+while [[ "$url" != "null" ]]; do
+    # Fetch the JSON response
+    response=$(curl -s "$url")
+
+    # Extract and print all the service names (unique)
+    echo "$response" | jq -r '.Items[] | "\(.serviceName) - \(.productName)"' >> /tmp/azuresvc
+
+    if [ $? -eq 0 ]; then
+      # Get the next page link
+      url=$(echo "$response" | jq -r '.NextPageLink')
+      echo $url
+      # max 780000 ?
+    else
+      echo "retry $url"
+    fi
+done
+
+cat /tmp/azuresvc | sort -u
+```
 
 **If we are not yet supporting the resource** in the codebase (`azurerm/service.go`), you'll need to [Add new service](#adding-new-service) to enable the importer to handle that resource. This will ensure the service is supported, and any associated resources can be properly managed.
 
