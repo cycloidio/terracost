@@ -11,18 +11,20 @@ type Service uint8
 
 // List of all the supported services
 const (
+	NATGateway      Service = iota // NAT Gateway
+	Storage         Service = iota // Storage
 	VirtualMachines Service = iota // Virtual Machines
 	VPNGateway      Service = iota // VPN Gateway
-	Storage         Service = iota // Storage
 )
 
 var (
 	// The list of all services is https://azure.microsoft.com/en-us/services/, the left side is
 	// the Family and the main content is the Services
 	services = map[string]struct{}{
+		NATGateway.String():      struct{}{},
+		Storage.String():         struct{}{},
 		VirtualMachines.String(): struct{}{},
 		VPNGateway.String():      struct{}{},
-		Storage.String():         struct{}{},
 	}
 )
 

@@ -116,6 +116,7 @@ func (ing *Ingester) fetchPrices(ctx context.Context) <-chan retailPrice {
 		zones := map[string]bool{}
 		zones[region.GetRegionToVNETZone(ing.region)] = true
 		zones[region.GetRegionToCDNZone(ing.region)] = true
+		zones["Global"] = true
 		var zonesFilter strings.Builder
 		for zone := range zones {
 			zonesFilter.WriteString(fmt.Sprintf(" or armRegionName eq '%s'", zone))
