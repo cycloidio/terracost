@@ -14,7 +14,6 @@ import (
 )
 
 // VirtualNetworkGateway is the entity that holds the logic to calculate price
-// of the google_compute_instance
 type VirtualNetworkGateway struct {
 	provider *Provider
 
@@ -38,7 +37,7 @@ type virtualNetworkGatewayValues struct {
 	} `mapstructure:"tc_usage"`
 }
 
-// decodeVirtualNetworkGatewayValues decodes and returns computeInstanceValues from a Terraform values map.
+// decodeVirtualNetworkGatewayValues decodes and returns Values from a Terraform values map.
 func decodeVirtualNetworkGatewayValues(tfVals map[string]interface{}) (virtualNetworkGatewayValues, error) {
 	var v virtualNetworkGatewayValues
 	config := &mapstructure.DecoderConfig{

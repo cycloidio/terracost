@@ -74,7 +74,9 @@ func (p *Provider) newVirtualMachine(vals virtualMachineValues) *LinuxWindowsVir
 			// Usage
 			monthlyDiskOperations: decimal.NewFromFloat(vals.Usage.OSDisk.MonthlyDiskOperations),
 		}
-		inst.os = strings.ToLower(vals.StorageOSDisk[0].OSType)
+		if vals.StorageOSDisk[0].OSType != "" {
+			inst.os = strings.ToLower(vals.StorageOSDisk[0].OSType)
+		}
 	}
 
 	return inst
