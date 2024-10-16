@@ -22,7 +22,7 @@ type virtualNetworkGatewayConnectionValues struct {
 	Type                    string `mapstructure:"type"`
 }
 
-// decodeVirtualNetworkGatewayConnectionValues decodes and returns computeInstanceValues from a Terraform values map.
+// decodeVirtualNetworkGatewayConnectionValues decodes and returns Values from a Terraform values map.
 func decodeVirtualNetworkGatewayConnectionValues(tfVals map[string]interface{}) (virtualNetworkGatewayConnectionValues, error) {
 	var v virtualNetworkGatewayConnectionValues
 	config := &mapstructure.DecoderConfig{

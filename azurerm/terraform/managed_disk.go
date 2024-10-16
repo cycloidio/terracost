@@ -14,7 +14,6 @@ import (
 )
 
 // ManagedDisk is the entity that holds the logic to calculate price
-// of the google_compute_instance
 type ManagedDisk struct {
 	provider *Provider
 	location string
@@ -42,7 +41,7 @@ type managedDiskValues struct {
 	} `mapstructure:"tc_usage"`
 }
 
-// decodeManagedDiskValues decodes and returns computeInstanceValues from a Terraform values map.
+// decodeManagedDiskValues decodes and returns Values from a Terraform values map.
 func decodeManagedDiskValues(tfVals map[string]interface{}) (managedDiskValues, error) {
 	var v managedDiskValues
 	config := &mapstructure.DecoderConfig{

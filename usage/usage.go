@@ -42,6 +42,9 @@ var Default = Usage{
 		},
 
 		// Azure
+		"azurerm_nat_gateway": map[string]interface{}{
+			"monthly_data_processed_gb": 150,
+		},
 		"azurerm_virtual_network_gateway": map[string]interface{}{
 			"monthly_data_transfer_gb": 150,
 		},

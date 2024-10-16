@@ -95,6 +95,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newManagedDisk(vals).Components()
+	case "azurerm_nat_gateway":
+		vals, err := decodeNatGatewayValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newNatGateway(vals).Components()
 	case "azurerm_virtual_machine":
 		vals, err := decodeVirtualMachineValues(tfRes.Values)
 		if err != nil {
