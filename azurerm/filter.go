@@ -23,6 +23,8 @@ func MinimalFilter(pp *price.WithProduct) bool {
 		if strings.HasSuffix(pp.Product.Attributes["meterName"], " Spot") || strings.HasSuffix(pp.Product.Attributes["meterName"], " Low Priority") {
 			return false
 		}
+		// DevTestConsumption Used to estimate windows without licence (hybride)
+		return (pp.Price.Attributes["type"] == "Consumption" || pp.Price.Attributes["type"] == "DevTestConsumption")
 	}
 
 	return pp.Price.Attributes["type"] == "Consumption"

@@ -83,6 +83,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newLinuxVirtualMachine(vals).Components()
+	case "azurerm_windows_virtual_machine":
+		vals, err := decodeWindowsVirtualMachineValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newWindowsVirtualMachine(vals).Components()
 	case "azurerm_managed_disk":
 		vals, err := decodeManagedDiskValues(tfRes.Values)
 		if err != nil {
