@@ -101,6 +101,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newVirtualNetworkGateway(vals).Components()
+	case "azurerm_virtual_network_gateway_connection":
+		vals, err := decodeVirtualNetworkGatewayConnectionValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newVirtualNetworkGatewayConnection(rss, vals).Components()
 	default:
 		return nil
 	}
