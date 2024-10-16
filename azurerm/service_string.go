@@ -7,11 +7,11 @@ import (
 	"strings"
 )
 
-const _ServiceName = "Virtual MachinesVirtual NetworkVPN GatewayStorage"
+const _ServiceName = "NAT GatewayStorageVirtual MachinesVPN Gateway"
 
-var _ServiceIndex = [...]uint8{0, 16, 31, 42, 49}
+var _ServiceIndex = [...]uint8{0, 11, 18, 34, 45}
 
-const _ServiceLowerName = "virtual machinesvirtual networkvpn gatewaystorage"
+const _ServiceLowerName = "nat gatewaystoragevirtual machinesvpn gateway"
 
 func (i Service) String() string {
 	if i >= Service(len(_ServiceIndex)-1) {
@@ -24,30 +24,30 @@ func (i Service) String() string {
 // Re-run the stringer command to generate them again.
 func _ServiceNoOp() {
 	var x [1]struct{}
-	_ = x[VirtualMachines-(0)]
-	_ = x[VirtualNetwork-(1)]
-	_ = x[VPNGateway-(2)]
-	_ = x[Storage-(3)]
+	_ = x[NATGateway-(0)]
+	_ = x[Storage-(1)]
+	_ = x[VirtualMachines-(2)]
+	_ = x[VPNGateway-(3)]
 }
 
-var _ServiceValues = []Service{VirtualMachines, VirtualNetwork, VPNGateway, Storage}
+var _ServiceValues = []Service{NATGateway, Storage, VirtualMachines, VPNGateway}
 
 var _ServiceNameToValueMap = map[string]Service{
-	_ServiceName[0:16]:       VirtualMachines,
-	_ServiceLowerName[0:16]:  VirtualMachines,
-	_ServiceName[16:31]:      VirtualNetwork,
-	_ServiceLowerName[16:31]: VirtualNetwork,
-	_ServiceName[31:42]:      VPNGateway,
-	_ServiceLowerName[31:42]: VPNGateway,
-	_ServiceName[42:49]:      Storage,
-	_ServiceLowerName[42:49]: Storage,
+	_ServiceName[0:11]:       NATGateway,
+	_ServiceLowerName[0:11]:  NATGateway,
+	_ServiceName[11:18]:      Storage,
+	_ServiceLowerName[11:18]: Storage,
+	_ServiceName[18:34]:      VirtualMachines,
+	_ServiceLowerName[18:34]: VirtualMachines,
+	_ServiceName[34:45]:      VPNGateway,
+	_ServiceLowerName[34:45]: VPNGateway,
 }
 
 var _ServiceNames = []string{
-	_ServiceName[0:16],
-	_ServiceName[16:31],
-	_ServiceName[31:42],
-	_ServiceName[42:49],
+	_ServiceName[0:11],
+	_ServiceName[11:18],
+	_ServiceName[18:34],
+	_ServiceName[34:45],
 }
 
 // ServiceString retrieves an enum value from the enum constants string name.
