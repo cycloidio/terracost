@@ -46,7 +46,26 @@ var Default = Usage{
 			"monthly_data_transfer_gb": 150,
 		},
 		"azurerm_managed_disk": map[string]interface{}{
+			// Number of disk operations (writes, reads, deletes)
 			"monthly_disk_operations": 100000000,
+		},
+		"azurerm_virtual_machine": map[string]interface{}{
+			"os_disk": map[string]interface{}{
+				// Number of disk operations (writes, reads, deletes)
+				"monthly_disk_operations": 100000000,
+			},
+		},
+		"azurerm_linux_virtual_machine": map[string]interface{}{
+			"os_disk": map[string]interface{}{
+				// Number of disk operations (writes, reads, deletes)
+				"monthly_disk_operations": 100000000,
+			},
+		},
+		"azurerm_windows_virtual_machine": map[string]interface{}{
+			"os_disk": map[string]interface{}{
+				// Number of disk operations (writes, reads, deletes)
+				"monthly_disk_operations": 100000000,
+			},
 		},
 	},
 }
