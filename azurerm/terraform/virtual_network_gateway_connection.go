@@ -14,6 +14,8 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// Use VirtualNetworkGateway struct that holds the logic to calculate price since both resources are close
+
 // virtualNetworkGatewayConnectionValues is holds the values that we need to be able
 // to calculate the price of the ComputeInstance
 type virtualNetworkGatewayConnectionValues struct {
