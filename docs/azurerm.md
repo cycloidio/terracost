@@ -22,12 +22,12 @@ If you need to add a **new resource**, the first step is to determine **which se
 
 If we **already support the service**, the only remaining step is to add the new resource.
 
-1. Add the new resource into the `terraform/` with a file name of the resource removing the provider prefix (ex: `azurerm_linux_virtual_machine`->`linux_virtual_machine.go`)
-2. As a starting point, copy the content from `linux_virtual_machine.go` into your new resource file
+1. Add the new resource into the `terraform/` with a file name of the resource removing the provider prefix (ex: `azurerm_virtual_network_gateway`->`virtual_network_gateway.go`)
+2. As a starting point, copy the content from `virtual_network_gateway.go` into your new resource file
 3. Replace function/variable names such as
 ```
-sed 's/LinuxVirtualMachine/NewResource/g'
-sed 's/linuxVirtualMachine/newResource/g'
+sed 's/VirtualNetworkGateway/NewResource/g'
+sed 's/virtualNetworkGateway/newResource/g'
 ```
 4. Add the resource in the `azurerm/terraform/provider.go` on the `ResourceComponents`
 5. Go back to your resource file and update the `{newResource}` and `{newResource}Values`struct.
@@ -44,7 +44,7 @@ Azure pricing attributes can be referenced from the [official documentation](htt
 
 Example to get the attributes available for your specific service:
 ```bash
-REQ="https://prices.azure.com/api/retail/prices?\$filter=serviceName eq 'Virtual Machines'"
+REQ="https://prices.azure.com/api/retail/prices?\$filter=serviceName eq 'VPN Gateway'"
 # REQ="https://prices.azure.com/api/retail/prices?\$filter=serviceName eq 'Virtual Machines' and (armRegionName eq 'northeurope' or armRegionName eq 'Zone 1')"
 # repalce escape and quote
 REQ=$(echo $REQ | sed "s/ /%20/g;s/'/%27/;s/(/%28/g;s/)/%29/g")
