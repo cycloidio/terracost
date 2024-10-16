@@ -78,27 +78,14 @@ REQ=$(echo $REQ | sed "s/ /%20/g;s/'/%27/;s/(/%28/g;s/)/%29/g")
 curl $REQ | jq .
 ```
 
+7. Verify the cost implemented match [Azure Calculator](https://azure.microsoft.com/en-us/pricing/calculator/)
+
 ## List of supported resources and attributes
 
-* [`azurerm_virtual_machine`](#azurerm_virtual_machine)
 * [`azurerm_linux_virtual_machine`](#azurerm_linux_virtual_machine)
-
-### `azurerm_virtual_machine`
-
-#### Cost factors
-
-* Location
-* VMSize
-
-#### Additional notes
-
-* We assume all the types are linux
-
-### `azurerm_linux_virtual_machine`
-
-#### Cost factors
-
-* Location
-* Size
-
-#### Additional notes
+* [`azurerm_windows_virtual_machine`](#azurerm_windows_virtual_machine)
+* [`azurerm_managed_disk`](#azurerm_managed_disk)
+* [`azurerm_nat_gateway`](#azurerm_nat_gateway)
+* [`azurerm_virtual_machine`](#azurerm_virtual_machine)
+* [`azurerm_virtual_network_gateway`](#azurerm_virtual_network_gateway)
+* [`azurerm_virtual_network_gateway_connection`](#azurerm_virtual_network_gateway_connection)
