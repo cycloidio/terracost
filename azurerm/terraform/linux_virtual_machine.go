@@ -1,6 +1,10 @@
 package terraform
 
 import (
+	"fmt"
+	"strings"
+
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/query"
@@ -9,13 +13,19 @@ import (
 	"github.com/shopspring/decimal"
 )
 
-// LinuxVirtualMachine is the entity that holds the logic to calculate price
+// LinuxWindowsVirtualMachine is the entity that holds the logic to calculate price
 // of the google_compute_instance
-type LinuxVirtualMachine struct {
-	provider *Provider
+type LinuxWindowsVirtualMachine struct {
+	provider        *Provider
+	location        string
+	size            string
+	ultraSSDEnabled bool
 
-	location string
-	size     string
+	managedDisk *ManagedDisk
+
+	// windows params
+	os          string
+	licenseType string
 }
 
 // linuxVirtualMachineValues is holds the values that we need to be able
@@ -23,9 +33,25 @@ type LinuxVirtualMachine struct {
 type linuxVirtualMachineValues struct {
 	Size     string `mapstructure:"size"`
 	Location string `mapstructure:"location"`
+
+	OSDisk []struct {
+		StorageAccountType string  `mapstructure:"storage_account_type"`
+		DiskSizeGB         float64 `mapstructure:"disk_size_gb"`
+	} `mapstructure:"os_disk"`
+
+	AdditionalCapabilities []struct {
+		UltraSSDEnabled bool `mapstructure:"ultra_ssd_enabled"`
+		UltraSSDLRS     bool `mapstructure:"UltraSSD_LRS"`
+	} `mapstructure:"additional_capabilities"`
+
+	Usage struct {
+		OSDisk struct {
+			MonthlyDiskOperations float64 `mapstructure:"monthly_disk_operations"`
+		} `mapstructure:"os_disk"`
+	} `mapstructure:"tc_usage"`
 }
 
-// decodeLinuxVirtualMachineValues decodes and returns computeInstanceValues from a Terraform values map.
+// decodeLinuxWindowsVirtualMachineValues decodes and returns computeInstanceValues from a Terraform values map.
 func decodeLinuxVirtualMachineValues(tfVals map[string]interface{}) (linuxVirtualMachineValues, error) {
 	var v linuxVirtualMachineValues
 	config := &mapstructure.DecoderConfig{
@@ -45,34 +71,64 @@ func decodeLinuxVirtualMachineValues(tfVals map[string]interface{}) (linuxVirtua
 }
 
 // newLinuxVirtualMachine initializes a new LinuxVirtualMachine from the provider
-func (p *Provider) newLinuxVirtualMachine(vals linuxVirtualMachineValues) *LinuxVirtualMachine {
-	inst := &LinuxVirtualMachine{
+func (p *Provider) newLinuxVirtualMachine(vals linuxVirtualMachineValues) *LinuxWindowsVirtualMachine {
+	inst := &LinuxWindowsVirtualMachine{
 		provider: p,
 
-		location: getLocationName(vals.Location),
+		location: region.GetLocationName(vals.Location),
 		size:     vals.Size,
+		os:       "linux",
 	}
 
+	if len(vals.AdditionalCapabilities) > 0 {
+		inst.ultraSSDEnabled = vals.AdditionalCapabilities[0].UltraSSDEnabled
+	}
+
+	if len(vals.OSDisk) > 0 {
+		inst.managedDisk = &ManagedDisk{
+			provider:           p,
+			location:           region.GetLocationName(vals.Location),
+			diskSizeGB:         decimal.NewFromFloat(vals.OSDisk[0].DiskSizeGB),
+			storageAccountType: vals.OSDisk[0].StorageAccountType,
+
+			// Usage
+			monthlyDiskOperations: decimal.NewFromFloat(vals.Usage.OSDisk.MonthlyDiskOperations),
+		}
+	}
 	return inst
 }
 
 // Components returns the price component queries that make up this Instance.
-func (inst *LinuxVirtualMachine) Components() []query.Component {
-	components := []query.Component{inst.linuxVirtualMachineComponent()}
+func (inst *LinuxWindowsVirtualMachine) Components() []query.Component {
+	components := []query.Component{}
+
+	if inst.os == "linux" {
+		components = append(components, inst.linuxVirtualMachineComponent(inst.provider.key, inst.location, inst.size))
+	} else {
+		components = append(components, inst.windowsVirtualMachineComponent(inst.provider.key, inst.location, inst.size, inst.licenseType))
+	}
+
+	if inst.ultraSSDEnabled {
+		components = append(components, inst.linuxVirtualMachineultraSSDReservationComponent(inst.provider.key, inst.location))
+	}
+
+	if inst.managedDisk != nil {
+		components = append(components, inst.managedDisk.Components()...)
+	}
 
 	return components
 }
 
-// linuxVirtualMachineComponent returns the query needed to be able to calculate the price
-func (inst *LinuxVirtualMachine) linuxVirtualMachineComponent() query.Component {
-	return linuxVirtualMachineComponent(inst.provider.key, inst.location, inst.size)
-}
+func (inst *LinuxWindowsVirtualMachine) linuxVirtualMachineComponent(key, location, size string) query.Component {
+	productNameRe := "Series( Linux)?$"
+	if strings.HasPrefix(strings.ToLower(size), "basic_") {
+		productNameRe = "Series Basic$"
+	} else if !strings.HasPrefix(strings.ToLower(size), "standard_") {
+		size = fmt.Sprintf("Standard_%s", size)
+	}
 
-// linuxVirtualMachineComponent is the abstraction of the same LinuxVirtualMachine.linuxVirtualMachineComponent
-// so it can be reused
-func linuxVirtualMachineComponent(key, location, size string) query.Component {
 	return query.Component{
-		Name:           "Compute",
+		Name:           "Compute Linux",
 		HourlyQuantity: decimal.NewFromInt(1),
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(key),
@@ -80,12 +136,39 @@ func linuxVirtualMachineComponent(key, location, size string) query.Component {
 			Family:   util.StringPtr("Compute"),
 			Location: util.StringPtr(location),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "arm_sku_name", Value: util.StringPtr(size)},
-				{Key: "priority", Value: util.StringPtr("regular")},
+				{Key: "productName", ValueRegex: util.StringPtr(productNameRe)},
+				{Key: "armSkuName", Value: util.StringPtr(size)},
 			},
 		},
 		PriceFilter: &price.Filter{
 			Unit: util.StringPtr("1 Hour"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "type", Value: util.StringPtr("Consumption")},
+			},
+		},
+	}
+}
+
+func (inst *LinuxWindowsVirtualMachine) linuxVirtualMachineultraSSDReservationComponent(key string, location string) query.Component {
+	return query.Component{
+		Name:           "Ultra disk reservation vCPU",
+		HourlyQuantity: decimal.NewFromInt(1),
+		ProductFilter: &product.Filter{
+			Provider: util.StringPtr(key),
+			Service:  util.StringPtr("Storage"),
+			Family:   util.StringPtr("Storage"),
+			Location: util.StringPtr(location),
+			AttributeFilters: []*product.AttributeFilter{
+				{Key: "skuName", Value: util.StringPtr("Ultra LRS")},
+				{Key: "productName", Value: util.StringPtr("Ultra Disks")},
+				{Key: "meterName", ValueRegex: util.StringPtr("Reservation per vCPU Provisioned$")},
+			},
+		},
+		PriceFilter: &price.Filter{
+			Unit: util.StringPtr("1/Hour"),
+			AttributeFilters: []*price.AttributeFilter{
+				{Key: "type", Value: util.StringPtr("Consumption")},
+			},
 		},
 	}
 }
