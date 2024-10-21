@@ -87,7 +87,7 @@ func (inst *VirtualNetworkGateway) Components() []query.Component {
 	return components
 }
 
-func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent(key, location, sku string, meterName string) query.Component {
+func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent(key string, location string, sku string, meterName string) query.Component {
 	return query.Component{
 		Name:           fmt.Sprintf("VPN gateway (%s)", sku),
 		HourlyQuantity: decimal.NewFromInt(1),
@@ -109,7 +109,7 @@ func (inst *VirtualNetworkGateway) virtualNetworkGatewayComponent(key, location,
 	}
 }
 
-func (inst *VirtualNetworkGateway) virtualNetworkGatewayP2SComponent(key, location, sku string) query.Component {
+func (inst *VirtualNetworkGateway) virtualNetworkGatewayP2SComponent(key string, location string, sku string) query.Component {
 	return query.Component{
 		Name:           "VPN gateway P2S tunnels (over 128)",
 		HourlyQuantity: decimal.NewFromInt(1),

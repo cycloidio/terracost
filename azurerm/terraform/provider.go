@@ -77,6 +77,12 @@ func (p *Provider) Name() string { return p.key }
 // ResourceComponents returns Component queries for a given terraform.Resource.
 func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes terraform.Resource) []query.Component {
 	switch tfRes.Type {
+	case "azurerm_bastion_host":
+		vals, err := decodeBastionHostValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newBastionHost(vals).Components()
 	case "azurerm_linux_virtual_machine":
 		vals, err := decodeLinuxVirtualMachineValues(tfRes.Values)
 		if err != nil {
