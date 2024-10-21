@@ -107,6 +107,18 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newNatGateway(vals).Components()
+	case "azurerm_dns_zone":
+		vals, err := decodeDNSZoneValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newDNSZone(rss, vals).Components()
+	case "azurerm_private_dns_zone":
+		vals, err := decodePrivateDNSZoneValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newPrivateDNSZone(rss, vals).Components()
 	case "azurerm_virtual_machine":
 		vals, err := decodeVirtualMachineValues(tfRes.Values)
 		if err != nil {
