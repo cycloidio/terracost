@@ -42,6 +42,9 @@ var Default = Usage{
 		},
 
 		// Azure
+		"azurerm_bastion_host": map[string]interface{}{
+			"monthly_outbound_data_gb": 40,
+		},
 		"azurerm_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 150,
 		},

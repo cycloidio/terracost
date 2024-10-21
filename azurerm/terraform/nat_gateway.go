@@ -59,9 +59,13 @@ func (p *Provider) newNatGateway(vals natGatewayValues) *NatGateway {
 		provider: p,
 
 		location: region.GetLocationName(vals.Location),
-		skuName:  vals.SkuName,
+		skuName:  "Standard",
 		// From Usage
 		monthlyDataProcessedGB: decimal.NewFromFloat(vals.Usage.MonthlyDataProcessedGB),
+	}
+
+	if vals.SkuName != "" {
+		inst.skuName = vals.SkuName
 	}
 
 	return inst
