@@ -84,39 +84,107 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		}
 		provider := providers[providerKey]
 
+		each := make(map[string]interface{})
+		if rv.ForEach != nil {
+			if fe, ok := rv.ForEach.(*hclsyntax.ForExpr); ok {
+				fev, err := fe.Value(evalCtx)
+				if err != nil {
+					return nil, fmt.Errorf("could not get value from ForEach: %w", err)
+				}
+				v, ok := convertCtyValue("", nil, fev)
+				if !ok {
+					// TODO: Return an error?
+				}
+				each = v.(map[string]interface{})
+			}
+		}
+		// When we only have to do it once
+		if len(each) == 0 {
+			each[""] = nil
+		}
 		// Parse the HCL body of the resource block and evaluate it. The JSON (in the form of map[string]interface{} type)
 		// is then placed into the cfg.
 		body, ok := rv.Config.(*hclsyntax.Body)
 		if !ok {
 			return nil, fmt.Errorf("invalid resource configuration body")
 		}
-		cfg := getBodyJSON(modName, body, evalCtx)
+		for k, v := range each {
+			if v != nil {
+				delete(evalCtx.Variables, "each")
+				vals := make(map[string]cty.Value)
+				for kv, vv := range v.(map[string]interface{}) {
+					it, err := gocty.ImpliedType(vv)
+					if err != nil {
+						continue
+					}
+					ctyv, err := gocty.ToCtyValue(vv, it)
+					if err != nil {
+						continue
+					}
+					vals[kv] = ctyv
+				}
 
-		// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
-		count := 1
-		if c, ok := cfg["count"]; ok {
-			if cf, ok := c.(float64); ok {
-				count = int(cf)
+				//each := map[string]interface{}{"value": vals}
+				vt, err := gocty.ImpliedType(vals)
+				if err != nil {
+					continue
+				}
+				ctyv, err := gocty.ToCtyValue(vals, vt)
+				if err != nil {
+					continue
+				}
+
+				// TODO: potentially overwrite the rk with the [k]
+				evalCtx.Variables["each"] = cty.ObjectVal(map[string]cty.Value{"value": ctyv})
 			}
-		}
+			cfg := getBodyJSON(modName, body, evalCtx)
+			// We delte the `for_each` key as we do not need it
+			delete(cfg, "for_each")
 
-		for i := 0; i < count; i++ {
-			addr := rk
-			if count > 1 {
-				addr = fmt.Sprintf("%s[%d]", rk, i)
-			}
+			if k == "" {
+				// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
+				count := 1
+				if c, ok := cfg["count"]; ok {
+					if cf, ok := c.(float64); ok {
+						count = int(cf)
+					}
+				}
 
-			// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
-			// that the resource was "skipped" from estimation.
-			if provider != nil {
-				rss[addr] = Resource{
-					Address:      addr,
-					Index:        i,
-					Mode:         "managed",
-					Type:         rv.Type,
-					Name:         rv.Name,
-					ProviderName: rv.Provider.Type,
-					Values:       cfg,
+				for i := 0; i < count; i++ {
+					addr := rk
+					if count > 1 {
+						addr = fmt.Sprintf("%s[%d]", rk, i)
+					}
+
+					// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
+					// that the resource was "skipped" from estimation.
+					if provider != nil {
+						rss[addr] = Resource{
+							Address:      addr,
+							Index:        i,
+							Mode:         "managed",
+							Type:         rv.Type,
+							Name:         rv.Name,
+							ProviderName: rv.Provider.Type,
+							Values:       cfg,
+						}
+					}
+				}
+			} else {
+				addr := rk
+				addr = fmt.Sprintf("%s[%s]", rk, k)
+
+				// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
+				// that the resource was "skipped" from estimation.
+				if provider != nil {
+					rss[addr] = Resource{
+						Address:      addr,
+						Mode:         "managed",
+						Type:         rv.Type,
+						Name:         rv.Name,
+						ProviderName: rv.Provider.Type,
+						Values:       cfg,
+					}
 				}
 			}
 		}
@@ -325,11 +393,7 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 			}
 		}
 		if iv, ok := inputs[vk]; ok {
-			ty, err := gocty.ImpliedType(iv)
-			if err != nil {
-				continue
-			}
-			ctyv, err := gocty.ToCtyValue(iv, ty)
+			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
 			if err != nil {
 				continue
 			}
@@ -368,104 +432,11 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			continue
 		}
-		switch val.Type() {
-		case cty.String:
-			// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
-			// Skip Unknown values to avoid panic.
-			// Other types such bool/Number without default value ends up here too
-			if !val.IsKnown() || val.IsNull() {
-				continue
-			}
-			cfg[attrk] = val.AsString()
-		case cty.Number:
-			if !val.IsKnown() || val.IsNull() {
-				continue
-			}
-			f, _ := val.AsBigFloat().Float64()
-			cfg[attrk] = f
-		case cty.Bool:
-			if !val.IsKnown() || val.IsNull() {
-				continue
-			}
-			cfg[attrk] = val.True()
-		default:
-			if val.Type().IsTupleType() {
-				values := make([]interface{}, 0, 0)
-				iter := val.ElementIterator()
-				for iter.Next() {
-					_, nval := iter.Element()
-					switch nval.Type() {
-					case cty.String:
-						// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
-						// Skip Unknow values to avoid panic.
-						// Other types such bool/Number without default value ends up here too
-						if !nval.IsKnown() || nval.IsNull() {
-							continue
-						}
-						values = append(values, nval.AsString())
-					case cty.Number:
-						if !nval.IsKnown() || nval.IsNull() {
-							continue
-						}
-						f, _ := nval.AsBigFloat().Float64()
-						values = append(values, f)
-					case cty.Bool:
-						if !nval.IsKnown() || nval.IsNull() {
-							continue
-						}
-						values = append(values, nval.True())
-					default:
-						vars := make([]string, 0, 0)
-						for _, vr := range attrv.Expr.Variables() {
-							v := string(hclwrite.TokensForTraversal(vr).Bytes())
-							sv := strings.Split(v, ".")
-							// The variables are also in here, if a variable
-							// has not been interpolated, which means it has no default,
-							// it'll be set as plain text and we don't want it
-							if sv[0] == "var" {
-								continue
-							}
-							// With this we remove the last element of the reference, which is the
-							// attribute it's linking to from the resource
-							//v = strings.Join(sv[0:len(sv)-1], ".")
-
-							// We prefix this attribute with the hclRefPrefix so then
-							// we know it's a reference and we can use it
-							v = strings.Join(sv, ".")
-							vars = append(vars, fmt.Sprintf("%s%s.%s", hclRefPrefix, modulePrefix, v))
-							// TODO: Here is where the references are
-						}
-						if len(vars) != 0 {
-							values = append(values, vars[0])
-						}
-					}
-				}
-				cfg[attrk] = values
-			} else {
-				vars := make([]string, 0, 0)
-				for _, vr := range attrv.Expr.Variables() {
-					v := string(hclwrite.TokensForTraversal(vr).Bytes())
-					sv := strings.Split(v, ".")
-					// The variables are also in here, if a variable
-					// has not been interpolated, which means it has no default,
-					// it'll be set as plain text and we don't want it
-					if sv[0] == "var" {
-						continue
-					}
-					// With this we remove the last element of the reference, which is the
-					// attribute it's linking to from the resource
-					//v = strings.Join(sv[0:len(sv)-1], ".")
-
-					// We prefix this attribute with the hclRefPrefix so then
-					// we know it's a reference and we can use it
-					v = strings.Join(sv, ".")
-					vars = append(vars, fmt.Sprintf("%s%s.%s", hclRefPrefix, modulePrefix, v))
-				}
-				if len(vars) != 0 {
-					cfg[attrk] = vars[0]
-				}
-			}
+		vv, ok := convertCtyValue(modulePrefix, attrv.Expr.Variables(), val)
+		if !ok {
+			continue
 		}
+		cfg[attrk] = vv
 	}
 	for _, block := range b.Blocks {
 		ncfg := getBodyJSON(modulePrefix, block.Body, evalCtx)
@@ -481,6 +452,121 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 	}
 
 	return cfg
+}
+
+// convertCtyValue converts the value v to a normal type, the second
+// return indicates if there is something to convert or no
+func convertCtyValue(modulePrefix string, attrvars []hcl.Traversal, val cty.Value) (interface{}, bool) {
+	switch val.Type() {
+	case cty.String:
+		// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
+		// Skip Unknown values to avoid panic.
+		// Other types such bool/Number without default value ends up here too
+		if !val.IsKnown() || val.IsNull() {
+			return nil, false
+		}
+		return val.AsString(), true
+	case cty.Number:
+		if !val.IsKnown() || val.IsNull() {
+			return nil, false
+		}
+		f, _ := val.AsBigFloat().Float64()
+		return f, true
+	case cty.Bool:
+		if !val.IsKnown() || val.IsNull() {
+			return nil, false
+		}
+		return val.True(), true
+	default:
+		if val.Type().IsTupleType() {
+			values := make([]interface{}, 0, 0)
+			iter := val.ElementIterator()
+			for iter.Next() {
+				_, nval := iter.Element()
+				switch nval.Type() {
+				case cty.String:
+					// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
+					// Skip Unknow values to avoid panic.
+					// Other types such bool/Number without default value ends up here too
+					if !nval.IsKnown() || nval.IsNull() {
+						continue
+					}
+					values = append(values, nval.AsString())
+				case cty.Number:
+					if !nval.IsKnown() || nval.IsNull() {
+						continue
+					}
+					f, _ := nval.AsBigFloat().Float64()
+					values = append(values, f)
+				case cty.Bool:
+					if !nval.IsKnown() || nval.IsNull() {
+						continue
+					}
+					values = append(values, nval.True())
+				default:
+					vars := make([]string, 0, 0)
+					for _, vr := range attrvars {
+						v := string(hclwrite.TokensForTraversal(vr).Bytes())
+						sv := strings.Split(v, ".")
+						// The variables are also in here, if a variable
+						// has not been interpolated, which means it has no default,
+						// it'll be set as plain text and we don't want it
+						if sv[0] == "var" || sv[0] == "each" {
+							//if sv[0] == "var" {
+							continue
+						}
+						// With this we remove the last element of the reference, which is the
+						// attribute it's linking to from the resource
+						//v = strings.Join(sv[0:len(sv)-1], ".")
+
+						// We prefix this attribute with the hclRefPrefix so then
+						// we know it's a reference and we can use it
+						v = strings.Join(sv, ".")
+						vars = append(vars, fmt.Sprintf("%s%s.%s", hclRefPrefix, modulePrefix, v))
+						// TODO: Here is where the references are
+					}
+					if len(vars) != 0 {
+						values = append(values, vars[0])
+					}
+				}
+			}
+			return values, true
+		} else if val.Type().IsObjectType() {
+			cfg := make(map[string]interface{})
+			for k, v := range val.AsValueMap() {
+				nv, ok := convertCtyValue(modulePrefix, nil, v)
+				if !ok {
+					continue
+				}
+				cfg[k] = nv
+			}
+			return cfg, true
+		} else {
+			vars := make([]string, 0, 0)
+			for _, vr := range attrvars {
+				v := string(hclwrite.TokensForTraversal(vr).Bytes())
+				sv := strings.Split(v, ".")
+				// The variables are also in here, if a variable
+				// has not been interpolated, which means it has no default,
+				// it'll be set as plain text and we don't want it
+				if sv[0] == "var" || sv[0] == "each" {
+					continue
+				}
+				// With this we remove the last element of the reference, which is the
+				// attribute it's linking to from the resource
+				//v = strings.Join(sv[0:len(sv)-1], ".")
+
+				// We prefix this attribute with the hclRefPrefix so then
+				// we know it's a reference and we can use it
+				v = strings.Join(sv, ".")
+				vars = append(vars, fmt.Sprintf("%s%s.%s", hclRefPrefix, modulePrefix, v))
+			}
+			if len(vars) != 0 {
+				return vars[0], true
+			}
+		}
+	}
+	return nil, false
 }
 
 // getHCLProviders extracts provider configurations from the module and initializes the providers using the
