@@ -16,6 +16,7 @@ require (
 	github.com/machinebox/progress v0.2.0
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/shopspring/decimal v1.3.1
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/afero v1.9.3
 	github.com/stretchr/testify v1.7.2
 	github.com/zclconf/go-cty v1.12.1
@@ -135,7 +136,6 @@ require (
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/sourcegraph/go-lsp v0.0.0-20200429204803-219e11d77f5d // indirect
 	github.com/sourcegraph/jsonrpc2 v0.1.0 // indirect
 	github.com/terraform-linters/tflint v0.44.1 // indirect

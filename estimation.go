@@ -1,6 +1,7 @@
 package terracost
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -11,8 +12,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/go-git/go-git/v5"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 
 	"github.com/cycloidio/terracost/backend"
@@ -77,7 +78,8 @@ func EstimateTerraformPlan(ctx context.Context, be backend.Backend, plan io.Read
 // is not defined on the root of the stack,
 // If Force Terragrunt(ftg) is set then we'll just run Terragrunt
 // If Parallelisim Terragrunt is set(!=0) it'll set it when running TG
-func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPath, modulePath string, ftg bool, ptg int, u usage.Usage, providerInitializers ...terraform.ProviderInitializer) ([]*cost.Plan, error) {
+// If debug is set to true it'll add more complex logging
+func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPath, modulePath string, ftg bool, ptg int, u usage.Usage, debug bool, providerInitializers ...terraform.ProviderInitializer) ([]*cost.Plan, error) {
 	if len(providerInitializers) == 0 {
 		providerInitializers = getDefaultProviders()
 	}
@@ -98,8 +100,6 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		afs = afero.NewOsFs()
 	}
 
-	spew.Dump("stackPath", stackPath)
-	spew.Dump("relModulePath", relModulePath)
 	if !ftg {
 		var hasTG bool
 		// We first check if the main main modulePath has a Terragrunt file to know what we have to run
@@ -174,8 +174,18 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 
 	// We set Writer and ErrWriter to io.Discard so we do not get
 	// any logs on the screen when running test of the tool itself
-	tgo.Writer = io.Discard
-	tgo.ErrWriter = io.Discard
+	var buff = &bytes.Buffer{}
+	if debug {
+		tgo.LogLevel = logrus.DebugLevel
+
+		tgo.Env = map[string]string{
+			"TF_LOG": "trace",
+		}
+		tgo.ErrWriter = buff
+	} else {
+		tgo.Writer = io.Discard
+		tgo.ErrWriter = io.Discard
+	}
 
 	// We need to initialize the tmpdir as a git repository because if the Terragrunt
 	// config has any of the functions like 'get_repo_root' it would fail if it's not
@@ -195,7 +205,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// Runs Terragrunt which basically generates some submodules
 	err = stack.Run(tgo)
 	if err != nil {
-		return nil, fmt.Errorf("failed to run stack %q: %w", stack.Path, err)
+		return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this are the STDERR: %s", stack.Path, err, buff.String())
 	}
 
 	costs := make([]*cost.Plan, 0)
