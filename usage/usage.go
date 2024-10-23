@@ -73,6 +73,18 @@ var Default = Usage{
 				"monthly_disk_operations": 100000000,
 			},
 		},
+		"azurerm_storage_share": map[string]interface{}{
+			"monthly_write_transactions": 1000000,
+			"monthly_list_transactions":  1000000,
+			"monthly_read_transactions":  1000000,
+			"monthly_other_transactions": 1000000,
+		},
+		"azurerm_public_ip": map[string]interface{}{
+			"monthly_hours": 730, // Corresponds to a full month
+		},
+		"azurerm_private_endpoint": map[string]interface{}{
+			"monthly_hours": 730, // Corresponds to a full month
+		},
 	},
 }
 

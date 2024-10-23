@@ -16,6 +16,7 @@ const (
 	NATGateway      Service = iota // NAT Gateway
 	Storage         Service = iota // Storage
 	VirtualMachines Service = iota // Virtual Machines
+	VirtualNetwork  Service = iota // Virtual Network
 	VPNGateway      Service = iota // VPN Gateway
 )
 
@@ -29,6 +30,7 @@ var (
 		Storage.String():         struct{}{},
 		VirtualMachines.String(): struct{}{},
 		VPNGateway.String():      struct{}{},
+		VirtualNetwork.String():  struct{}{},
 	}
 )
 

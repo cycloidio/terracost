@@ -137,6 +137,30 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newVirtualNetworkGatewayConnection(rss, vals).Components()
+	case "azurerm_storage_account":
+		vals, err := decodeStorageAccountValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newStorageAccount(vals).Components()
+	case "azurerm_storage_share":
+		vals, err := decodeStorageShareValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newStorageShare(rss, vals).Components()
+	case "azurerm_public_ip":
+		vals, err := decodePublicIPValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newPublicIP(vals).Components()
+	case "azurerm_private_endpoint":
+		vals, err := decodePrivateEndpointValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newPrivateEndpoint(vals).Components()
 	default:
 		return nil
 	}
