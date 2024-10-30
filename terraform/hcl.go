@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -124,7 +125,6 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 					vals[kv] = ctyv
 				}
 
-				//each := map[string]interface{}{"value": vals}
 				vt, err := gocty.ImpliedType(vals)
 				if err != nil {
 					continue
@@ -393,8 +393,12 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 			}
 		}
 		if iv, ok := inputs[vk]; ok {
+			iv = convertGoTypesToExpectedCtyType(iv, vv.Type)
 			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
 			if err != nil {
+				// NOTE: There are some types that we don't how to
+				// parse yet but we want to continue so we ignore
+				// the error
 				continue
 			}
 			vars[vk] = ctyv
@@ -421,6 +425,111 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	evalCtx.Variables["local"] = cty.ObjectVal(lm)
 
 	return evalCtx
+}
+
+// convertGoTypesToExpectedCtyType will take a GO value and a cty.Type and convert the GO value into the cty.Type as much
+// as possible by trying to weak-type assertions
+func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
+	var nv interface{}
+	// We check if the expected type on the module
+	// matches the type we have on the inputs, if
+	// not we have to convert the type on the inputs
+	// to the one expected on the module definition.
+	switch t {
+	case cty.String:
+		var ok bool
+		nv, ok = v.(string)
+		if !ok {
+			nv = fmt.Sprint(v)
+		}
+	case cty.Number:
+		switch t := v.(type) {
+		case float64:
+			// This is the right type numbers are parsed
+			nv = v
+		case string:
+			niv, err := strconv.Atoi(t)
+			if err != nil {
+				// NOTE: This is so it does not
+				// break when parsing
+				nv = 0
+				break
+			}
+			nv = niv
+		case bool:
+			nv = 1
+			if !t {
+				nv = 0
+			}
+		default:
+			// NOTE: This is so it does not
+			// break when parsing
+			nv = false
+		}
+	case cty.Bool:
+		switch t := v.(type) {
+		case bool:
+			// This is the right type
+			nv = v
+		case string:
+			nv = false
+			if t == "true" {
+				nv = true
+			}
+		case float64:
+			nv = false
+			if t > 0.0 {
+				nv = true
+			}
+		default:
+			// NOTE: This is so it does not
+			// break when parsing
+			nv = false
+		}
+	case cty.DynamicPseudoType:
+		// TODO: Don't know how to evaluate the content of it yet
+		// for what I've seen this is happening when it has mix types
+		// defined init
+	default:
+		// Here we check for complex types
+		// TODO: Some of this types I don't have examples
+		// of or may not even be possible for them to happen.
+		// Gonna leave the IF statements so we know them
+		if t.IsTupleType() {
+		} else if t.IsObjectType() {
+			cfg := make(map[string]interface{})
+			for vk, vv := range v.(map[string]interface{}) {
+				if t.HasAttribute(vk) {
+					at := t.AttributeType(vk)
+					cfg[vk] = convertGoTypesToExpectedCtyType(vv, at)
+				} else {
+					// If the recieving object does not have the expected
+					cfg[vk] = convertGoTypesToExpectedCtyType(vv, cty.String)
+				}
+			}
+			nv = cfg
+		} else if t.IsMapType() {
+			// A map is a list of the same type
+			mv := make(map[string]interface{})
+			et := t.MapElementType()
+			for vk, vv := range v.(map[string]interface{}) {
+				mv[vk] = convertGoTypesToExpectedCtyType(vv, *et)
+			}
+			nv = mv
+			break
+		} else if t.IsListType() {
+			lv := make([]interface{}, 0, 0)
+			et := t.ListElementType()
+			for _, vv := range v.([]interface{}) {
+				nnv := convertGoTypesToExpectedCtyType(vv, *et)
+				lv = append(lv, nnv)
+			}
+			nv = lv
+			break
+		} else {
+		}
+	}
+	return nv
 }
 
 // getBodyJSON gets all the variables in a JSON format of the actual representation and the references it may have
@@ -457,6 +566,9 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 // convertCtyValue converts the value v to a normal type, the second
 // return indicates if there is something to convert or no
 func convertCtyValue(modulePrefix string, attrvars []hcl.Traversal, val cty.Value) (interface{}, bool) {
+	if val.IsNull() {
+		return nil, true
+	}
 	switch val.Type() {
 	case cty.String:
 		// If the attribute points to a variable without a default value, "cty.UnknownVal(cty.String)" is returned
