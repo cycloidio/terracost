@@ -192,7 +192,6 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// a git repository
 	_, err = git.PlainInit(tmpdir, false)
 	if err != nil && !errors.Is(git.ErrRepositoryAlreadyExists, err) {
-		//if err != nil {
 		return nil, fmt.Errorf("failed to initialize git repo %q: %w", tmpdir, err)
 	}
 
@@ -205,7 +204,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// Runs Terragrunt which basically generates some submodules
 	err = stack.Run(tgo)
 	if err != nil {
-		return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this are the STDERR: %s", stack.Path, err, buff.String())
+		return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this is the STDERR for TG: %s", stack.Path, err, buff.String())
 	}
 
 	costs := make([]*cost.Plan, 0)
