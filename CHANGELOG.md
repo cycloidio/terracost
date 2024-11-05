@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.2] _2024-11-05_
+
 ### Added
 
 - AWS support for `aws_fsx_lustre_file_system`, `aws_fsx_ontap_file_system`, `aws_fsx_openzfs_file_system`, `aws_fsx_windows_file_system`
