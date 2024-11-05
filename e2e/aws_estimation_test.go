@@ -25,6 +25,7 @@ import (
 var (
 	noModulePath            = ""
 	noForceTerragrunt       bool
+	noDebug                 bool
 	noParallelismTerragrunt = 0
 )
 
@@ -326,7 +327,7 @@ func TestAWSEstimation(t *testing.T) {
 	t.Run("HCL", func(t *testing.T) {
 		t.Run("Success", func(t *testing.T) {
 
-			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-aws", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
 			require.Len(t, plans, 1)
 			plan := plans[0]
@@ -339,7 +340,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessMagento", func(t *testing.T) {
 
-			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-magento", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
 			require.Len(t, plans, 1)
 			plan := plans[0]
@@ -352,7 +353,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessASG", func(t *testing.T) {
 
-			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-asg", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
 			require.Len(t, plans, 1)
 			plan := plans[0]
@@ -365,7 +366,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessEKS", func(t *testing.T) {
 
-			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-eks", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-eks", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
 			require.Len(t, plans, 1)
 			plan := plans[0]
@@ -378,7 +379,7 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessRemote", func(t *testing.T) {
 
-			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-remote", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
 			require.Len(t, plans, 1)
 			plan := plans[0]

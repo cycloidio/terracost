@@ -57,7 +57,7 @@ func TestAzureRMEstimation(t *testing.T) {
 		assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(64.021), "USD"), pcost)
 	})
 	t.Run("FromHCL", func(t *testing.T) {
-		plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/azurerm/stack-compute", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+		plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/azurerm/stack-compute", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 		require.NoError(t, err)
 		require.Len(t, plans, 1)
 		plan := plans[0]

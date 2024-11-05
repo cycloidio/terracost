@@ -20,6 +20,10 @@
   ([Issue #106](https://github.com/cycloidio/terracost/issues/106))
 - Added the option to specify Parallelism on Terragrunt
   ([Issue #106](https://github.com/cycloidio/terracost/pull/118))
+- Added ability to follow HCL references
+  ([Pull #124](https://github.com/cycloidio/terracost/pull/124))
+- Added `for_each` resources estimation
+  ([Pull #124](https://github.com/cycloidio/terracost/pull/124))
 
 ### Fixed
 
@@ -35,6 +39,8 @@
   ([Issue #90](https://github.com/cycloidio/terracost/issues/90)), ([Issue #74](https://github.com/cycloidio/terracost/issues/74))
 - The dependencies to use terraform `v1.4.6-cy`
   ([Pull #121](https://github.com/cycloidio/terracost/pull/121))
+- Variable weak typing errors are now fixed
+  ([Pull #124](https://github.com/cycloidio/terracost/pull/124))
 
 ## [0.5.1] _2023-03-08_
 
