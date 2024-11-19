@@ -9,7 +9,7 @@ Examples help you to understand how to test TerraCost.
 Cloud Provider pricing data need to be ingested in a Mysql server. For testing purpose, local docker can be used
 
 ```
-docker run  -p 3306:3306 -d --privileged  -e MYSQL_ROOT_PASSWORD=terracost  mysql:8.0.36 --default-authentication-plugin=mysql_native_password
+docker run  -p 3306:3306 -d --privileged  -e MYSQL_ROOT_PASSWORD=terracost  mysql:8.4.3
 ```
 
 Once Mysql started, create the terracost database
