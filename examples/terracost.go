@@ -182,7 +182,8 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 	}
 
 	// terraform HCL directory
-	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, 0, usage.Default, terraformProviderInitializer)
+        debugEnabled := false
+	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, 0, usage.Default, debugEnabled, terraformProviderInitializer)
 
 	if err != nil {
 		fmt.Printf("%s\n", err)
