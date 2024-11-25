@@ -75,7 +75,7 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 
 			prod := &product.Product{
 				Provider: ProviderName,
-				SKU:      fmt.Sprintf("%s-%s-%.2f", rp.SkuID, rp.MeterID, rp.TierMinimumUnits),
+				SKU:      fmt.Sprintf("%s-%s-%s-%.2f", rp.SkuID, rp.MeterID, rp.Type, rp.TierMinimumUnits),
 				Service:  rp.ServiceName,
 				Family:   rp.ServiceFamily,
 				Location: rp.ArmRegionName,
@@ -126,21 +126,21 @@ func (ing *Ingester) fetchPrices(ctx context.Context) <-chan retailPrice {
 		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and (armRegionName eq '%s'%s)", ing.service, ing.region, zonesFilter.String()))
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s?$filter=%s", ing.buildPricesURL(), f), nil)
 		if err != nil {
-			ing.err = err
+			ing.err = fmt.Errorf("error creating HTTP request: %w", err)
 			return
 		}
 
 		for req != nil {
 			res, err := ing.client.Do(req)
 			if err != nil {
-				ing.err = err
+				ing.err = fmt.Errorf("error executing HTTP request: %w", err)
 				return
 			}
 
 			var rps retailPricesResponse
 			err = json.NewDecoder(res.Body).Decode(&rps)
 			if err != nil {
-				ing.err = err
+				ing.err = fmt.Errorf("error decoding HTTP response: %w", err)
 				return
 			}
 			res.Body.Close()

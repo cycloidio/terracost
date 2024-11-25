@@ -97,13 +97,13 @@ func (p *Provider) newStorageShare(rss map[string]terraform.Resource, vals stora
 		monthlyOtherTransactions: decimal.NewFromInt(vals.Usage.MonthlyOtherTransactions),
 	}
 	//accessTier is optional.
-	//Note! TransactionOptimized is ignored since it corresponds to the default vallue on the billing API standard
+	//Note! TransactionOptimized is ignored since it corresponds to the default value on the billing API standard
 	// 		terraform values		billing values
 	//		"Hot":                  "Hot",
 	//		"Cool":                 "Cool",
 	//		"TransactionOptimized": "Standard",
 	//		"Premium":              "Premium",
-	if vals.AccessTier != "" || vals.AccessTier != "TransactionOptimized" {
+	if vals.AccessTier != "" && vals.AccessTier != "TransactionOptimized" {
 		inst.accessTier = vals.AccessTier
 
 	}
