@@ -391,7 +391,7 @@ func TestAWSEstimation(t *testing.T) {
 			assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(86.474), "USD"), pcost)
 		})
 		t.Run("SuccessTerragrunt", func(t *testing.T) {
-			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/terragrunt/", "../testdata/aws/terragrunt/non-prod/us-east-1/qa/webserver-cluster/", noForceTerragrunt, noParallelismTerragrunt, usage.Default)
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/terragrunt/", "../testdata/aws/terragrunt/non-prod/us-east-1/qa/webserver-cluster/", noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
 			require.Len(t, plans, 2)
 
@@ -409,6 +409,11 @@ func TestAWSEstimation(t *testing.T) {
 					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(18.25), "USD"), pcost)
 				}
 			}
+		})
+		t.Run("SuccessFunctions", func(t *testing.T) {
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-functions/", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
+			require.NoError(t, err)
+			require.Len(t, plans, 1)
 		})
 	})
 }

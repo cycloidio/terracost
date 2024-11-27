@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+### Fixed
+
+- Now HCL functions are loaded so no more errors related to functions missing
+  ([Issue #126](https://github.com/cycloidio/terracost/issue/126))
+
 ## [0.5.2] _2024-11-05_
 
 ### Added
