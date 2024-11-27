@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform/addrs"
 	"github.com/hashicorp/terraform/configs"
 	"github.com/hashicorp/terraform/getmodules"
+	"github.com/hashicorp/terraform/lang"
 	"github.com/hashicorp/terraform/registry"
 	"github.com/hashicorp/terraform/registry/regsrc"
 	"github.com/spf13/afero"
@@ -405,12 +406,14 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 		}
 	}
 
+	scope := lang.Scope{}
 	// Initialize the evaluation context that will be used by the Terraform parser to fill in values
 	// of variables. E.g. the `var` element contains variable values accessible from HCL using `var.*`.
 	evalCtx := &hcl.EvalContext{
 		Variables: map[string]cty.Value{
 			"var": cty.ObjectVal(vars),
 		},
+		Functions: scope.Functions(),
 	}
 
 	// Set values of locals.
