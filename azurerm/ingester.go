@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/cycloidio/terracost/azurerm/region"
 	"github.com/cycloidio/terracost/price"
 	"github.com/cycloidio/terracost/product"
 	"github.com/shopspring/decimal"
@@ -71,23 +72,19 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 		defer close(results)
 
 		for rp := range ing.fetchPrices(ctx) {
-			priority := "regular"
-			if strings.HasSuffix(rp.MeterName, " Spot") {
-				priority = "spot"
-			} else if strings.HasSuffix(rp.MeterName, " Low Priority") {
-				priority = "low"
-			}
+
 			prod := &product.Product{
 				Provider: ProviderName,
-				SKU:      rp.SkuID,
+				SKU:      fmt.Sprintf("%s-%s-%s-%.2f", rp.SkuID, rp.MeterID, rp.Type, rp.TierMinimumUnits),
 				Service:  rp.ServiceName,
 				Family:   rp.ServiceFamily,
 				Location: rp.ArmRegionName,
 				Attributes: map[string]string{
-					"arm_sku_name": rp.ArmSkuName,
-					"product_name": rp.ProductName,
-					"sku_name":     rp.SkuName,
-					"priority":     priority,
+					"armSkuName":       rp.ArmSkuName,
+					"meterName":        rp.MeterName,
+					"productName":      rp.ProductName,
+					"skuName":          rp.SkuName,
+					"tierMinimumUnits": fmt.Sprintf("%f", rp.TierMinimumUnits),
 				},
 			}
 			pwp := &price.WithProduct{
@@ -106,7 +103,6 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 			}
 		}
 	}()
-
 	return results
 }
 
@@ -115,25 +111,36 @@ func (ing *Ingester) fetchPrices(ctx context.Context) <-chan retailPrice {
 
 	go func() {
 		defer close(results)
+
+		// Azure also use Zones as location. Get Zones to ingest depending of the region
+		zones := map[string]bool{}
+		zones[region.GetRegionToVNETZone(ing.region)] = true
+		zones[region.GetRegionToCDNZone(ing.region)] = true
+		zones["Global"] = true
+		var zonesFilter strings.Builder
+		for zone := range zones {
+			zonesFilter.WriteString(fmt.Sprintf(" or armRegionName eq '%s'", zone))
+		}
+
 		// Docs: https://docs.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices
-		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and armRegionName eq '%s'", ing.service, ing.region))
+		f := url.PathEscape(fmt.Sprintf("serviceName eq '%s' and (armRegionName eq '%s'%s)", ing.service, ing.region, zonesFilter.String()))
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s?$filter=%s", ing.buildPricesURL(), f), nil)
 		if err != nil {
-			ing.err = err
+			ing.err = fmt.Errorf("error creating HTTP request: %w", err)
 			return
 		}
 
 		for req != nil {
 			res, err := ing.client.Do(req)
 			if err != nil {
-				ing.err = err
+				ing.err = fmt.Errorf("error executing HTTP request: %w", err)
 				return
 			}
 
 			var rps retailPricesResponse
 			err = json.NewDecoder(res.Body).Decode(&rps)
 			if err != nil {
-				ing.err = err
+				ing.err = fmt.Errorf("error decoding HTTP response: %w", err)
 				return
 			}
 			res.Body.Close()

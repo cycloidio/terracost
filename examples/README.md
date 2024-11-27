@@ -9,7 +9,7 @@ Examples help you to understand how to test TerraCost.
 Cloud Provider pricing data need to be ingested in a Mysql server. For testing purpose, local docker can be used
 
 ```
-docker run  -p 3306:3306 -d --privileged  -e MYSQL_ROOT_PASSWORD=terracost  mysql:8.0.36 --default-authentication-plugin=mysql_native_password
+docker run  -p 3306:3306 -d --privileged  -e MYSQL_ROOT_PASSWORD=terracost  mysql:8.4.3
 ```
 
 Once Mysql started, create the terracost database
@@ -55,4 +55,22 @@ go run terracost.go -estimate-plan ./terraform-plan.json
 To estimate terraform code, define the terraform provider to use and the path of your terraform hcl code.
 ```
 go run terracost.go -provider aws -estimate-hcl ../testdata/aws/stack-aws
+```
+
+### Tips to check the billing queries
+
+```
+mysql -h 127.0.0.1 -uroot -pterracost terracost_test
+
+mysql>select * from pricing_products where service="$SERVICE" and family=""$FAMILY"" and JSON_EXTRACT(attributes, "$.skuName") = "$SKUNAME" and JSON_EXTRACT(attributes, "$.meterName") = "$METERNAME";
++--+----------+-----+----------+---------+---------+-----------+
+id | provider | sku | location | service | family  | attributes
++--+----------+-----+----------+---------+---------+-----------+
+01 | azurem   | sku | location | service | family  | {...}
++--+----------+-----+----------+---------+---------+-----------+
+```
+
+Remember that the query above correspond to the query to the billing API like this
+```
+curl -s "https://prices.azure.com/api/retail/prices?\$filter=serviceName eq '$SERVICE'" and  serviceFamily eq '$FAMILY' and skuName eq 'SKUNAME' and meterName eq 'METERNAME'| jq .
 ```

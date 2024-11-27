@@ -26,8 +26,12 @@ ci: lint
 	@$(GO_TEST_CMD) ./...
 
 .PHONY: test
-test: lint down db-up db-migrate
+test: down db-up db-migrate
 	@$(GO_TEST_CMD) ./...
+
+.PHONY: test-package
+test-package: db-migrate
+	@$(GO_TEST_CMD) $(P)
 
 .PHONY: db-inject
 db-inject:

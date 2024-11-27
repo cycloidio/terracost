@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"strings"
 
@@ -13,8 +15,10 @@ import (
 	"github.com/cycloidio/terracost/aws/region"
 	awstf "github.com/cycloidio/terracost/aws/terraform"
 	"github.com/cycloidio/terracost/azurerm"
-	azurestf "github.com/cycloidio/terracost/azurerm/terraform"
+	azuretf "github.com/cycloidio/terracost/azurerm/terraform"
 	"github.com/cycloidio/terracost/cost"
+	"github.com/cycloidio/terracost/google"
+	googletf "github.com/cycloidio/terracost/google/terraform"
 	"github.com/cycloidio/terracost/mysql"
 	"github.com/cycloidio/terracost/terraform"
 	"github.com/cycloidio/terracost/usage"
@@ -28,13 +32,16 @@ func helpUsage() {
 }
 
 var (
-	flagIngest            bool   = false
-	flagIngestMinimal     bool   = true
-	flagAWSIngestRegion   string = "eu-west-1"
-	flagAzureIngestRegion string = "francecentral"
-	flagestimatePlan      string = ""
-	flagestimateHCL       string = ""
-	flagProvider          string = "aws"
+	flagIngest               bool   = false
+	flagIngestMinimal        bool   = true
+	flagIngestRegion         string = ""
+	defaultAWSRegion         string = "eu-west-1"
+	defaultAzureRegion       string = "francecentral"
+	defaultGCPRegion         string = "europe-west1-b"
+	flagestimatePlan         string = ""
+	flagestimateHCL          string = ""
+	flagProvider             string = "aws"
+	googleCredentialFilePath string = "/tmp/credentials.json"
 )
 
 func main() {
@@ -42,11 +49,11 @@ func main() {
 	flag.Usage = helpUsage
 	flag.BoolVar(&flagIngest, "ingest", flagIngest, "Run price ingester")
 	flag.BoolVar(&flagIngestMinimal, "ingest-minimal", flagIngestMinimal, "Minimal ingest")
-	flag.StringVar(&flagAWSIngestRegion, "ingest-aws-region", flagAWSIngestRegion, "AWS region used to ingest")
-	flag.StringVar(&flagAzureIngestRegion, "ingest-azure-region", flagAzureIngestRegion, "AWS region used to ingest")
+	flag.StringVar(&flagIngestRegion, "ingest-region", flagIngestRegion, "Region used to ingest")
 	flag.StringVar(&flagestimatePlan, "estimate-plan", flagestimatePlan, "terraform-plan.json file path to estimate (example: ./terraform-plan.json)")
 	flag.StringVar(&flagestimateHCL, "estimate-hcl", flagestimateHCL, "terraform HCL code path to estimate (example: ../testdata/aws/stack-aws)")
-	flag.StringVar(&flagProvider, "provider", flagProvider, "Terraform provider used [aws|azurerm]")
+	flag.StringVar(&flagProvider, "provider", flagProvider, "Terraform provider used [aws|azure|gcp]")
+	flag.StringVar(&googleCredentialFilePath, "google-cred-file", googleCredentialFilePath, "GCP JSON credential file path (/tmp/credentials.json)")
 
 	flag.Parse()
 
@@ -69,9 +76,15 @@ func main() {
 	backend := mysql.NewBackend(db)
 
 	if flagIngest {
-		ingestRegion := flagAWSIngestRegion
-		if flagProvider == "azurerm" {
-			ingestRegion = flagAzureIngestRegion
+		ingestRegion := flagIngestRegion
+		if ingestRegion == "" {
+			if flagProvider == "aws" {
+				ingestRegion = defaultAWSRegion
+			} else if flagProvider == "azure" {
+				ingestRegion = defaultAzureRegion
+			} else if flagProvider == "gcp" {
+				ingestRegion = defaultGCPRegion
+			}
 		}
 		ingest(flagProvider, ingestRegion, backend, db)
 	}
@@ -114,7 +127,7 @@ func ingest(flagProvider string, region string, backend *mysql.Backend, db *sql.
 				os.Exit(1)
 			}
 		}
-	} else if flagProvider == "azurerm" {
+	} else if flagProvider == "azure" {
 		for _, s := range azurerm.GetSupportedServices() {
 			fmt.Printf("[%s] Ingestion\n", s)
 			op := []azurerm.Option{}
@@ -122,6 +135,48 @@ func ingest(flagProvider string, region string, backend *mysql.Backend, db *sql.
 				op = append(op, azurerm.WithIngestionFilter(azurerm.MinimalFilter))
 			}
 			ingester, err := azurerm.NewIngester(context.Background(), s, region, op...)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(1)
+			}
+
+			err = terracost.IngestPricing(context.Background(), backend, ingester)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(1)
+			}
+		}
+	} else if flagProvider == "gcp" {
+		for _, s := range google.GetSupportedServices() {
+			fmt.Printf("[%s] Ingestion\n", s)
+			op := []google.Option{}
+			if flagIngestMinimal {
+				op = append(op, google.WithIngestionFilter(google.MinimalFilter))
+			}
+
+			// Read a GCP access credentials json file
+			// https://developers.google.com/workspace/guides/create-credentials?hl=en
+			file, err := ioutil.ReadFile(googleCredentialFilePath)
+			if err != nil {
+				fmt.Printf("Failed to open google credential file: %s\n", err)
+			}
+
+			type GoogleCredential struct {
+				ProjectID string `json:"project_id"`
+			}
+
+			// Define a variable to hold the data
+			var credential GoogleCredential
+			err = json.Unmarshal(file, &credential)
+			if err != nil {
+				fmt.Printf("Failed to decode JSON: %s\n", err)
+			}
+
+			googleProject := credential.ProjectID
+			googleCredentialJSON := file
+
+			ingester, err := google.NewIngester(context.Background(), googleCredentialJSON, s, googleProject, region, op...)
+
 			if err != nil {
 				fmt.Printf("%s\n", err)
 				os.Exit(1)
@@ -161,7 +216,7 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 	var terraformProviderInitializer = terraform.ProviderInitializer{}
 	if provider == "aws" {
 		terraformProviderInitializer = terraform.ProviderInitializer{
-			MatchNames: []string{provider, fmt.Sprintf("registry.terraform.io/hashicorp/%s", provider)},
+			MatchNames: []string{"aws", fmt.Sprintf("registry.terraform.io/hashicorp/%s", "aws")},
 			Provider: func(config map[string]interface{}) (terraform.Provider, error) {
 				r, ok := config["region"]
 				if !ok {
@@ -172,17 +227,28 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 			},
 		}
 
-	} else if provider == "azurerm" {
+	} else if provider == "azure" {
 		terraformProviderInitializer = terraform.ProviderInitializer{
-			MatchNames: []string{provider, fmt.Sprintf("registry.terraform.io/hashicorp/%s", provider)},
+			MatchNames: []string{"azurerm", fmt.Sprintf("registry.terraform.io/hashicorp/%s", "azurerm")},
 			Provider: func(config map[string]interface{}) (terraform.Provider, error) {
-				return azurestf.NewProvider(provider)
+				return azuretf.NewProvider(provider)
+			},
+		}
+	} else if provider == "gcp" {
+		terraformProviderInitializer = terraform.ProviderInitializer{
+			MatchNames: []string{"google", fmt.Sprintf("registry.terraform.io/hashicorp/%s", "google")},
+			Provider: func(config map[string]interface{}) (terraform.Provider, error) {
+				r, ok := config["region"]
+				if !ok {
+					return nil, nil
+				}
+				return googletf.NewProvider(provider, r.(string))
 			},
 		}
 	}
-
 	// terraform HCL directory
-	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, 0, usage.Default, terraformProviderInitializer)
+	debugEnabled := false
+	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, 0, usage.Default, debugEnabled, terraformProviderInitializer)
 
 	if err != nil {
 		fmt.Printf("%s\n", err)

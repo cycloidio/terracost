@@ -40,7 +40,7 @@ func TestAzureRMIngestion(t *testing.T) {
 
 	allProds, err := backend.Products().Filter(ctx, &product.Filter{Provider: util.StringPtr(azurerm.ProviderName), Service: util.StringPtr(azurerm.VirtualMachines.String())})
 	require.NoError(t, err)
-	assert.Len(t, allProds, 838)
+	assert.Lenf(t, allProds, 1248, "expectes 1248 items, got %d", len(allProds))
 
 	for _, prod := range allProds {
 		prices, err := backend.Prices().Filter(ctx, prod.ID, nil)

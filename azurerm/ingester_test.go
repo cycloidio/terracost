@@ -24,7 +24,7 @@ func TestIngest(t *testing.T) {
 		require.NoError(t, err)
 
 		var count int
-		for _ = range i.Ingest(ctx, 10) {
+		for range i.Ingest(ctx, 10) {
 			count++
 		}
 
@@ -37,12 +37,12 @@ func TestIngest(t *testing.T) {
 		require.NoError(t, err)
 
 		var count int
-		for _ = range i.Ingest(ctx, 10) {
+		for range i.Ingest(ctx, 10) {
 			count++
 		}
 
 		require.NoError(t, i.Err())
-		assert.Equal(t, 840, count)
+		assert.Equal(t, 1248, count) // 840 + 408
 	})
 	t.Run("ErrNotSupportedService", func(t *testing.T) {
 		_, err := azurerm.NewIngester(ctx, "invalid service", region, azurerm.WithIngestionFilter(azurerm.MinimalFilter), azurerm.WithEndpoint(ts.URL))

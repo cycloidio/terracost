@@ -9,6 +9,7 @@ const (
 // Default is the default Usage that will be used if none is configured
 var Default = Usage{
 	ResourceDefaultTypeUsage: map[string]interface{}{
+		// AWS
 		"aws_eks_node_group": map[string]interface{}{
 			"instances":                        15,
 			"operating_system":                 "linux",
@@ -38,6 +39,51 @@ var Default = Usage{
 		},
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
+		},
+
+		// Azure
+		"azurerm_bastion_host": map[string]interface{}{
+			"monthly_outbound_data_gb": 40,
+		},
+		"azurerm_nat_gateway": map[string]interface{}{
+			"monthly_data_processed_gb": 150,
+		},
+		"azurerm_virtual_network_gateway": map[string]interface{}{
+			"monthly_data_transfer_gb": 150,
+		},
+		"azurerm_managed_disk": map[string]interface{}{
+			// Number of disk operations (writes, reads, deletes)
+			"monthly_disk_operations": 100000000,
+		},
+		"azurerm_virtual_machine": map[string]interface{}{
+			"os_disk": map[string]interface{}{
+				// Number of disk operations (writes, reads, deletes)
+				"monthly_disk_operations": 100000000,
+			},
+		},
+		"azurerm_linux_virtual_machine": map[string]interface{}{
+			"os_disk": map[string]interface{}{
+				// Number of disk operations (writes, reads, deletes)
+				"monthly_disk_operations": 100000000,
+			},
+		},
+		"azurerm_windows_virtual_machine": map[string]interface{}{
+			"os_disk": map[string]interface{}{
+				// Number of disk operations (writes, reads, deletes)
+				"monthly_disk_operations": 100000000,
+			},
+		},
+		"azurerm_storage_share": map[string]interface{}{
+			"monthly_write_transactions": 1000000,
+			"monthly_list_transactions":  1000000,
+			"monthly_read_transactions":  1000000,
+			"monthly_other_transactions": 1000000,
+		},
+		"azurerm_public_ip": map[string]interface{}{
+			"monthly_hours": 730, // Corresponds to a full month
+		},
+		"azurerm_private_endpoint": map[string]interface{}{
+			"monthly_hours": 730, // Corresponds to a full month
 		},
 	},
 }

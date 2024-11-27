@@ -1,6 +1,10 @@
 package azurerm
 
-import "github.com/cycloidio/terracost/price"
+import (
+	"strings"
+
+	"github.com/cycloidio/terracost/price"
+)
 
 // IngestionFilter allows control over what pricing data is ingested. Given a price.WithProduct the function returns
 // true if the record should be ingested, false if it should be skipped.
@@ -13,5 +17,15 @@ func DefaultFilter(_ *price.WithProduct) bool {
 
 // MinimalFilter only ingests the supported records, skipping those that would never be used.
 func MinimalFilter(pp *price.WithProduct) bool {
-	return pp.Price.Attributes["type"] == "Consumption" && pp.Product.Attributes["priority"] == "regular"
+
+	// Ignore Spot and Reserved Virtual Machines
+	if pp.Product.Service == "Virtual Machines" && pp.Product.Family == "Compute" {
+		if strings.HasSuffix(pp.Product.Attributes["meterName"], " Spot") || strings.HasSuffix(pp.Product.Attributes["meterName"], " Low Priority") {
+			return false
+		}
+		// DevTestConsumption Used to estimate windows without licence (hybride)
+		return (pp.Price.Attributes["type"] == "Consumption" || pp.Price.Attributes["type"] == "DevTestConsumption")
+	}
+
+	return pp.Price.Attributes["type"] == "Consumption"
 }
