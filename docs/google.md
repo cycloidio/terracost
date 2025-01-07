@@ -6,7 +6,7 @@ For the Google services pricing we have to be aware of this 2 APIs:
 * [List of Services](https://cloud.google.com/billing/v1/how-tos/catalog-api#listing_public_services_from_the_catalog)
 * [List of Service SKUs](https://cloud.google.com/billing/v1/how-tos/catalog-api#getting_the_list_of_skus_for_a_service)
 
-If it's from a **new service** (not listed on the `/google/service.go` you first have to add it to the list and find the right mapping to then add to the 
+If it's from a **new service** (not listed on the `/google/service.go` you first have to add it to the list and find the right mapping to then add to the
  services map so it can be validated, to get the actual service ID you have to use this [API](https://cloud.google.com/billing/v1/how-tos/catalog-api#getting_the_list_of_skus_for_a_service).
 
 If you have to add a **new resource** then you have to first find out to **which service** does it belong, **if we are not supporting it** yet (`google/service.go`) then you'll have to add it to the list and find the right ID (using the list services API) to put then on the `services` variable on the same file, this will allow the importer to be able support that service.
@@ -23,15 +23,15 @@ When all this is done you may want to check the `google/filter.go#MinimalFilter`
 
 ## List of supported resources and attributes
 
-* [`google_compute_instance`](#google_compute_instance)
+<!--
+for i in $(grep 'case ' google/terraform/provider.go | sed -E 's/.*case[^"]+//;s/[",:]//g');do
+  shortname=$(echo $i| sed -E 's/^aws_//')
+  echo '* [`'$i'`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/'$shortname')';
+done
+-->
 
-### `google_compute_instance`
+* [`google_compute_instance`](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_compute_instance)
 
-#### Cost factors
+### Additional notes
 
-* Location
-* Machine type
-
-#### Additional notes
-
-* For the machine type we use the https://cloud.google.com/compute/docs/machine-types API and add those as generated SKU and calculate the price by mapping it with the SKUs of CPU & RAM
+* `google_compute_instance`: For the machine type we use the https://cloud.google.com/compute/docs/machine-types API and add those as generated SKU and calculate the price by mapping it with the SKUs of CPU & RAM
