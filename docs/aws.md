@@ -17,107 +17,28 @@ use for AWS has [this](https://docs.aws.amazon.com/cur/latest/userguide/product-
 
 ## List of supported resources and attributes
 
-* [`aws_instance`](#aws_instance)
-* [`aws_ebs_volume`](#aws_ebs_volume)
-* [`aws_elasticache_cluster`](#aws_elasticache_cluster)
-* [`aws_elasticache_replication_group`](#aws_elasticache_replication_group)
-* [`aws_eip`](#aws_eip)
-* [`aws_db_instance`](#aws_db_instance)
-* [`aws_lb/aws_alb`](#aws_lb--aws_alb)
-* [`aws_elb`](#aws_elb)
+<!--
+for i in $(grep 'case ' aws/terraform/provider.go | sed -E 's/.*case[^"]+//;s/[",:]//g');do
+  shortname=$(echo $i| sed -E 's/^aws_//')
+  echo '* [`'$i'`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/'$shortname')';
+done
+-->
 
-### `aws_instance`
-
-#### Cost factors
-
-* Location
-* Instance type
-* Tenancy - only "shared" and "dedicated"
-* Operating system - currently only Linux supported, every instance is treated as a Linux instance
-* Pre-installed S/W - currently not supported, the value of "NA" is used instead
-* Storage - see more in the `aws_ebs_volume` entry
-
-#### Additional notes
-
-* Only "On Demand" instances are supported.
-* Only compute and storage costs are estimated. GPU, monitoring, etc. are not taken into account.
-* Uptime of 730 hours in a month (non-stop) is assumed.
-
-### `aws_db_instance`
-
-#### Cost factors
-
-* Location
-* Instance class
-* Database engine and edition
-* License model - "License included" or "Bring your own license"
-* Deployment option - "Single-AZ" or "Multi-AZ"
-* Allocated storage
-* Storage type - "Magnetic" (standard), "Provisioned IOPS" (io1), "General Purpose" (gp2)
-* Provisioned IOPS - only for this type of storage; 100 by default
-
-#### Additional notes
-
-* Only "On Demand" database instances are supported.
-* Uptime of 730 hours in a month (non-stop) is assumed.
-
-### `aws_ebs_volume`
-
-#### Cost factors
-
-* Location
-* Volume type - "gp2" by default
-* Volume size - 8GB by default
-* Provisioned IOPS - only for "io1" and "io2" volume types; 100 by default
-
-### `aws_elasticache_cluster`
-
-#### Cost factors
-
-* Location
-* InstanceType
-* CacheEngine - "Memcached" or "Redis"
-
-#### Additional notes
-
-* HourlyQuantity is incresed regarding the number of cache nodes
-
-### `aws_elasticache_replication_group`
-
-#### Cost factors
-
-* Location
-* InstanceType
-* CacheEngine - "Memcached" or "Redis"
-
-#### Additional notes
-
-* HourlyQuantity is incresed regarding the number of cache nodes
-
-### `aws_eip`
-
-#### Cost factors
-
-* Group - IdleAddress by default
-* StartingRange - 1 by default
-
-### `aws_lb` / `aws_alb`
-
-#### Cost factors
-
-* Location
-* Load balancer type - "application" by default
-
-#### Additional notes
-
-* Cost of Load Balancer Capacity Units (LCU's) per hour is not estimated.
-
-### `aws_elb`
-
-#### Cost factors
-
-* Location
-
-#### Additional notes
-
-* Data transfer usage cost is not estimated.
+* [`aws_instance`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance)
+* [`aws_autoscaling_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group)
+* [`aws_db_instance`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance)
+* [`aws_ebs_volume`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ebs_volume)
+* [`aws_efs_file_system`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/efs_file_system)
+* [`aws_elasticache_cluster`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_cluster)
+* [`aws_elasticache_replication_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elasticache_replication_group)
+* [`aws_eip`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip)
+* [`aws_elb`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elb)
+* [`aws_eks_cluster`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster)
+* [`aws_eks_node_group`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_node_group)
+* [`aws_fsx_lustre_file_system`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_lustre_file_system)
+* [`aws_fsx_ontap_file_system`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_ontap_file_system)
+* [`aws_fsx_openzfs_file_system`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_openzfs_file_system)
+* [`aws_fsx_windows_file_system`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/fsx_windows_file_system)
+* [`aws_lb`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb)
+* [`aws_alb`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/alb)
+* [`aws_nat_gateway`](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway)
