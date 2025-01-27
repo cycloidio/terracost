@@ -139,7 +139,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 				evalCtx.Variables["each"] = cty.ObjectVal(map[string]cty.Value{"value": ctyv})
 			}
 			cfg := getBodyJSON(modName, body, evalCtx)
-			// We delte the `for_each` key as we do not need it
+			// We delete the `for_each` key as we do not need it
 			delete(cfg, "for_each")
 
 			if k == "" {
