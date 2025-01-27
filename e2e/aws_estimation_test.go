@@ -17,7 +17,6 @@ import (
 	"github.com/cycloidio/terracost/product"
 	"github.com/cycloidio/terracost/terraform"
 	"github.com/cycloidio/terracost/usage"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -418,7 +417,6 @@ func TestAWSEstimation(t *testing.T) {
 		})
 		t.Run("SuccessCount", func(t *testing.T) {
 			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-count/", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
-			spew.Dump(plans)
 			require.NoError(t, err)
 			require.Len(t, plans[0].Planned.Resources, 4)
 		})
