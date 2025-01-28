@@ -125,7 +125,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		if !hasTG {
 			plannedQueries, modAddr, err := terraform.ExtractQueriesFromHCL(afs, providerInitializers, modulePath, u, nil)
 			if err != nil {
-				return nil, fmt.Errorf("failed to extract queries from hcl: %w", err)
+				return nil, fmt.Errorf("failed to ExtractQueriesFromHCL on module %q executed on 'stackPath' %q and 'modulePath' %q with error: %w", modAddr, stackPath, modulePath, err)
 			}
 			planned, err := cost.NewState(ctx, be, plannedQueries)
 			if err != nil {
@@ -253,7 +253,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 				costs = append(costs, cost.NewPlan(modAddr, nil, nil))
 				continue
 			}
-			return nil, err
+			return nil, fmt.Errorf("failed to ExtractQueriesFromHCL on module %q executed on 'stackPath' %q and 'modulePath' %q with error: %w", modAddr, stackPath, modulePath, err)
 		}
 		planned, err := cost.NewState(ctx, be, plannedQueries)
 		if err != nil {
