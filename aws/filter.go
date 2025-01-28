@@ -16,22 +16,24 @@ func DefaultFilter(_ *price.WithProduct) bool {
 // MinimalFilter only ingests the supported records, skipping those that would never be used.
 func MinimalFilter(pp *price.WithProduct) bool {
 	switch pp.Product.Service {
+	case "AmazonCloudWatch":
+		return true // is minimal already
 	case "AmazonEC2":
 		return minimalFilterEC2(pp)
+	case "AmazonEFS":
+		return true // is minimal already
+	case "AmazonEKS":
+		return true // is minimal already
+	case "AmazonElastiCache":
+		return true // is minimal already
+	case "AmazonFSx":
+		return true
 	case "AmazonRDS":
 		return minimalFilterRDS(pp)
 	case "AWSELB":
 		return true // is minimal already
-	case "AmazonElastiCache":
+	case "AWSQueueService":
 		return true // is minimal already
-	case "AmazonCloudWatch":
-		return true // is minimal already
-	case "AmazonEKS":
-		return true // is minimal already
-	case "AmazonEFS":
-		return true // is minimal already
-	case "AmazonFSx":
-		return true
 	default:
 		return false
 	}

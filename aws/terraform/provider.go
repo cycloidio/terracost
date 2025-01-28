@@ -129,6 +129,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newNatGateway(vals).Components()
+	case "aws_sqs_queue":
+		vals, err := decodeSQSQueueValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newSQSQueue(rss, vals).Components()
 	default:
 		return nil
 	}

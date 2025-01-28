@@ -40,6 +40,10 @@ var Default = Usage{
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
 		},
+		"aws_sqs_queue": map[string]interface{}{
+			"monthly_requests": 15000000,
+			"request_size_kb": 16,
+		},
 
 		// Azure
 		"azurerm_bastion_host": map[string]interface{}{
