@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"sort"
@@ -80,6 +81,14 @@ func EstimateTerraformPlan(ctx context.Context, be backend.Backend, plan io.Read
 // If Parallelisim Terragrunt is set(!=0) it'll set it when running TG
 // If debug is set to true it'll add more complex logging
 func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPath, modulePath string, ftg bool, ptg int, u usage.Usage, debug bool, providerInitializers ...terraform.ProviderInitializer) ([]*cost.Plan, error) {
+	llvl := slog.LevelInfo
+	if debug {
+		llvl = slog.LevelDebug
+	}
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: llvl,
+	}))
+
 	if len(providerInitializers) == 0 {
 		providerInitializers = getDefaultProviders()
 	}
@@ -96,11 +105,14 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		modulePath = stackPath
 	}
 
+	logger.DebugContext(ctx, "Paths evaluated", "stackPath", stackPath, "modulePath", modulePath, "relModulePath", relModulePath)
+
 	if afs == nil {
 		afs = afero.NewOsFs()
 	}
 
 	if !ftg {
+		logger.DebugContext(ctx, "No TerraGrunt was forced")
 		var hasTG bool
 		// We first check if the main main modulePath has a Terragrunt file to know what we have to run
 		err = afero.Walk(afs, modulePath, func(p string, info fs.FileInfo, err error) error {
@@ -123,6 +135,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 
 		// If no Terragrunt file is found then we execute the normal code
 		if !hasTG {
+			logger.DebugContext(ctx, "No TerraGrunt found executing ExtractQueriesFromHCL", "modulePath", modulePath)
 			plannedQueries, modAddr, err := terraform.ExtractQueriesFromHCL(afs, providerInitializers, modulePath, u, nil)
 			if err != nil {
 				return nil, fmt.Errorf("failed to ExtractQueriesFromHCL on module %q executed on 'stackPath' %q and 'modulePath' %q with error: %w", modAddr, stackPath, modulePath, err)
@@ -144,12 +157,14 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	}
 	defer os.RemoveAll(tmpdir)
 
+	logger.DebugContext(ctx, "Moving files to from Afero to FS", "stackPath", stackPath, "tmpdir", tmpdir)
 	// We move the files from afs stackPath to the just created tmpdir
 	err = util.FromAferoToOS(afs, stackPath, tmpdir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to move content from Afero(%q) to OS: %w", stackPath, err)
 	}
 
+	logger.DebugContext(ctx, "Getting TerraGrunt options", "path", relModulePath)
 	tgo, err := options.NewTerragruntOptions(filepath.Join(tmpdir, relModulePath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create terragrunt options for %s: %w", tmpdir, err)
@@ -190,6 +205,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// We need to initialize the tmpdir as a git repository because if the Terragrunt
 	// config has any of the functions like 'get_repo_root' it would fail if it's not
 	// a git repository
+	logger.DebugContext(ctx, "Running Git Init", "path", tmpdir)
 	_, err = git.PlainInit(tmpdir, false)
 	if err != nil && !errors.Is(git.ErrRepositoryAlreadyExists, err) {
 		return nil, fmt.Errorf("failed to initialize git repo %q: %w", tmpdir, err)
@@ -202,13 +218,17 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	}
 
 	// Runs Terragrunt which basically generates some submodules
+	logger.DebugContext(ctx, "Running TerraGrunt")
 	err = stack.Run(tgo)
 	if err != nil {
 		return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this is the STDERR for TG: %s", stack.Path, err, buff.String())
 	}
 
+	logger.DebugContext(ctx, "Modules found", "count", len(stack.Modules))
+
 	costs := make([]*cost.Plan, 0)
 	for _, m := range stack.Modules {
+		logger.DebugContext(ctx, "Working on module", "path", m.TerragruntOptions.WorkingDir)
 		// We ReadTerragruntConfig so we can have the 'tgc.Inputs' which has the values+variables
 		// that we need to set to the module. Normally those inputs are passed via ENV variables
 		// when Terragrunt is running
@@ -241,6 +261,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 			return nil, fmt.Errorf("failed to move content from OS(%q) to Afero: %w", terraformSource.WorkingDir, err)
 		}
 
+		logger.DebugContext(ctx, "ExtractQueriesFromHCL", "Inputs", tgc.Inputs)
 		plannedQueries, modAddr, err := terraform.ExtractQueriesFromHCL(nfs, providerInitializers, "", u, tgc.Inputs)
 		if err != nil {
 			if err == terraform.ErrNoKnownProvider {
