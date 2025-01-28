@@ -420,6 +420,12 @@ func TestAWSEstimation(t *testing.T) {
 			require.NoError(t, err)
 			require.Len(t, plans[0].Planned.Resources, 4)
 		})
+		t.Run("TEST", func(t *testing.T) {
+			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/dump/", "../testdata/aws/dump/env/test/siemens-gael-demo-1/aws/us-west-1", !noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
+			require.NoError(t, err)
+			require.Len(t, plans, 2)
+
+		})
 	})
 }
 

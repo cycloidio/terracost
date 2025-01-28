@@ -1,15 +1,16 @@
+variable "instances_count" {
+  default = 2
+}
+
 variable "instances" {
   description = "instance inputs"
   type = list(object({
     ami           = string
     instance_type = string
+    disk_gb       = string
+    name          = string
   }))
 }
-
-variable "instances_count" {
-  default = 2
-}
-
 
 resource "aws_instance" "instances" {
 

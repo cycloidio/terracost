@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
@@ -288,6 +289,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		}
 
 		nextEvalCtx := getEvalCtx(child, vars, nil)
+		//spew.Dump(nextEvalCtx.Variables)
 
 		// If the module call contains a `providers` block, it should replace the implicit provider
 		// inheritance. Instead, a new map of parent to child providers is created.
@@ -386,17 +388,19 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	if vars == nil {
 		vars = make(map[string]cty.Value)
 	}
+	// TODO: Set variables that are on the Module
 	for vk, vv := range mod.Variables {
 		if _, ok := vars[vk]; !ok {
 			// If it has no value we do not set it
-			if !vv.Default.IsNull() {
-				vars[vk] = vv.Default
-			}
+			//if !vv.Default.IsNull() {
+			vars[vk] = vv.Default
+			//}
 		}
 		if iv, ok := inputs[vk]; ok {
 			iv = convertGoTypesToExpectedCtyType(iv, vv.Type)
 			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
 			if err != nil {
+				spew.Dump(err)
 				// NOTE: There are some types that we don't how to
 				// parse yet but we want to continue so we ignore
 				// the error
@@ -498,6 +502,9 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 		// TODO: Some of this types I don't have examples
 		// of or may not even be possible for them to happen.
 		// Gonna leave the IF statements so we know them
+		if v == nil {
+			return nil
+		}
 		if t.IsTupleType() {
 		} else if t.IsObjectType() {
 			cfg := make(map[string]interface{})
