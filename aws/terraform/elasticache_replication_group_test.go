@@ -193,7 +193,7 @@ func TestElastiCacheReplication_Components(t *testing.T) {
 				"node_type": "cache.m4.large",
 				"engine":    "redis",
 				"cluster_mode": []map[string]int{
-					map[string]int{
+					{
 						"replicas_per_node_group": 3,
 						"num_node_groups":         2,
 					},

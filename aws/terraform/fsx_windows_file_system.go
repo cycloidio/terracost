@@ -58,6 +58,10 @@ func (v *FSxFileSystem) getWindowsDeployOption(deploymentType string) string {
 
 // newFSxWindowsFileSystem creates a new FSxWindowsFileSystem from fsxWindowsFileSystemValues.
 func (p *Provider) newFSxWindowsFileSystem(rss map[string]terraform.Resource, vals fsxWindowsFileSystemValues) *FSxFileSystem {
+	// The 'rss' variable contains information from linked resources.
+	// Currently, it is not utilized in this resource.
+	_ = rss
+
 	v := &FSxFileSystem{
 		provider:           p,
 		region:             p.region,

@@ -63,6 +63,10 @@ func (v *FSxFileSystem) getOpenzfsDeployOption(deploymentType string) string {
 
 // newFSxOpenzfsFileSystem creates a new FSxOpenzfsFileSystem from fsxOpenzfsFileSystemValues.
 func (p *Provider) newFSxOpenzfsFileSystem(rss map[string]terraform.Resource, vals fsxOpenzfsFileSystemValues) *FSxFileSystem {
+	// The 'rss' variable contains information from linked resources.
+	// Currently, it is not utilized in this resource.
+	_ = rss
+
 	v := &FSxFileSystem{
 		provider:           p,
 		region:             p.region,

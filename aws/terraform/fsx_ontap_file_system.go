@@ -63,6 +63,10 @@ func (v *FSxFileSystem) getOntapDeployOption(deploymentType string) string {
 
 // newFSxOntapFileSystem creates a new FSxOntapFileSystem from fsxOntapFileSystemValues.
 func (p *Provider) newFSxOntapFileSystem(rss map[string]terraform.Resource, vals fsxOntapFileSystemValues) *FSxFileSystem {
+	// The 'rss' variable contains information from linked resources.
+	// Currently, it is not utilized in this resource.
+	_ = rss
+
 	v := &FSxFileSystem{
 		provider:           p,
 		region:             p.region,
