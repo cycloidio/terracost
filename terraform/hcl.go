@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
@@ -23,6 +22,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/gocty"
 
+	"github.com/cycloidio/terracost/log"
 	"github.com/cycloidio/terracost/query"
 	"github.com/cycloidio/terracost/usage"
 	"github.com/cycloidio/terracost/util"
@@ -38,6 +38,7 @@ const (
 // ExtractQueriesFromHCL returns the resources found in the module identified by the modPath.
 func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage, inputs map[string]interface{}) ([]query.Resource, string, error) {
 	parser := configs.NewParser(fs)
+	log.Logger.Debug("hcl: Loading module", "path", modPath)
 	mod, diags := parser.LoadConfigDir(modPath)
 	if diags.HasErrors() {
 		return nil, "", fmt.Errorf(diags.Error())
@@ -57,6 +58,12 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 	if err != nil {
 		return nil, modName, err
 	}
+
+	pns := make([]string, 0, 0)
+	for pn := range providers {
+		pns = append(pns, pn)
+	}
+	log.Logger.Debug("hcl: Providers found", "providers", pns)
 
 	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
 	if err != nil {
@@ -143,6 +150,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			// We delete the `for_each` key as we do not need it
 			delete(cfg, "for_each")
 
+			// k is empty when there is not 'for_each'
 			if k == "" {
 				// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
 				count := 1
@@ -152,6 +160,9 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 					}
 				}
 
+				if count != 1 {
+					log.Logger.Debug("hcl: Found count on resource", "count", count, "resource", rk)
+				}
 				for i := 0; i < count; i++ {
 					addr := rk
 					if count > 1 {
@@ -170,6 +181,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 							ProviderName: rv.Provider.Type,
 							Values:       cfg,
 						}
+						log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
 					}
 				}
 			} else {
@@ -187,6 +199,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 						ProviderName: rv.Provider.Type,
 						Values:       cfg,
 					}
+					log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
 				}
 			}
 		}
@@ -248,6 +261,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 	for mk, mv := range mod.ModuleCalls {
 		p := joinPath(modPath, mv.SourceAddr.String())
 
+		log.Logger.Debug("hcl: Found child module", "path", p)
 		// EntersNewPackage checks if the module is a local
 		// one or a Remote one.
 		if mv.EntersNewPackage() {
@@ -265,6 +279,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			mv.SourceAddr = maddr
 			mv.SourceAddrRaw = dir
 			p = dir
+			log.Logger.Debug("hcl: Was a remote module, pulled to new path", "path", p, "source_addr", maddr, "source_addr_raw", dir)
 		}
 
 		child, diags := parser.LoadConfigDir(p)
@@ -289,7 +304,6 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		}
 
 		nextEvalCtx := getEvalCtx(child, vars, nil)
-		//spew.Dump(nextEvalCtx.Variables)
 
 		// If the module call contains a `providers` block, it should replace the implicit provider
 		// inheritance. Instead, a new map of parent to child providers is created.
@@ -384,6 +398,8 @@ func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 
 // getEvalCtx returns the evaluation context of the given module with variable values set.
 func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[string]interface{}) *hcl.EvalContext {
+	lvars := make(map[string]interface{})
+	llocal := make(map[string]interface{})
 	// Set default values for undefined variables.
 	if vars == nil {
 		vars = make(map[string]cty.Value)
@@ -391,22 +407,27 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	// TODO: Set variables that are on the Module
 	for vk, vv := range mod.Variables {
 		if _, ok := vars[vk]; !ok {
-			// If it has no value we do not set it
-			//if !vv.Default.IsNull() {
 			vars[vk] = vv.Default
-			//}
+			lv, ok := convertCtyValue("", nil, vv.Default)
+			if ok {
+				lvars[vk] = lv
+			}
 		}
 		if iv, ok := inputs[vk]; ok {
 			iv = convertGoTypesToExpectedCtyType(iv, vv.Type)
 			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
 			if err != nil {
-				spew.Dump(err)
 				// NOTE: There are some types that we don't how to
 				// parse yet but we want to continue so we ignore
 				// the error
 				continue
 			}
 			vars[vk] = ctyv
+
+			lv, ok := convertCtyValue("", nil, ctyv)
+			if ok {
+				lvars[vk] = lv
+			}
 		}
 	}
 
@@ -428,8 +449,14 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 			continue
 		}
 		lm[lk] = val
+		lv, ok := convertCtyValue("", nil, val)
+		if ok {
+			llocal[lk] = lv
+		}
 	}
 	evalCtx.Variables["local"] = cty.ObjectVal(lm)
+
+	log.Logger.Debug("hcl: New variables/locals found", "var", lvars, "local", llocal)
 
 	return evalCtx
 }
