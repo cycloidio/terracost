@@ -535,7 +535,11 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 		if t.IsTupleType() {
 		} else if t.IsObjectType() {
 			cfg := make(map[string]interface{})
-			for vk, vv := range v.(map[string]interface{}) {
+			vm, ok := v.(map[string]interface{})
+			if !ok {
+				return nil
+			}
+			for vk, vv := range vm {
 				if t.HasAttribute(vk) {
 					at := t.AttributeType(vk)
 					cfg[vk] = convertGoTypesToExpectedCtyType(vv, at)
@@ -549,7 +553,11 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 			// A map is a list of the same type
 			mv := make(map[string]interface{})
 			et := t.MapElementType()
-			for vk, vv := range v.(map[string]interface{}) {
+			vm, ok := v.(map[string]interface{})
+			if !ok {
+				return nil
+			}
+			for vk, vv := range vm {
 				mv[vk] = convertGoTypesToExpectedCtyType(vv, *et)
 			}
 			nv = mv
@@ -557,7 +565,11 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 		} else if t.IsListType() {
 			lv := make([]interface{}, 0, 0)
 			et := t.ListElementType()
-			for _, vv := range v.([]interface{}) {
+			va, ok := v.([]interface{})
+			if !ok {
+				return nil
+			}
+			for _, vv := range va {
 				nnv := convertGoTypesToExpectedCtyType(vv, *et)
 				lv = append(lv, nnv)
 			}
