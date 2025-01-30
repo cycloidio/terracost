@@ -34,6 +34,8 @@ func MinimalFilter(pp *price.WithProduct) bool {
 		return true // is minimal already
 	case "AWSQueueService":
 		return true // is minimal already
+	case "AWSSecretsManager":
+		return true // is minimal already
 	default:
 		return false
 	}

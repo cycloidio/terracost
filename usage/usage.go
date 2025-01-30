@@ -40,9 +40,12 @@ var Default = Usage{
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
 		},
+		"aws_secretsmanager_secret": map[string]interface{}{
+			"monthly_requests": 1000000,
+		},
 		"aws_sqs_queue": map[string]interface{}{
 			"monthly_requests": 15000000,
-			"request_size_kb": 16,
+			"request_size_kb":  16,
 		},
 
 		// Azure
