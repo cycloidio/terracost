@@ -10,6 +10,11 @@ const (
 var Default = Usage{
 	ResourceDefaultTypeUsage: map[string]interface{}{
 		// AWS
+		"aws_cloudwatch_log_group": map[string]interface{}{
+			"storage_gb":                       200,
+			"monthly_data_ingested_gb":         10,
+			"monthly_data_scanned_insights_gb": 20,
+		},
 		"aws_eks_node_group": map[string]interface{}{
 			"instances":                        15,
 			"operating_system":                 "linux",

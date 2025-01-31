@@ -41,6 +41,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newAutoscalingGroup(rss, vals).Components()
+	case "aws_cloudwatch_log_group":
+		vals, err := decodeCloudwatchLogGroupValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newCloudwatchLogGroup(rss, vals).Components()
 	case "aws_db_instance":
 		vals, err := decodeDBInstanceValues(tfRes.Values)
 		if err != nil {

@@ -17,7 +17,7 @@ func DefaultFilter(_ *price.WithProduct) bool {
 func MinimalFilter(pp *price.WithProduct) bool {
 	switch pp.Product.Service {
 	case "AmazonCloudWatch":
-		return true // is minimal already
+		return minimalFilterCloudWatch(pp)
 	case "AmazonEC2":
 		return minimalFilterEC2(pp)
 	case "AmazonEFS":
@@ -58,6 +58,16 @@ func minimalFilterEC2(pp *price.WithProduct) bool {
 		}
 		return true
 	case "Storage", "System Operation", "NAT Gateway":
+		return true
+	default:
+		return false
+	}
+}
+
+// minimalFilterCloudWatch only ingests records of supported product families.
+func minimalFilterCloudWatch(pp *price.WithProduct) bool {
+	switch pp.Product.Family {
+	case "Data Payload", "Storage Snapshot", "Alarm":
 		return true
 	default:
 		return false
