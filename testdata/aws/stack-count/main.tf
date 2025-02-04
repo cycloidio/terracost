@@ -2,13 +2,17 @@ module "example" {
   source = "./ec2_instances"
 
   count = length(var.instances)
-  #instances = [
-  #{
-  #ami           = "bar"
-  #instance_type = "t3.small"
-  #}
-  #]
-  instances = var.instances[count.index]
+  instances = [
+    {
+      ami           = "bar"
+      instance_type = "t3.small"
+    },
+    {
+      ami           = "bar2"
+      instance_type = "t2.small"
+    }
+  ]
+  #instances = var.instances[count.index]
 
   #instances = {}
   #instances = null

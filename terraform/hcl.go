@@ -65,7 +65,7 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 	}
 	log.Logger.Debug("hcl: Providers found", "providers", pns)
 
-	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
+	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, 1, evalCtx, u)
 	if err != nil {
 		return nil, modName, err
 	}
@@ -79,14 +79,11 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 }
 
 // extractHCLModule returns the resources found in the provided module.
-func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext, u usage.Usage) ([]query.Resource, error) {
+func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, mcount int, evalCtx *hcl.EvalContext, u usage.Usage) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
 
 	rss := make(map[string]Resource)
 	for rk, rv := range mod.ManagedResources {
-		if modName != "" {
-			rk = fmt.Sprintf("%s.%s", modName, rk)
-		}
 
 		providerKey := rv.Provider.Type
 		if rv.ProviderConfigRef != nil {
@@ -150,31 +147,57 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			// We delete the `for_each` key as we do not need it
 			delete(cfg, "for_each")
 
-			// k is empty when there is not 'for_each'
-			if k == "" {
-				// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
-				count := 1
-				if c, ok := cfg["count"]; ok {
-					if cf, ok := c.(float64); ok {
-						count = int(cf)
-					}
+			for mc := 0; mc < mcount; mc++ {
+				nrk := rk
+				if modName != "" && mcount > 1 {
+					nrk = fmt.Sprintf("%s[%d].%s", modName, mc, rk)
 				}
+				//if mcount > 1 {
+				//rk = fmt.Sprintf("%s[%d]", rk, mc)
+				//}
+				// k is empty when there is not 'for_each'
+				if k == "" {
+					// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
+					count := 1
+					if c, ok := cfg["count"]; ok {
+						if cf, ok := c.(float64); ok {
+							count = int(cf)
+						}
+					}
 
-				if count != 1 {
-					log.Logger.Debug("hcl: Found count on resource", "count", count, "resource", rk)
-				}
-				for i := 0; i < count; i++ {
-					addr := rk
-					if count > 1 {
-						addr = fmt.Sprintf("%s[%d]", rk, i)
+					if count != 1 {
+						log.Logger.Debug("hcl: Found count on resource", "count", count, "resource", nrk)
 					}
+					for i := 0; i < count; i++ {
+						addr := rk
+						if count > 1 {
+							addr = fmt.Sprintf("%s[%d]", nrk, i)
+						}
+
+						// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
+						// that the resource was "skipped" from estimation.
+						if provider != nil {
+							rss[addr] = Resource{
+								Address:      addr,
+								Index:        i,
+								Mode:         "managed",
+								Type:         rv.Type,
+								Name:         rv.Name,
+								ProviderName: rv.Provider.Type,
+								Values:       cfg,
+							}
+							log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
+						}
+					}
+				} else {
+					addr := nrk
+					addr = fmt.Sprintf("%s[%s]", nrk, k)
 
 					// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
 					// that the resource was "skipped" from estimation.
 					if provider != nil {
 						rss[addr] = Resource{
 							Address:      addr,
-							Index:        i,
 							Mode:         "managed",
 							Type:         rv.Type,
 							Name:         rv.Name,
@@ -183,23 +206,6 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 						}
 						log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
 					}
-				}
-			} else {
-				addr := rk
-				addr = fmt.Sprintf("%s[%s]", rk, k)
-
-				// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
-				// that the resource was "skipped" from estimation.
-				if provider != nil {
-					rss[addr] = Resource{
-						Address:      addr,
-						Mode:         "managed",
-						Type:         rv.Type,
-						Name:         rv.Name,
-						ProviderName: rv.Provider.Type,
-						Values:       cfg,
-					}
-					log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
 				}
 			}
 		}
@@ -298,12 +304,21 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		for _, attr := range body.Attributes {
 			val, diags := attr.Expr.Value(evalCtx)
 			if diags != nil && diags.HasErrors() {
+				log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", attr.Name)
 				continue
 			}
 			vars[attr.Name] = val
 		}
 
 		nextEvalCtx := getEvalCtx(child, vars, nil)
+
+		mcfg := getBodyJSON(modName, body, nextEvalCtx)
+		nmcount := 1
+		if c, ok := mcfg["count"]; ok {
+			if cf, ok := c.(float64); ok {
+				nmcount = int(cf)
+			}
+		}
 
 		// If the module call contains a `providers` block, it should replace the implicit provider
 		// inheritance. Instead, a new map of parent to child providers is created.
@@ -331,7 +346,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			nextModPath = fmt.Sprintf("module.%s", mk)
 		}
 
-		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nextEvalCtx, u)
+		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nmcount, nextEvalCtx, u)
 		if err != nil {
 			return nil, err
 		}
@@ -446,6 +461,7 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	for lk, lv := range mod.Locals {
 		val, diags := lv.Expr.Value(evalCtx)
 		if diags != nil && diags.HasErrors() {
+			log.Logger.Error("hcl: Error on abstracting value for 'local'", "key", lk)
 			continue
 		}
 		lm[lk] = val
@@ -586,7 +602,11 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 	cfg := make(map[string]interface{})
 	// Each attribute of the body is casted to the correct type and placed into the cfg map.
 	for attrk, attrv := range b.Attributes {
-		val, _ := attrv.Expr.Value(evalCtx)
+		val, diags := attrv.Expr.Value(evalCtx)
+		if diags != nil && diags.HasErrors() {
+			log.Logger.Error("hcl: Error on abstracting value for 'attribute'", "name", attrk)
+			continue
+		}
 		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			continue
 		}

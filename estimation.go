@@ -81,14 +81,6 @@ func EstimateTerraformPlan(ctx context.Context, be backend.Backend, plan io.Read
 // If Parallelisim Terragrunt is set(!=0) it'll set it when running TG
 // If debug is set to true it'll add more complex logging
 func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPath, modulePath string, ftg bool, ptg int, u usage.Usage, debug bool, providerInitializers ...terraform.ProviderInitializer) ([]*cost.Plan, error) {
-	//llvl := slog.LevelInfo
-	//if debug {
-	//llvl = slog.LevelDebug
-	//}
-	//log.Logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
-	//Level: llvl,
-	//}))
-
 	if len(providerInitializers) == 0 {
 		providerInitializers = getDefaultProviders()
 	}
