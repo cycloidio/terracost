@@ -42,6 +42,9 @@ const (
 	ThroughputCapacity         // Throughput capacity
 	FileSystemDeploymentOption // Deployment option
 
+	// CloudWatch Alarm fields
+	AlarmType // Alarm Type
+
 	///// Price Attributes /////
 	Currency      // Currency
 	PricePerUnit  // PricePerUnit

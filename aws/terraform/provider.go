@@ -47,6 +47,13 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newCloudwatchLogGroup(rss, vals).Components()
+	case "aws_cloudwatch_metric_alarm":
+		vals, err := decodeCloudwatchMetricAlarmValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newCloudwatchMetricAlarm(rss, vals).Components()
+
 	case "aws_db_instance":
 		vals, err := decodeDBInstanceValues(tfRes.Values)
 		if err != nil {

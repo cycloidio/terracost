@@ -220,6 +220,9 @@ var columnProductToIngest = map[field.Field]string{
 	field.StorageType:                "StorageType",
 	field.ThroughputCapacity:         "ThroughputCapacity",
 	field.FileSystemDeploymentOption: "Deployment_option",
+
+	// Cloudwatch alarms
+	field.AlarmType: "AlarmType",
 }
 
 // columnPriceToIngest is a mapping from column title to the price.Price attribute name under which the value will
