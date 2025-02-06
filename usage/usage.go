@@ -45,6 +45,17 @@ var Default = Usage{
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
 		},
+		"aws_rds_cluster": map[string]interface{}{
+			"capacity_units_per_hr":        0.5,
+			"storage_gb":                   50,
+			"write_requests_per_sec":       4,
+			"read_requests_per_sec":        4,
+			"backup_snapshot_size_gb":      60,
+			"average_statements_per_hr":    2500,
+			"change_records_per_statement": 0.095,
+			"backtrack_window_hrs":         150,
+			"snapshot_export_size_gb":      300,
+		},
 		"aws_secretsmanager_secret": map[string]interface{}{
 			"monthly_requests": 1000000,
 		},

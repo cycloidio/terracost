@@ -142,6 +142,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newNatGateway(vals).Components()
+	case "aws_rds_cluster":
+		vals, err := decodeRDSClusterValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newRDSCluster(rss, vals).Components()
 	case "aws_secretsmanager_secret":
 		vals, err := decodeSecretsmanagerSecretValues(tfRes.Values)
 		if err != nil {
