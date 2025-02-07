@@ -169,7 +169,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 						log.Logger.Debug("hcl: Found count on resource", "count", count, "resource", nrk)
 					}
 					for i := 0; i < count; i++ {
-						addr := rk
+						addr := nrk
 						if count > 1 {
 							addr = fmt.Sprintf("%s[%d]", nrk, i)
 						}
