@@ -77,7 +77,7 @@ func minimalFilterCloudWatch(pp *price.WithProduct) bool {
 // minimalFilterRDS only ingests RDS records of supported product families.
 func minimalFilterRDS(pp *price.WithProduct) bool {
 	switch pp.Product.Family {
-	case "Database Instance", "Database Storage", "Provisioned IOPS", "Serverless", "System Operation", "Storage Snapshot":
+	case "Database Instance", "Database Storage", "Provisioned IOPS", "Serverless", "ServerlessV2", "System Operation", "Storage Snapshot", "Performance Insights":
 		return true
 	default:
 		return false

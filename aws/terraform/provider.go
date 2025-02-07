@@ -148,6 +148,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newRDSCluster(rss, vals).Components()
+	case "aws_rds_cluster_instance":
+		vals, err := decodeRDSClusterInstanceValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newRDSClusterInstance(rss, vals).Components()
 	case "aws_secretsmanager_secret":
 		vals, err := decodeSecretsmanagerSecretValues(tfRes.Values)
 		if err != nil {

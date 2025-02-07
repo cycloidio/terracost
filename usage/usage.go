@@ -56,6 +56,10 @@ var Default = Usage{
 			"backtrack_window_hrs":         150,
 			"snapshot_export_size_gb":      300,
 		},
+		"aws_rds_cluster_instance": map[string]interface{}{
+			"monthly_additional_performance_insights_requests": 500000,
+			"capacity_units_per_hr":                            0.5,
+		},
 		"aws_secretsmanager_secret": map[string]interface{}{
 			"monthly_requests": 1000000,
 		},

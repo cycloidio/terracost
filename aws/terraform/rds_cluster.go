@@ -1,6 +1,7 @@
 package terraform
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/mitchellh/mapstructure"
@@ -23,7 +24,8 @@ type RDSCluster struct {
 	storageType           string
 	backupRetentionPeriod decimal.Decimal
 
-	isServerless bool
+	isServerless      bool
+	serverlessVersion string
 
 	// Usage
 	writeRequestsPerSec       decimal.Decimal
@@ -92,6 +94,8 @@ func (p *Provider) newRDSCluster(rss map[string]terraform.Resource, vals rdsClus
 		storageType:           vals.StorageType,
 		backupRetentionPeriod: decimal.NewFromFloat(1),
 
+		serverlessVersion: "v1",
+
 		// Usage
 		writeRequestsPerSec:       decimal.NewFromFloat(vals.Usage.WriteRequestsPerSec),
 		readRequestsPerSec:        decimal.NewFromFloat(vals.Usage.ReadRequestsPerSec),
@@ -112,8 +116,12 @@ func (p *Provider) newRDSCluster(rss map[string]terraform.Resource, vals rdsClus
 		v.engineMode = vals.EngineMode
 	}
 
-	if len(vals.Serverlessv2ScalingConfiguration) > 0 || v.engineMode == "serverless" {
+	if len(vals.Serverlessv2ScalingConfiguration) > 0 {
 		v.isServerless = true
+		v.serverlessVersion = "v2"
+	} else if v.engineMode == "serverless" {
+		v.isServerless = true
+		v.serverlessVersion = "v1"
 	}
 
 	return v
@@ -139,7 +147,7 @@ func (v *RDSCluster) Components() []query.Component {
 	components := v.rdsClusterAuroraStorageComponent(databaseEngine, isIOOptimized)
 
 	if v.isServerless {
-		components = append(components, v.rdsClusterAuroraServerlessComponent(databaseEngine))
+		components = append(components, v.rdsClusterAuroraServerlessComponent(databaseEngine, isIOOptimized))
 	}
 
 	if v.backupRetentionPeriod.GreaterThan(decimal.NewFromFloat(1)) {
@@ -157,9 +165,21 @@ func (v *RDSCluster) Components() []query.Component {
 	return components
 }
 
-func (v *RDSCluster) rdsClusterAuroraServerlessComponent(databaseEngine string) query.Component {
+func (v *RDSCluster) rdsClusterAuroraServerlessComponent(databaseEngine string, isIOOptimized bool) query.Component {
+
+	family := "Serverless"
+	usageType := ".*Aurora:ServerlessUsage$"
+
+	if v.serverlessVersion == "v2" {
+		family = "ServerlessV2"
+		usageType = ".*Aurora:ServerlessV2Usage$"
+		if isIOOptimized {
+			usageType = ".*Aurora:ServerlessV2IOOptimizedUsage$"
+		}
+	}
+
 	return query.Component{
-		Name:            "Aurora serverless",
+		Name:            fmt.Sprintf("Aurora %s", family),
 		MonthlyQuantity: v.capacityUnitsPerHr,
 		Details:         []string{databaseEngine},
 		Usage:           true,
@@ -167,10 +187,11 @@ func (v *RDSCluster) rdsClusterAuroraServerlessComponent(databaseEngine string) 
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(v.provider.key),
 			Service:  util.StringPtr("AmazonRDS"),
-			Family:   util.StringPtr("Serverless"),
+			Family:   util.StringPtr(family),
 			Location: util.StringPtr(v.region.String()),
 			AttributeFilters: []*product.AttributeFilter{
 				{Key: "DatabaseEngine", Value: util.StringPtr(databaseEngine)},
+				{Key: "UsageType", ValueRegex: util.StringPtr(usageType)},
 			},
 		},
 		PriceFilter: &price.Filter{

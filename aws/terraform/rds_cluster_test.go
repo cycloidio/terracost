@@ -230,7 +230,7 @@ func TestRDSCluster_Components(t *testing.T) {
 				},
 			},
 			{
-				Name:            "Aurora serverless",
+				Name:            "Aurora ServerlessV2",
 				MonthlyQuantity: decimal.NewFromFloat(0.5),
 				Unit:            "ACU-Hr",
 				Details:         []string{"Aurora PostgreSQL"},
@@ -238,10 +238,11 @@ func TestRDSCluster_Components(t *testing.T) {
 				ProductFilter: &product.Filter{
 					Provider: util.StringPtr("aws"),
 					Service:  util.StringPtr("AmazonRDS"),
-					Family:   util.StringPtr("Serverless"),
+					Family:   util.StringPtr("ServerlessV2"),
 					Location: util.StringPtr("eu-west-1"),
 					AttributeFilters: []*product.AttributeFilter{
 						{Key: "DatabaseEngine", Value: util.StringPtr("Aurora PostgreSQL")},
+						{Key: "UsageType", ValueRegex: util.StringPtr(".*Aurora:ServerlessV2IOOptimizedUsage$")},
 					},
 				},
 				PriceFilter: &price.Filter{
