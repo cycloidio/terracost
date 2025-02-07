@@ -22,6 +22,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/gocty"
 
+	"github.com/cycloidio/terracost/log"
 	"github.com/cycloidio/terracost/query"
 	"github.com/cycloidio/terracost/usage"
 	"github.com/cycloidio/terracost/util"
@@ -37,6 +38,7 @@ const (
 // ExtractQueriesFromHCL returns the resources found in the module identified by the modPath.
 func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage, inputs map[string]interface{}) ([]query.Resource, string, error) {
 	parser := configs.NewParser(fs)
+	log.Logger.Debug("hcl: Loading module", "path", modPath)
 	mod, diags := parser.LoadConfigDir(modPath)
 	if diags.HasErrors() {
 		return nil, "", fmt.Errorf(diags.Error())
@@ -57,7 +59,13 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 		return nil, modName, err
 	}
 
-	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, evalCtx, u)
+	pns := make([]string, 0, 0)
+	for pn := range providers {
+		pns = append(pns, pn)
+	}
+	log.Logger.Debug("hcl: Providers found", "providers", pns)
+
+	queries, err := extractHCLModule(fs, providers, parser, modPath, "", mod, 1, evalCtx, u)
 	if err != nil {
 		return nil, modName, err
 	}
@@ -71,14 +79,11 @@ func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializ
 }
 
 // extractHCLModule returns the resources found in the provided module.
-func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, evalCtx *hcl.EvalContext, u usage.Usage) ([]query.Resource, error) {
+func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *configs.Parser, modPath, modName string, mod *configs.Module, mcount int, evalCtx *hcl.EvalContext, u usage.Usage) ([]query.Resource, error) {
 	queries := make([]query.Resource, 0, len(mod.ManagedResources))
 
 	rss := make(map[string]Resource)
 	for rk, rv := range mod.ManagedResources {
-		if modName != "" {
-			rk = fmt.Sprintf("%s.%s", modName, rk)
-		}
 
 		providerKey := rv.Provider.Type
 		if rv.ProviderConfigRef != nil {
@@ -142,49 +147,64 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			// We delete the `for_each` key as we do not need it
 			delete(cfg, "for_each")
 
-			if k == "" {
-				// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
-				count := 1
-				if c, ok := cfg["count"]; ok {
-					if cf, ok := c.(float64); ok {
-						count = int(cf)
-					}
+			for mc := 0; mc < mcount; mc++ {
+				nrk := rk
+				if modName != "" && mcount > 1 {
+					nrk = fmt.Sprintf("%s[%d].%s", modName, mc, rk)
 				}
-
-				for i := 0; i < count; i++ {
-					addr := rk
-					if count > 1 {
-						addr = fmt.Sprintf("%s[%d]", rk, i)
+				//if mcount > 1 {
+				//rk = fmt.Sprintf("%s[%d]", rk, mc)
+				//}
+				// k is empty when there is not 'for_each'
+				if k == "" {
+					// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
+					count := 1
+					if c, ok := cfg["count"]; ok {
+						if cf, ok := c.(float64); ok {
+							count = int(cf)
+						}
 					}
+
+					if count != 1 {
+						log.Logger.Debug("hcl: Found count on resource", "count", count, "resource", nrk)
+					}
+					for i := 0; i < count; i++ {
+						addr := nrk
+						if count > 1 {
+							addr = fmt.Sprintf("%s[%d]", nrk, i)
+						}
+
+						// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
+						// that the resource was "skipped" from estimation.
+						if provider != nil {
+							rss[addr] = Resource{
+								Address:      addr,
+								Index:        i,
+								Mode:         "managed",
+								Type:         rv.Type,
+								Name:         rv.Name,
+								ProviderName: rv.Provider.Type,
+								Values:       cfg,
+							}
+							log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
+						}
+					}
+				} else {
+					addr := nrk
+					addr = fmt.Sprintf("%s[%s]", nrk, k)
 
 					// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
 					// that the resource was "skipped" from estimation.
 					if provider != nil {
 						rss[addr] = Resource{
 							Address:      addr,
-							Index:        i,
 							Mode:         "managed",
 							Type:         rv.Type,
 							Name:         rv.Name,
 							ProviderName: rv.Provider.Type,
 							Values:       cfg,
 						}
-					}
-				}
-			} else {
-				addr := rk
-				addr = fmt.Sprintf("%s[%s]", rk, k)
-
-				// Only retrieve resource if the provider is valid. If it's not, the comps will be nil, which signifies
-				// that the resource was "skipped" from estimation.
-				if provider != nil {
-					rss[addr] = Resource{
-						Address:      addr,
-						Mode:         "managed",
-						Type:         rv.Type,
-						Name:         rv.Name,
-						ProviderName: rv.Provider.Type,
-						Values:       cfg,
+						log.Logger.Debug("hcl: Found resource", "resource", rss[addr])
 					}
 				}
 			}
@@ -247,6 +267,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 	for mk, mv := range mod.ModuleCalls {
 		p := joinPath(modPath, mv.SourceAddr.String())
 
+		log.Logger.Debug("hcl: Found child module", "path", p)
 		// EntersNewPackage checks if the module is a local
 		// one or a Remote one.
 		if mv.EntersNewPackage() {
@@ -264,6 +285,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			mv.SourceAddr = maddr
 			mv.SourceAddrRaw = dir
 			p = dir
+			log.Logger.Debug("hcl: Was a remote module, pulled to new path", "path", p, "source_addr", maddr, "source_addr_raw", dir)
 		}
 
 		child, diags := parser.LoadConfigDir(p)
@@ -280,14 +302,53 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		// variable names to their evaluated values.
 		vars := make(map[string]cty.Value)
 		for _, attr := range body.Attributes {
+			// TODO: Check if the attribute has variables
+			// and if so read those first, add the values to the CTX
+			// and then evaluate the current one with that new context
+			// with the defined value
+
+			if _, ok := vars[attr.Name]; ok {
+				// This means it has been pulled before as a dependency
+				continue
+			}
+			for _, vr := range attr.Expr.Variables() {
+				v := string(hclwrite.TokensForTraversal(vr).Bytes())
+				sv := strings.Split(v, ".")
+				if val, ok := vars[sv[1]]; ok {
+					appendToCtx(evalCtx, sv[0], sv[1], val)
+				} else if sv[0] == "var" || sv[0] == "local" {
+					depAttr, ok := body.Attributes[sv[1]]
+					if ok {
+						val, diags := depAttr.Expr.Value(evalCtx)
+						if diags != nil && diags.HasErrors() {
+							log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", depAttr.Name, "reason", diags.Error())
+							continue
+						}
+						appendToCtx(evalCtx, sv[0], depAttr.Name, val)
+						vars[depAttr.Name] = val
+					}
+				}
+			}
 			val, diags := attr.Expr.Value(evalCtx)
 			if diags != nil && diags.HasErrors() {
+				log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", attr.Name, "reason", diags.Error())
 				continue
 			}
 			vars[attr.Name] = val
 		}
 
 		nextEvalCtx := getEvalCtx(child, vars, nil)
+
+		// TODO: Check if this should use nextEvalCtx
+		log.Logger.Debug("hcl: Fetching module count")
+		mcfg := getBodyJSON(modName, body, nextEvalCtx)
+		nmcount := 1
+		if c, ok := mcfg["count"]; ok {
+			if cf, ok := c.(float64); ok {
+				nmcount = int(cf)
+			}
+		}
+		log.Logger.Debug("hcl: End fetching module count")
 
 		// If the module call contains a `providers` block, it should replace the implicit provider
 		// inheritance. Instead, a new map of parent to child providers is created.
@@ -315,7 +376,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			nextModPath = fmt.Sprintf("module.%s", mk)
 		}
 
-		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nextEvalCtx, u)
+		qs, err := extractHCLModule(fs, childProvs, parser, p, nextModPath, child, nmcount, nextEvalCtx, u)
 		if err != nil {
 			return nil, err
 		}
@@ -382,27 +443,38 @@ func installModule(fs afero.Fs, mc *configs.ModuleCall) (string, error) {
 
 // getEvalCtx returns the evaluation context of the given module with variable values set.
 func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[string]interface{}) *hcl.EvalContext {
+	lvars := make(map[string]interface{})
+	llocal := make(map[string]interface{})
 	// Set default values for undefined variables.
 	if vars == nil {
 		vars = make(map[string]cty.Value)
 	}
+	// TODO: Set variables that are on the Module
 	for vk, vv := range mod.Variables {
 		if _, ok := vars[vk]; !ok {
-			// If it has no value we do not set it
-			if !vv.Default.IsNull() {
-				vars[vk] = vv.Default
+			vars[vk] = vv.Default
+			lv, ok := convertCtyValue("", nil, vv.Default)
+			if ok {
+				lvars[vk] = lv
 			}
 		}
 		if iv, ok := inputs[vk]; ok {
 			iv = convertGoTypesToExpectedCtyType(iv, vv.Type)
 			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
 			if err != nil {
+				log.Logger.Error("hcl: Error on abstracting value for 'input'", "key", vk, "reason", err.Error())
 				// NOTE: There are some types that we don't how to
 				// parse yet but we want to continue so we ignore
 				// the error
 				continue
 			}
 			vars[vk] = ctyv
+
+			lv, ok := convertCtyValue("", nil, ctyv)
+			if ok {
+				lvars[vk] = lv
+			}
+			continue
 		}
 	}
 
@@ -421,13 +493,39 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	for lk, lv := range mod.Locals {
 		val, diags := lv.Expr.Value(evalCtx)
 		if diags != nil && diags.HasErrors() {
+			log.Logger.Error("hcl: Error on abstracting value for 'local'", "key", lk, "reason", diags.Error())
 			continue
 		}
 		lm[lk] = val
+		lv, ok := convertCtyValue("", nil, val)
+		if ok {
+			llocal[lk] = lv
+		}
 	}
 	evalCtx.Variables["local"] = cty.ObjectVal(lm)
 
+	log.Logger.Debug("hcl: New variables/locals found", "var", lvars, "local", llocal)
+
 	return evalCtx
+}
+
+func appendToCtx(ctx *hcl.EvalContext, t, name string, v cty.Value) {
+	vars := ctx.Variables[t]
+
+	mvars := make(map[string]cty.Value)
+	// TODO: Do a foreach or a func (val Value) ElementIterator() ElementIterator {
+	iter := vars.ElementIterator()
+	for iter.Next() {
+		k, v := iter.Element()
+		var key string
+		if err := gocty.FromCtyValue(k, &key); err != nil {
+			log.Logger.Error("hcl: Failed to get KEY from Context to append", "key", k, "reason", err.Error())
+		}
+		mvars[key] = v
+	}
+	mvars[name] = v
+
+	ctx.Variables[t] = cty.ObjectVal(mvars)
 }
 
 // convertGoTypesToExpectedCtyType will take a GO value and a cty.Type and convert the GO value into the cty.Type as much
@@ -498,10 +596,17 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 		// TODO: Some of this types I don't have examples
 		// of or may not even be possible for them to happen.
 		// Gonna leave the IF statements so we know them
+		if v == nil {
+			return nil
+		}
 		if t.IsTupleType() {
 		} else if t.IsObjectType() {
 			cfg := make(map[string]interface{})
-			for vk, vv := range v.(map[string]interface{}) {
+			vm, ok := v.(map[string]interface{})
+			if !ok {
+				return nil
+			}
+			for vk, vv := range vm {
 				if t.HasAttribute(vk) {
 					at := t.AttributeType(vk)
 					cfg[vk] = convertGoTypesToExpectedCtyType(vv, at)
@@ -515,7 +620,11 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 			// A map is a list of the same type
 			mv := make(map[string]interface{})
 			et := t.MapElementType()
-			for vk, vv := range v.(map[string]interface{}) {
+			vm, ok := v.(map[string]interface{})
+			if !ok {
+				return nil
+			}
+			for vk, vv := range vm {
 				mv[vk] = convertGoTypesToExpectedCtyType(vv, *et)
 			}
 			nv = mv
@@ -523,7 +632,11 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 		} else if t.IsListType() {
 			lv := make([]interface{}, 0, 0)
 			et := t.ListElementType()
-			for _, vv := range v.([]interface{}) {
+			va, ok := v.([]interface{})
+			if !ok {
+				return nil
+			}
+			for _, vv := range va {
 				nnv := convertGoTypesToExpectedCtyType(vv, *et)
 				lv = append(lv, nnv)
 			}
@@ -540,7 +653,11 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 	cfg := make(map[string]interface{})
 	// Each attribute of the body is casted to the correct type and placed into the cfg map.
 	for attrk, attrv := range b.Attributes {
-		val, _ := attrv.Expr.Value(evalCtx)
+		val, diags := attrv.Expr.Value(evalCtx)
+		if diags != nil && diags.HasErrors() {
+			log.Logger.Error("hcl: Error on abstracting value for 'attribute'", "name", attrk, "reason", diags.Error())
+			continue
+		}
 		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			continue
 		}
@@ -627,7 +744,6 @@ func convertCtyValue(modulePrefix string, attrvars []hcl.Traversal, val cty.Valu
 						// has not been interpolated, which means it has no default,
 						// it'll be set as plain text and we don't want it
 						if sv[0] == "var" || sv[0] == "each" {
-							//if sv[0] == "var" {
 							continue
 						}
 						// With this we remove the last element of the reference, which is the
