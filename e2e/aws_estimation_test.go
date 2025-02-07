@@ -416,9 +416,10 @@ func TestAWSEstimation(t *testing.T) {
 			require.Len(t, plans, 1)
 		})
 		t.Run("SuccessCount", func(t *testing.T) {
+			//log.Level.Set(slog.LevelDebug)
 			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-count/", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
 			require.NoError(t, err)
-			require.Len(t, plans[0].Planned.Resources, 4)
+			require.Len(t, plans[0].Planned.Resources, 12)
 		})
 		t.Run("TEST", func(t *testing.T) {
 			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/dump/", "../testdata/aws/dump/env/test/siemens-gael-demo-1/aws/us-west-1", !noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)

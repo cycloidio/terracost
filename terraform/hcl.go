@@ -302,9 +302,36 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 		// variable names to their evaluated values.
 		vars := make(map[string]cty.Value)
 		for _, attr := range body.Attributes {
+			// TODO: Check if the attribute has variables
+			// and if so read those first, add the values to the CTX
+			// and then evaluate the current one with that new context
+			// with the defined value
+
+			if _, ok := vars[attr.Name]; ok {
+				// This means it has been pulled before as a dependency
+				continue
+			}
+			for _, vr := range attr.Expr.Variables() {
+				v := string(hclwrite.TokensForTraversal(vr).Bytes())
+				sv := strings.Split(v, ".")
+				if val, ok := vars[sv[1]]; ok {
+					appendToCtx(evalCtx, sv[0], sv[1], val)
+				} else if sv[0] == "var" || sv[0] == "local" {
+					depAttr, ok := body.Attributes[sv[1]]
+					if ok {
+						val, diags := depAttr.Expr.Value(evalCtx)
+						if diags != nil && diags.HasErrors() {
+							log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", depAttr.Name, "reason", diags.Error())
+							continue
+						}
+						appendToCtx(evalCtx, sv[0], depAttr.Name, val)
+						vars[depAttr.Name] = val
+					}
+				}
+			}
 			val, diags := attr.Expr.Value(evalCtx)
 			if diags != nil && diags.HasErrors() {
-				log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", attr.Name)
+				log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", attr.Name, "reason", diags.Error())
 				continue
 			}
 			vars[attr.Name] = val
@@ -312,6 +339,8 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 
 		nextEvalCtx := getEvalCtx(child, vars, nil)
 
+		// TODO: Check if this should use nextEvalCtx
+		log.Logger.Debug("hcl: Fetching module count")
 		mcfg := getBodyJSON(modName, body, nextEvalCtx)
 		nmcount := 1
 		if c, ok := mcfg["count"]; ok {
@@ -319,6 +348,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 				nmcount = int(cf)
 			}
 		}
+		log.Logger.Debug("hcl: End fetching module count")
 
 		// If the module call contains a `providers` block, it should replace the implicit provider
 		// inheritance. Instead, a new map of parent to child providers is created.
@@ -432,6 +462,7 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 			iv = convertGoTypesToExpectedCtyType(iv, vv.Type)
 			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
 			if err != nil {
+				log.Logger.Error("hcl: Error on abstracting value for 'input'", "key", vk, "reason", err.Error())
 				// NOTE: There are some types that we don't how to
 				// parse yet but we want to continue so we ignore
 				// the error
@@ -443,6 +474,7 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 			if ok {
 				lvars[vk] = lv
 			}
+			continue
 		}
 	}
 
@@ -461,7 +493,7 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	for lk, lv := range mod.Locals {
 		val, diags := lv.Expr.Value(evalCtx)
 		if diags != nil && diags.HasErrors() {
-			log.Logger.Error("hcl: Error on abstracting value for 'local'", "key", lk)
+			log.Logger.Error("hcl: Error on abstracting value for 'local'", "key", lk, "reason", diags.Error())
 			continue
 		}
 		lm[lk] = val
@@ -475,6 +507,25 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	log.Logger.Debug("hcl: New variables/locals found", "var", lvars, "local", llocal)
 
 	return evalCtx
+}
+
+func appendToCtx(ctx *hcl.EvalContext, t, name string, v cty.Value) {
+	vars := ctx.Variables[t]
+
+	mvars := make(map[string]cty.Value)
+	// TODO: Do a foreach or a func (val Value) ElementIterator() ElementIterator {
+	iter := vars.ElementIterator()
+	for iter.Next() {
+		k, v := iter.Element()
+		var key string
+		if err := gocty.FromCtyValue(k, &key); err != nil {
+			log.Logger.Error("hcl: Failed to get KEY from Context to append", "key", k, "reason", err.Error())
+		}
+		mvars[key] = v
+	}
+	mvars[name] = v
+
+	ctx.Variables[t] = cty.ObjectVal(mvars)
 }
 
 // convertGoTypesToExpectedCtyType will take a GO value and a cty.Type and convert the GO value into the cty.Type as much
@@ -604,7 +655,7 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 	for attrk, attrv := range b.Attributes {
 		val, diags := attrv.Expr.Value(evalCtx)
 		if diags != nil && diags.HasErrors() {
-			log.Logger.Error("hcl: Error on abstracting value for 'attribute'", "name", attrk)
+			log.Logger.Error("hcl: Error on abstracting value for 'attribute'", "name", attrk, "reason", diags.Error())
 			continue
 		}
 		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
@@ -693,7 +744,6 @@ func convertCtyValue(modulePrefix string, attrvars []hcl.Traversal, val cty.Valu
 						// has not been interpolated, which means it has no default,
 						// it'll be set as plain text and we don't want it
 						if sv[0] == "var" || sv[0] == "each" {
-							//if sv[0] == "var" {
 							continue
 						}
 						// With this we remove the last element of the reference, which is the

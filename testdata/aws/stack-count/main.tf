@@ -12,13 +12,29 @@ module "example" {
       instance_type = "t2.small"
     }
   ]
-  #instances = var.instances[count.index]
 
-  #instances = {}
-  #instances = null
+  secrets = {
+    "user_passwords_${var.chamber_name}" = {
+      description             = "Secret for multiple users with random passwords"
+      recovery_window_in_days = 0
+      instances_count         = length(var.instances)
+    }
+  }
 
   instances_count = 3
 }
+
+variable "chamber_name" {
+  type    = string
+  default = "test"
+}
+
+variable "secrets" {
+  description = "Map of secrets to keep in AWS Secrets Manager"
+  type        = any
+  default     = {}
+}
+
 
 variable "instances" {
   description = "instance inputs"
@@ -31,5 +47,5 @@ variable "instances" {
     imdsv1_disabled = bool
     application     = optional(string, "")
   })))
-  default = [null]
+  default = []
 }
