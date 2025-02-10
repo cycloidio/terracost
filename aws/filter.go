@@ -30,6 +30,10 @@ func MinimalFilter(pp *price.WithProduct) bool {
 		return true
 	case "AmazonRDS":
 		return minimalFilterRDS(pp)
+	case "AmazonS3":
+		return minimalFilterS3Bucket(pp)
+	case "AWSDataTransfer":
+		return true
 	case "AWSELB":
 		return true // is minimal already
 	case "awskms":
@@ -80,6 +84,15 @@ func minimalFilterCloudWatch(pp *price.WithProduct) bool {
 func minimalFilterRDS(pp *price.WithProduct) bool {
 	switch pp.Product.Family {
 	case "Database Instance", "Database Storage", "Provisioned IOPS", "Serverless", "ServerlessV2", "System Operation", "Storage Snapshot", "Performance Insights":
+		return true
+	default:
+		return false
+	}
+}
+
+func minimalFilterS3Bucket(pp *price.WithProduct) bool {
+	switch pp.Product.Family {
+	case "Storage", "API Request":
 		return true
 	default:
 		return false

@@ -60,6 +60,10 @@ var Default = Usage{
 			"monthly_additional_performance_insights_requests": 500000,
 			"capacity_units_per_hr":                            0.5,
 		},
+		"aws_s3_bucket": map[string]interface{}{
+			"storage_gb":               200,
+			"monthly_outbound_data_gb": 10,
+		},
 		"aws_secretsmanager_secret": map[string]interface{}{
 			"monthly_requests": 1000000,
 		},
