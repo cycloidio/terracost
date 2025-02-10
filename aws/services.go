@@ -14,6 +14,7 @@ var supportedServices = map[string]struct{}{
 	"AmazonFSx":         {},
 	"AmazonRDS":         {},
 	"AWSELB":            {},
+	"awskms":            {},
 	"AWSQueueService":   {},
 	"AWSSecretsManager": {},
 }
