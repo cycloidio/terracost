@@ -92,7 +92,7 @@ func minimalFilterRDS(pp *price.WithProduct) bool {
 
 func minimalFilterS3Bucket(pp *price.WithProduct) bool {
 	switch pp.Product.Family {
-	case "Storage", "API Request":
+	case "Storage", "API Request", "Fee":
 		return true
 	default:
 		return false

@@ -64,6 +64,9 @@ var Default = Usage{
 			"storage_gb":               200,
 			"monthly_outbound_data_gb": 10,
 		},
+		"aws_s3_bucket_analytics_configuration": map[string]interface{}{
+			"monthly_monitored_objects": 50000000,
+		},
 		"aws_secretsmanager_secret": map[string]interface{}{
 			"monthly_requests": 1000000,
 		},
