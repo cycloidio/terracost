@@ -5,6 +5,11 @@
 - Now HCL functions are loaded so no more errors related to functions missing
   ([Issue #126](https://github.com/cycloidio/terracost/issue/126))
 
+### Added
+
+- AWS support for `aws_cloudwatch_log_group`, `aws_cloudwatch_metric_alarm`, `aws_kms_key`, `aws_rds_cluster`, `aws_rds_cluster_instance`, `aws_s3_bucket`, `aws_s3_bucket_analytics_configuration`, `aws_s3_bucket_inventory`, `aws_secretsmanager_secret`, `aws_sqs_queue`
+  ([Pull #131](https://github.com/cycloidio/terracost/pull/115))
+
 ## [0.5.2] _2024-11-05_
 
 ### Added
