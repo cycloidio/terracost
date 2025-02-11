@@ -53,11 +53,7 @@ func decodeCloudwatchMetricAlarmValues(tfVals map[string]interface{}) (cloudwatc
 }
 
 // newCloudwatchMetricAlarm creates a new CloudwatchMetricAlarm from cloudwatchMetricAlarmValues.
-func (p *Provider) newCloudwatchMetricAlarm(rss map[string]terraform.Resource, vals cloudwatchMetricAlarmValues) *CloudwatchMetricAlarm {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newCloudwatchMetricAlarm(_ map[string]terraform.Resource, vals cloudwatchMetricAlarmValues) *CloudwatchMetricAlarm {
 	v := &CloudwatchMetricAlarm{
 		provider:           p,
 		region:             p.region,

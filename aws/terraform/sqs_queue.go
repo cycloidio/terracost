@@ -55,11 +55,7 @@ func decodeSQSQueueValues(tfVals map[string]interface{}) (sqsQueueValues, error)
 }
 
 // newSQSQueue creates a new SQSQueue from sqsQueueValues.
-func (p *Provider) newSQSQueue(rss map[string]terraform.Resource, vals sqsQueueValues) *SQSQueue {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newSQSQueue(_ map[string]terraform.Resource, vals sqsQueueValues) *SQSQueue {
 	v := &SQSQueue{
 		provider:  p,
 		region:    p.region,

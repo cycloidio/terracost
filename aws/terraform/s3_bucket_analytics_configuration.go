@@ -47,11 +47,7 @@ func decodeS3BucketAnalyticsConfigurationValues(tfVals map[string]interface{}) (
 }
 
 // newS3BucketAnalyticsConfiguration creates a new S3BucketAnalyticsConfiguration from s3BucketAnalyticsConfigurationValues.
-func (p *Provider) newS3BucketAnalyticsConfiguration(rss map[string]terraform.Resource, vals s3BucketAnalyticsConfigurationValues) *S3BucketAnalyticsConfiguration {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newS3BucketAnalyticsConfiguration(_ map[string]terraform.Resource, vals s3BucketAnalyticsConfigurationValues) *S3BucketAnalyticsConfiguration {
 	v := &S3BucketAnalyticsConfiguration{
 		provider: p,
 		region:   p.region,

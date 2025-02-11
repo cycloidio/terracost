@@ -81,11 +81,7 @@ func decodeRDSClusterValues(tfVals map[string]interface{}) (rdsClusterValues, er
 }
 
 // newRDSCluster creates a new RDSCluster from rdsClusterValues.
-func (p *Provider) newRDSCluster(rss map[string]terraform.Resource, vals rdsClusterValues) *RDSCluster {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newRDSCluster(_ map[string]terraform.Resource, vals rdsClusterValues) *RDSCluster {
 	v := &RDSCluster{
 		provider:              p,
 		region:                p.region,

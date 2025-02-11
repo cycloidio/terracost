@@ -53,11 +53,7 @@ func decodeS3BucketValues(tfVals map[string]interface{}) (s3BucketValues, error)
 }
 
 // newS3Bucket creates a new S3Bucket from s3BucketValues.
-func (p *Provider) newS3Bucket(rss map[string]terraform.Resource, vals s3BucketValues) *S3Bucket {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newS3Bucket(_ map[string]terraform.Resource, vals s3BucketValues) *S3Bucket {
 	v := &S3Bucket{
 		provider: p,
 		region:   p.region,

@@ -43,11 +43,7 @@ func decodeKMSKeyValues(tfVals map[string]interface{}) (kmsKeyValues, error) {
 }
 
 // newKMSKey creates a new KMSKey from kmsKeyValues.
-func (p *Provider) newKMSKey(rss map[string]terraform.Resource, vals kmsKeyValues) *KMSKey {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newKMSKey(_ map[string]terraform.Resource, vals kmsKeyValues) *KMSKey {
 	v := &KMSKey{
 		provider:              p,
 		region:                p.region,

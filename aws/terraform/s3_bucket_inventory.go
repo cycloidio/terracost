@@ -47,11 +47,7 @@ func decodeS3BucketInventoryValues(tfVals map[string]interface{}) (s3BucketInven
 }
 
 // newS3BucketInventory creates a new S3BucketInventory from s3BucketInventoryValues.
-func (p *Provider) newS3BucketInventory(rss map[string]terraform.Resource, vals s3BucketInventoryValues) *S3BucketInventory {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newS3BucketInventory(_ map[string]terraform.Resource, vals s3BucketInventoryValues) *S3BucketInventory {
 	v := &S3BucketInventory{
 		provider: p,
 		region:   p.region,

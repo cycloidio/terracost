@@ -51,11 +51,7 @@ func decodeCloudwatchLogGroupValues(tfVals map[string]interface{}) (cloudwatchLo
 }
 
 // newCloudwatchLogGroup creates a new CloudwatchLogGroup from cloudwatchLogGroupValues.
-func (p *Provider) newCloudwatchLogGroup(rss map[string]terraform.Resource, vals cloudwatchLogGroupValues) *CloudwatchLogGroup {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newCloudwatchLogGroup(_ map[string]terraform.Resource, vals cloudwatchLogGroupValues) *CloudwatchLogGroup {
 	v := &CloudwatchLogGroup{
 		provider: p,
 		region:   p.region,

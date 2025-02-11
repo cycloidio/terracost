@@ -68,11 +68,7 @@ func decodeEFSFileSystemValues(tfVals map[string]interface{}) (efsFileSystemValu
 }
 
 // newEFSFileSystem creates a new EFSFileSystem from efsFileSystemValues.
-func (p *Provider) newEFSFileSystem(rss map[string]terraform.Resource, vals efsFileSystemValues) *EFSFileSystem {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newEFSFileSystem(_ map[string]terraform.Resource, vals efsFileSystemValues) *EFSFileSystem {
 	v := &EFSFileSystem{
 		provider:       p,
 		region:         p.region,

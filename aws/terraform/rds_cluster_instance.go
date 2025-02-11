@@ -71,7 +71,7 @@ func decodeRDSClusterInstanceValues(tfVals map[string]interface{}) (rdsClusterIn
 }
 
 // newRDSClusterInstance creates a new RDSClusterInstance from rdsClusterInstanceValues.
-func (p *Provider) newRDSClusterInstance(rss map[string]terraform.Resource, vals rdsClusterInstanceValues) *RDSClusterInstance {
+func (p *Provider) newRDSClusterInstance(_ map[string]terraform.Resource, vals rdsClusterInstanceValues) *RDSClusterInstance {
 	v := &RDSClusterInstance{
 		provider:                           p,
 		region:                             p.region,
@@ -86,13 +86,6 @@ func (p *Provider) newRDSClusterInstance(rss map[string]terraform.Resource, vals
 		capacityUnitsPerHr:                           decimal.NewFromFloat(vals.Usage.CapacityUnitsPerHr),
 		monthlyAdditionalPerformanceInsightsRequests: decimal.NewFromFloat(vals.Usage.MonthlyAdditionalPerformanceInsightsRequests),
 	}
-
-	// Reference not used for now
-	_ = rss
-	// rdscluster, err := decodeRDSClusterValues(rss[vals.ClusterIdentifier].Values)
-	// if err != nil {
-	// 	return v
-	// }
 
 	v.isServerless = strings.EqualFold(vals.InstanceClass, "db.serverless")
 

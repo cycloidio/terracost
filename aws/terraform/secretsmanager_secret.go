@@ -47,11 +47,7 @@ func decodeSecretsmanagerSecretValues(tfVals map[string]interface{}) (secretsman
 }
 
 // newSecretsmanagerSecret creates a new SecretsmanagerSecret from secretsmanagerSecretValues.
-func (p *Provider) newSecretsmanagerSecret(rss map[string]terraform.Resource, vals secretsmanagerSecretValues) *SecretsmanagerSecret {
-	// The 'rss' variable contains information from linked resources.
-	// Currently, it is not utilized in this resource.
-	_ = rss
-
+func (p *Provider) newSecretsmanagerSecret(_ map[string]terraform.Resource, vals secretsmanagerSecretValues) *SecretsmanagerSecret {
 	v := &SecretsmanagerSecret{
 		provider: p,
 		region:   p.region,
