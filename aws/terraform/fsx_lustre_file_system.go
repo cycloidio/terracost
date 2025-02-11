@@ -41,7 +41,7 @@ func decodeFSxLustreFileSystemValues(tfVals map[string]interface{}) (fsxLustreFi
 }
 
 // newFSxLustreFileSystem creates a new FSxLustreFileSystem from fsxLustreFileSystemValues.
-func (p *Provider) newFSxLustreFileSystem(rss map[string]terraform.Resource, vals fsxLustreFileSystemValues) *FSxFileSystem {
+func (p *Provider) newFSxLustreFileSystem(_ map[string]terraform.Resource, vals fsxLustreFileSystemValues) *FSxFileSystem {
 	v := &FSxFileSystem{
 		provider:           p,
 		region:             p.region,

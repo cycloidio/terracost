@@ -16,22 +16,32 @@ func DefaultFilter(_ *price.WithProduct) bool {
 // MinimalFilter only ingests the supported records, skipping those that would never be used.
 func MinimalFilter(pp *price.WithProduct) bool {
 	switch pp.Product.Service {
+	case "AmazonCloudWatch":
+		return minimalFilterCloudWatch(pp)
 	case "AmazonEC2":
 		return minimalFilterEC2(pp)
-	case "AmazonRDS":
-		return minimalFilterRDS(pp)
-	case "AWSELB":
-		return true // is minimal already
-	case "AmazonElastiCache":
-		return true // is minimal already
-	case "AmazonCloudWatch":
+	case "AmazonEFS":
 		return true // is minimal already
 	case "AmazonEKS":
 		return true // is minimal already
-	case "AmazonEFS":
+	case "AmazonElastiCache":
 		return true // is minimal already
 	case "AmazonFSx":
 		return true
+	case "AmazonRDS":
+		return minimalFilterRDS(pp)
+	case "AmazonS3":
+		return minimalFilterS3Bucket(pp)
+	case "AWSDataTransfer":
+		return true
+	case "AWSELB":
+		return true // is minimal already
+	case "awskms":
+		return true // is minimal already
+	case "AWSQueueService":
+		return true // is minimal already
+	case "AWSSecretsManager":
+		return true // is minimal already
 	default:
 		return false
 	}
@@ -60,10 +70,29 @@ func minimalFilterEC2(pp *price.WithProduct) bool {
 	}
 }
 
+// minimalFilterCloudWatch only ingests records of supported product families.
+func minimalFilterCloudWatch(pp *price.WithProduct) bool {
+	switch pp.Product.Family {
+	case "Data Payload", "Storage Snapshot", "Alarm":
+		return true
+	default:
+		return false
+	}
+}
+
 // minimalFilterRDS only ingests RDS records of supported product families.
 func minimalFilterRDS(pp *price.WithProduct) bool {
 	switch pp.Product.Family {
-	case "Database Instance", "Database Storage", "Provisioned IOPS":
+	case "Database Instance", "Database Storage", "Provisioned IOPS", "Serverless", "ServerlessV2", "System Operation", "Storage Snapshot", "Performance Insights":
+		return true
+	default:
+		return false
+	}
+}
+
+func minimalFilterS3Bucket(pp *price.WithProduct) bool {
+	switch pp.Product.Family {
+	case "Storage", "API Request", "Fee":
 		return true
 	default:
 		return false

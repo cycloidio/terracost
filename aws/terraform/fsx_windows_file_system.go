@@ -57,7 +57,7 @@ func (v *FSxFileSystem) getWindowsDeployOption(deploymentType string) string {
 }
 
 // newFSxWindowsFileSystem creates a new FSxWindowsFileSystem from fsxWindowsFileSystemValues.
-func (p *Provider) newFSxWindowsFileSystem(rss map[string]terraform.Resource, vals fsxWindowsFileSystemValues) *FSxFileSystem {
+func (p *Provider) newFSxWindowsFileSystem(_ map[string]terraform.Resource, vals fsxWindowsFileSystemValues) *FSxFileSystem {
 	v := &FSxFileSystem{
 		provider:           p,
 		region:             p.region,

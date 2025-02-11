@@ -68,7 +68,7 @@ func decodeEFSFileSystemValues(tfVals map[string]interface{}) (efsFileSystemValu
 }
 
 // newEFSFileSystem creates a new EFSFileSystem from efsFileSystemValues.
-func (p *Provider) newEFSFileSystem(rss map[string]terraform.Resource, vals efsFileSystemValues) *EFSFileSystem {
+func (p *Provider) newEFSFileSystem(_ map[string]terraform.Resource, vals efsFileSystemValues) *EFSFileSystem {
 	v := &EFSFileSystem{
 		provider:       p,
 		region:         p.region,
@@ -166,7 +166,7 @@ func (v *EFSFileSystem) efsFileSystemComponent(usagetype string, storageGB decim
 			Family:   util.StringPtr("Storage"),
 			Location: util.StringPtr(v.region.String()),
 			AttributeFilters: []*product.AttributeFilter{
-				{Key: "UsageType", ValueRegex: util.StringPtr(fmt.Sprintf("%s", usagetype))},
+				{Key: "UsageType", ValueRegex: util.StringPtr(usagetype)},
 			},
 		},
 	}

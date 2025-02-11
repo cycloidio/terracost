@@ -10,6 +10,11 @@ const (
 var Default = Usage{
 	ResourceDefaultTypeUsage: map[string]interface{}{
 		// AWS
+		"aws_cloudwatch_log_group": map[string]interface{}{
+			"storage_gb":                       200,
+			"monthly_data_ingested_gb":         10,
+			"monthly_data_scanned_insights_gb": 20,
+		},
 		"aws_eks_node_group": map[string]interface{}{
 			"instances":                        15,
 			"operating_system":                 "linux",
@@ -39,6 +44,39 @@ var Default = Usage{
 		},
 		"aws_nat_gateway": map[string]interface{}{
 			"monthly_data_processed_gb": 10,
+		},
+		"aws_rds_cluster": map[string]interface{}{
+			"capacity_units_per_hr":        0.5,
+			"storage_gb":                   50,
+			"write_requests_per_sec":       4,
+			"read_requests_per_sec":        4,
+			"backup_snapshot_size_gb":      60,
+			"average_statements_per_hr":    2500,
+			"change_records_per_statement": 0.095,
+			"backtrack_window_hrs":         150,
+			"snapshot_export_size_gb":      300,
+		},
+		"aws_rds_cluster_instance": map[string]interface{}{
+			"monthly_additional_performance_insights_requests": 500000,
+			"capacity_units_per_hr":                            0.5,
+		},
+		"aws_s3_bucket": map[string]interface{}{
+			"storage_gb":               200,
+			"monthly_outbound_data_gb": 10,
+		},
+		"aws_s3_bucket_analytics_configuration": map[string]interface{}{
+			"monthly_monitored_objects": 50000000,
+		},
+
+		"aws_s3_bucket_inventory": map[string]interface{}{
+			"monthly_listed_objects": 2000000000,
+		},
+		"aws_secretsmanager_secret": map[string]interface{}{
+			"monthly_requests": 1000000,
+		},
+		"aws_sqs_queue": map[string]interface{}{
+			"monthly_requests": 15000000,
+			"request_size_kb":  16,
 		},
 
 		// Azure

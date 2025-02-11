@@ -41,6 +41,19 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newAutoscalingGroup(rss, vals).Components()
+	case "aws_cloudwatch_log_group":
+		vals, err := decodeCloudwatchLogGroupValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newCloudwatchLogGroup(rss, vals).Components()
+	case "aws_cloudwatch_metric_alarm":
+		vals, err := decodeCloudwatchMetricAlarmValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newCloudwatchMetricAlarm(rss, vals).Components()
+
 	case "aws_db_instance":
 		vals, err := decodeDBInstanceValues(tfRes.Values)
 		if err != nil {
@@ -117,6 +130,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newFSxWindowsFileSystem(rss, vals).Components()
+	case "aws_kms_key":
+		vals, err := decodeKMSKeyValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newKMSKey(rss, vals).Components()
 	case "aws_lb", "aws_alb":
 		vals, err := decodeLBValues(tfRes.Values)
 		if err != nil {
@@ -129,6 +148,48 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newNatGateway(vals).Components()
+	case "aws_rds_cluster":
+		vals, err := decodeRDSClusterValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newRDSCluster(rss, vals).Components()
+	case "aws_rds_cluster_instance":
+		vals, err := decodeRDSClusterInstanceValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newRDSClusterInstance(rss, vals).Components()
+	case "aws_s3_bucket":
+		vals, err := decodeS3BucketValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newS3Bucket(rss, vals).Components()
+	case "aws_s3_bucket_analytics_configuration":
+		vals, err := decodeS3BucketAnalyticsConfigurationValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newS3BucketAnalyticsConfiguration(rss, vals).Components()
+	case "aws_s3_bucket_inventory":
+		vals, err := decodeS3BucketInventoryValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newS3BucketInventory(rss, vals).Components()
+	case "aws_secretsmanager_secret":
+		vals, err := decodeSecretsmanagerSecretValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newSecretsmanagerSecret(rss, vals).Components()
+	case "aws_sqs_queue":
+		vals, err := decodeSQSQueueValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newSQSQueue(rss, vals).Components()
 	default:
 		return nil
 	}

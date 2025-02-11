@@ -62,7 +62,7 @@ func (v *FSxFileSystem) getOpenzfsDeployOption(deploymentType string) string {
 }
 
 // newFSxOpenzfsFileSystem creates a new FSxOpenzfsFileSystem from fsxOpenzfsFileSystemValues.
-func (p *Provider) newFSxOpenzfsFileSystem(rss map[string]terraform.Resource, vals fsxOpenzfsFileSystemValues) *FSxFileSystem {
+func (p *Provider) newFSxOpenzfsFileSystem(_ map[string]terraform.Resource, vals fsxOpenzfsFileSystemValues) *FSxFileSystem {
 	v := &FSxFileSystem{
 		provider:           p,
 		region:             p.region,

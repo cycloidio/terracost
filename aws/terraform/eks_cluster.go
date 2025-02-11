@@ -49,7 +49,7 @@ func decodeEKSClusterValues(tfVals map[string]interface{}) (eKSClusterValues, er
 }
 
 // NewInstance creates a new Instance from Terraform values.
-func (p *Provider) newEKSCluster(vals eKSClusterValues) *EKSCluster {
+func (p *Provider) newEKSCluster(_ eKSClusterValues) *EKSCluster {
 	inst := &EKSCluster{
 		providerKey: p.key,
 		region:      p.region,
