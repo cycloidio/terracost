@@ -67,6 +67,10 @@ var Default = Usage{
 		"aws_s3_bucket_analytics_configuration": map[string]interface{}{
 			"monthly_monitored_objects": 50000000,
 		},
+
+		"aws_s3_bucket_inventory": map[string]interface{}{
+			"monthly_listed_objects": 2000000000,
+		},
 		"aws_secretsmanager_secret": map[string]interface{}{
 			"monthly_requests": 1000000,
 		},

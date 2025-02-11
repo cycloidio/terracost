@@ -172,6 +172,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newS3BucketAnalyticsConfiguration(rss, vals).Components()
+	case "aws_s3_bucket_inventory":
+		vals, err := decodeS3BucketInventoryValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newS3BucketInventory(rss, vals).Components()
 	case "aws_secretsmanager_secret":
 		vals, err := decodeSecretsmanagerSecretValues(tfRes.Values)
 		if err != nil {
