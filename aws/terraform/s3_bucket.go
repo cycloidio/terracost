@@ -140,7 +140,8 @@ func (v *S3Bucket) S3BucketComponent(startingRange string, storage decimal.Decim
 func (v *S3Bucket) S3BucketOutboundDataTransferComponent(startingRange string, outboundGB decimal.Decimal) query.Component {
 	shortRegion := region.GetRegionToShortName(v.region.String())
 	usageType := "DataTransfer-Out-Bytes"
-	if shortRegion != "" {
+	// us-east-1 is a special case where no shortRegion should be used
+	if shortRegion != "" && shortRegion != "us-east-1" {
 		usageType = fmt.Sprintf("%s-DataTransfer-Out-Bytes", shortRegion)
 	}
 

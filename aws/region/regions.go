@@ -40,8 +40,10 @@ var nameToCode = map[string]Code{
 	"Middle East (UAE)":          "me-central-1",
 }
 
+// Short billing Region code
+// https://docs.aws.amazon.com/AmazonS3/latest/userguide/aws-usage-report-understand.html
 var codeToShortName = map[string]string{
-	"us-east-1":       "",
+	"us-east-1":       "US",
 	"us-east-2":       "USE2",
 	"us-west-1":       "USW1",
 	"us-west-2":       "USW2",
@@ -69,8 +71,8 @@ var codeToShortName = map[string]string{
 	"ap-east-1":       "APE1",
 	"ap-south-2":      "APS5",
 	"sa-east-1":       "SAE1",
-	"cn-north-1":      "", // error
-	"cn-northwest-1":  "", // error
+	"cn-north-1":      "CNN1",
+	"cn-northwest-1":  "CNW1",
 	"us-gov-west-1":   "UGW1",
 	"us-gov-east-1":   "UGE1",
 	"me-south-1":      "MES1",
@@ -87,6 +89,7 @@ func init() {
 	}
 }
 
+// GetRegionToShortName returns the short billing Region code for a region, which is the code that AWS commonly use in UsageType for billing purposes.
 func GetRegionToShortName(region string) string {
 	return codeToShortName[region]
 }
