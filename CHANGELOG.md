@@ -4,6 +4,8 @@
 
 - Now HCL functions are loaded so no more errors related to functions missing
   ([Issue #126](https://github.com/cycloidio/terracost/issue/126))
+- Now Dynamic are converted correctly to specific type to be used
+  ([Issue #126](https://github.com/cycloidio/terracost/issue/133))
 
 ### Added
 

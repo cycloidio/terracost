@@ -119,23 +119,35 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			if v != nil {
 				delete(evalCtx.Variables, "each")
 				vals := make(map[string]cty.Value)
-				for kv, vv := range v.(map[string]interface{}) {
-					it, err := gocty.ImpliedType(vv)
+				types := make(map[string]cty.Type)
+				switch vt := v.(type) {
+				case map[string]interface{}:
+					for kv, vv := range vt {
+						it, err := goTypeToCty(vv)
+						if err != nil {
+							continue
+						}
+						ctyv, err := gocty.ToCtyValue(vv, it)
+						if err != nil {
+							continue
+						}
+						vals[kv] = ctyv
+						types[kv] = it
+					}
+				default:
+					it, err := goTypeToCty(vt)
 					if err != nil {
 						continue
 					}
-					ctyv, err := gocty.ToCtyValue(vv, it)
+					ctyv, err := gocty.ToCtyValue(vt, it)
 					if err != nil {
 						continue
 					}
-					vals[kv] = ctyv
+					vals[k] = ctyv
+					types[k] = it
 				}
 
-				vt, err := gocty.ImpliedType(vals)
-				if err != nil {
-					continue
-				}
-				ctyv, err := gocty.ToCtyValue(vals, vt)
+				ctyv, err := gocty.ToCtyValue(vals, cty.Object(types))
 				if err != nil {
 					continue
 				}
@@ -459,8 +471,8 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 			}
 		}
 		if iv, ok := inputs[vk]; ok {
-			iv = convertGoTypesToExpectedCtyType(iv, vv.Type)
-			ctyv, err := gocty.ToCtyValue(iv, vv.Type)
+			iv, it := convertGoTypesToExpectedCtyType(iv, vv.Type)
+			ctyv, err := gocty.ToCtyValue(iv, it)
 			if err != nil {
 				log.Logger.Error("hcl: Error on abstracting value for 'input'", "key", vk, "reason", err.Error())
 				// NOTE: There are some types that we don't how to
@@ -530,8 +542,11 @@ func appendToCtx(ctx *hcl.EvalContext, t, name string, v cty.Value) {
 
 // convertGoTypesToExpectedCtyType will take a GO value and a cty.Type and convert the GO value into the cty.Type as much
 // as possible by trying to weak-type assertions
-func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
-	var nv interface{}
+func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) (interface{}, cty.Type) {
+	var (
+		nv interface{}
+		nt cty.Type = t
+	)
 	// We check if the expected type on the module
 	// matches the type we have on the inputs, if
 	// not we have to convert the type on the inputs
@@ -588,31 +603,37 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 			nv = false
 		}
 	case cty.DynamicPseudoType:
-		// TODO: Don't know how to evaluate the content of it yet
-		// for what I've seen this is happening when it has mix types
-		// defined init
+		// NOTE: This is when we do not actually know which is
+		// the type of the value
+		ct, err := goTypeToCty(v)
+		if err != nil {
+			log.Logger.Error("hcl: Error on abstracting DynamicPseudoType", err.Error())
+			return nil, nt
+		}
+		nv, _ = convertGoTypesToExpectedCtyType(v, ct)
+		nt = ct
 	default:
 		// Here we check for complex types
 		// TODO: Some of this types I don't have examples
 		// of or may not even be possible for them to happen.
 		// Gonna leave the IF statements so we know them
 		if v == nil {
-			return nil
+			return nil, nt
 		}
 		if t.IsTupleType() {
 		} else if t.IsObjectType() {
 			cfg := make(map[string]interface{})
 			vm, ok := v.(map[string]interface{})
 			if !ok {
-				return nil
+				return nil, nt
 			}
 			for vk, vv := range vm {
 				if t.HasAttribute(vk) {
 					at := t.AttributeType(vk)
-					cfg[vk] = convertGoTypesToExpectedCtyType(vv, at)
+					cfg[vk], _ = convertGoTypesToExpectedCtyType(vv, at)
 				} else {
 					// If the recieving object does not have the expected
-					cfg[vk] = convertGoTypesToExpectedCtyType(vv, cty.String)
+					cfg[vk], _ = convertGoTypesToExpectedCtyType(vv, cty.String)
 				}
 			}
 			nv = cfg
@@ -622,10 +643,10 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 			et := t.MapElementType()
 			vm, ok := v.(map[string]interface{})
 			if !ok {
-				return nil
+				return nil, nt
 			}
 			for vk, vv := range vm {
-				mv[vk] = convertGoTypesToExpectedCtyType(vv, *et)
+				mv[vk], _ = convertGoTypesToExpectedCtyType(vv, *et)
 			}
 			nv = mv
 			break
@@ -634,10 +655,10 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 			et := t.ListElementType()
 			va, ok := v.([]interface{})
 			if !ok {
-				return nil
+				return nil, nt
 			}
 			for _, vv := range va {
-				nnv := convertGoTypesToExpectedCtyType(vv, *et)
+				nnv, _ := convertGoTypesToExpectedCtyType(vv, *et)
 				lv = append(lv, nnv)
 			}
 			nv = lv
@@ -645,7 +666,7 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) interface{} {
 		} else {
 		}
 	}
-	return nv
+	return nv, nt
 }
 
 // getBodyJSON gets all the variables in a JSON format of the actual representation and the references it may have
@@ -844,4 +865,34 @@ func joinPath(source, target string) string {
 		return target
 	}
 	return path.Join(source, target)
+}
+
+func goTypeToCty(t interface{}) (cty.Type, error) {
+	switch tv := t.(type) {
+	case int, int32, int64, float64, float32:
+		return cty.Number, nil
+	case string:
+		return cty.String, nil
+	case bool:
+		return cty.Bool, nil
+	case map[string]interface{}:
+		tm := make(map[string]cty.Type)
+		for k, v := range tv {
+			ct, err := goTypeToCty(v)
+			if err != nil {
+				return cty.Type{}, err
+			}
+			tm[k] = ct
+		}
+		return cty.Object(tm), nil
+	case []interface{}:
+		first := tv[0]
+		ft, err := goTypeToCty(first)
+		if err != nil {
+			return cty.Type{}, err
+		}
+		return cty.List(ft), nil
+	default:
+		return cty.Type{}, fmt.Errorf("failed to convert type %T to CTY type", t)
+	}
 }
