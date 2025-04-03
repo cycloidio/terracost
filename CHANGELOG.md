@@ -6,6 +6,8 @@
   ([Issue #126](https://github.com/cycloidio/terracost/issue/126))
 - Now Dynamic are converted correctly to specific type to be used
   ([Issue #126](https://github.com/cycloidio/terracost/issue/133))
+- Fixed the unchecked conversion of a potentially nil region value in the AWS Terraform provider
+  ([Pull #134](https://github.com/cycloidio/terracost/pull/134))
 
 ### Added
 
