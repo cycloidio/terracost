@@ -4,8 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	costestimation "github.com/cycloidio/terracost"
 	"github.com/cycloidio/terracost/aws"
@@ -409,6 +411,12 @@ func TestAWSEstimation(t *testing.T) {
 					assertCostEqual(t, cost.NewMonthly(decimal.NewFromFloat(18.25), "USD"), pcost)
 				}
 			}
+		})
+		t.Run("TerragruntContextCancelled", func(t *testing.T) {
+			ctx, _ = context.WithTimeoutCause(ctx, time.Millisecond, fmt.Errorf("potato"))
+			_, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/terragrunt/", "../testdata/aws/terragrunt/non-prod/us-east-1/qa/webserver-cluster/", noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)
+			require.EqualError(t, err, "potato")
+
 		})
 		t.Run("SuccessFunctions", func(t *testing.T) {
 			plans, err := costestimation.EstimateHCL(ctx, backend, nil, "../testdata/aws/stack-functions/", noModulePath, noForceTerragrunt, noParallelismTerragrunt, usage.Default, noDebug)

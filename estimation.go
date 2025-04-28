@@ -209,11 +209,23 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		return nil, fmt.Errorf("failed to FindStackInSubfolders: %w", err)
 	}
 
+	tgRun := make(chan error, 1)
+	defer close(tgRun)
+
 	// Runs Terragrunt which basically generates some submodules
 	log.Logger.DebugContext(ctx, "Running TerraGrunt")
-	err = stack.Run(tgo)
-	if err != nil {
-		return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this is the STDERR for TG: %s", stack.Path, err, buff.String())
+	go func() {
+		localErr := stack.Run(tgo)
+		tgRun <- localErr
+	}()
+	select {
+	case <-ctx.Done():
+		err = context.Cause(ctx)
+		return nil, err
+	case err = <-tgRun:
+		if err != nil {
+			return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this is the STDERR for TG: %s", stack.Path, err, buff.String())
+		}
 	}
 
 	log.Logger.DebugContext(ctx, "Modules found", "count", len(stack.Modules))
