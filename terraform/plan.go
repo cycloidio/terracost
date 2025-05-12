@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/cycloidio/terracost/query"
@@ -357,11 +359,45 @@ func (p *Plan) evaluateResourceExpressions(prefix string, config map[string]inte
 		}
 
 		varName := ref[1]
+		pos, iaok := isArray(varName)
+		if iaok {
+			varName = strings.Split(varName, "[")[0]
+		}
 		v, ok := variables[varName]
 		if !ok || v.Value == "" {
 			return nil, fmt.Errorf("required variable %q is not defined", varName)
 		}
-		values[name] = v.Value
+
+		if iaok && v.Value != nil {
+			va, ok := v.Value.([]interface{})
+			if !ok {
+				return nil, fmt.Errorf("expecting %q to be an array", varName)
+			}
+			if (len(va) - 1) < pos {
+				return nil, fmt.Errorf("position requested [%d] is out of range for %q", pos, varName)
+			}
+			values[name] = va[pos]
+		} else {
+			values[name] = v.Value
+		}
 	}
 	return values, nil
+}
+
+var reKeyIsArray = regexp.MustCompile(`.*\[(?P<position>\d+)\]$`)
+
+// isArray checks if the 'n'(name) is an array name access like `subnet_ids[0]`,
+// it'll return the position and if it is array or not
+func isArray(n string) (int, bool) {
+	match := reKeyIsArray.FindStringSubmatch(n)
+	if match == nil {
+		return 0, false
+	}
+
+	p, err := strconv.Atoi(match[1])
+	if err != nil {
+		return 0, false
+	}
+
+	return p, true
 }
