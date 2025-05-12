@@ -56,7 +56,7 @@ lint: $(GOLINT) $(GOIMPORTS)
 .PHONY: db-up
 db-up: # Start the DB server
 ifeq ($(IS_CI), 0)
-	@$(DOCKER_COMPOSE_CMD) up -d database
+	@$(DOCKER_COMPOSE_CMD) up -d database --remove-orphans
 	@$(DOCKER_COMPOSE_CMD) run wait -c database:3306
 endif
 
