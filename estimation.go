@@ -59,6 +59,7 @@ func EstimateTerraformPlan(ctx context.Context, be backend.Backend, plan io.Read
 	if err != nil {
 		return nil, err
 	}
+
 	planned, err := cost.NewState(ctx, be, plannedQueries)
 	if err != nil {
 		return nil, err
