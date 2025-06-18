@@ -168,6 +168,14 @@ func (p *Plan) extractModuleConfiguration(prefix string, module *ConfigurationMo
 	return nil
 }
 
+var reResAddrClean = regexp.MustCompile(`\[\d*\]`)
+
+// cleanResourceAddresss will remove all unnecessary parts of it so it can be matched:
+// * Remove all the [*] that it may have
+func cleanResourceAddresss(ra string) string {
+	return reResAddrClean.ReplaceAllString(ra, "")
+}
+
 // extractModuleQueries iterates recursively over all the module's (and its descendants) resources. It uses the
 // resourceProviders map to retrieve the correct Provider based on the resource address.
 func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string]providerWithResourceValues) []query.Resource {
@@ -175,7 +183,7 @@ func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string
 
 	rss := make(map[string]Resource)
 	for _, tfres := range module.Resources {
-		pwrv, ok := resourceProviders[tfres.Address]
+		pwrv, ok := resourceProviders[cleanResourceAddresss(tfres.Address)]
 		if !ok || tfres.Mode != "managed" {
 			continue
 		}
@@ -236,7 +244,7 @@ func (p *Plan) extractModuleQueries(module *Module, resourceProviders map[string
 
 	for _, rs := range rss {
 		// We know it's present as it has passed the previous loop
-		pwrv := resourceProviders[rs.Address]
+		pwrv := resourceProviders[cleanResourceAddresss(rs.Address)]
 		comps := pwrv.Provider.ResourceComponents(rss, rs)
 		q := query.Resource{
 			Address:    rs.Address,
