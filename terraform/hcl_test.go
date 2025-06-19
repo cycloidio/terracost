@@ -88,9 +88,10 @@ func TestExtractQueriesFromHCL(t *testing.T) {
 					assert.Equal(t, "aws_ebs_volume", res.Type)
 					assert.Equal(t, "volume", res.Name)
 					assert.Equal(t, map[string]interface{}{
-						"size":     float64(20),
-						"type":     "gp2",
-						"tc_usage": map[string]interface{}(nil),
+						"size":              float64(20),
+						"type":              "gp2",
+						"availability_zone": nil,
+						"tc_usage":          map[string]interface{}(nil),
 					}, res.Values)
 
 				case "module.rds.aws_db_instance.db":
