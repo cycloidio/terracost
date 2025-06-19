@@ -161,12 +161,13 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 
 			for mc := 0; mc < mcount; mc++ {
 				nrk := rk
-				if modName != "" && mcount > 1 {
-					nrk = fmt.Sprintf("%s[%d].%s", modName, mc, rk)
+				if modName != "" {
+					if mcount > 1 {
+						nrk = fmt.Sprintf("%s[%d].%s", modName, mc, rk)
+					} else {
+						nrk = fmt.Sprintf("%s.%s", modName, rk)
+					}
 				}
-				//if mcount > 1 {
-				//rk = fmt.Sprintf("%s[%d]", rk, mc)
-				//}
 				// k is empty when there is not 'for_each'
 				if k == "" {
 					// Assume this is a single instance of this resource unless the cfg contains the "count" parameter.
@@ -607,7 +608,7 @@ func convertGoTypesToExpectedCtyType(v interface{}, t cty.Type) (interface{}, ct
 		// the type of the value
 		ct, err := goTypeToCty(v)
 		if err != nil {
-			log.Logger.Error("hcl: Error on abstracting DynamicPseudoType", err.Error())
+			log.Logger.Error("hcl: Error on abstracting DynamicPseudoType", "error", err.Error())
 			return nil, nt
 		}
 		nv, _ = convertGoTypesToExpectedCtyType(v, ct)
@@ -675,13 +676,11 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 	// Each attribute of the body is casted to the correct type and placed into the cfg map.
 	for attrk, attrv := range b.Attributes {
 		val, diags := attrv.Expr.Value(evalCtx)
-		if diags != nil && diags.HasErrors() {
+		if diags != nil && diags.HasErrors() && !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			log.Logger.Error("hcl: Error on abstracting value for 'attribute'", "name", attrk, "reason", diags.Error())
 			continue
 		}
-		if !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
-			continue
-		}
+
 		vv, ok := convertCtyValue(modulePrefix, attrv.Expr.Variables(), val)
 		if !ok {
 			continue
@@ -886,6 +885,9 @@ func goTypeToCty(t interface{}) (cty.Type, error) {
 		}
 		return cty.Object(tm), nil
 	case []interface{}:
+		if len(tv) == 0 {
+			return cty.Type{}, fmt.Errorf("empty array found cannot deduce internal type")
+		}
 		first := tv[0]
 		ft, err := goTypeToCty(first)
 		if err != nil {
