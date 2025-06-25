@@ -10,7 +10,7 @@
   ([Pull #134](https://github.com/cycloidio/terracost/pull/134))
 
 ### Added
-
+- Azurerm support for `azurerm_postgresql_flexible_server`
 - AWS support for `aws_cloudwatch_log_group`, `aws_cloudwatch_metric_alarm`, `aws_kms_key`, `aws_rds_cluster`, `aws_rds_cluster_instance`, `aws_s3_bucket`, `aws_s3_bucket_analytics_configuration`, `aws_s3_bucket_inventory`, `aws_secretsmanager_secret`, `aws_sqs_queue`
   ([Pull #131](https://github.com/cycloidio/terracost/pull/115))
 - Context checking on HCL estimation
