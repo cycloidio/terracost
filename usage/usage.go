@@ -123,6 +123,10 @@ var Default = Usage{
 		"azurerm_private_endpoint": map[string]interface{}{
 			"monthly_hours": 730, // Corresponds to a full month
 		},
+		"azurerm_postgresql_flexible_server": map[string]interface{}{
+			"additional_backup_storage_gb": 50,  // in GB
+			"monthly_hours":                730, // Corresponds to a full month
+		},
 	},
 }
 

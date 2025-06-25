@@ -161,6 +161,12 @@ func (p *Provider) ResourceComponents(rss map[string]terraform.Resource, tfRes t
 			return nil
 		}
 		return p.newPrivateEndpoint(vals).Components()
+	case "azurerm_postgresql_flexible_server":
+		vals, err := decodePostgreSQLFlexibleServerValues(tfRes.Values)
+		if err != nil {
+			return nil
+		}
+		return p.newPostgreSQLFlexibleServer(vals).Components()
 	default:
 		return nil
 	}
