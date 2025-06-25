@@ -231,7 +231,7 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 		terraformProviderInitializer = terraform.ProviderInitializer{
 			MatchNames: []string{"azurerm", fmt.Sprintf("registry.terraform.io/hashicorp/%s", "azurerm")},
 			Provider: func(config map[string]interface{}) (terraform.Provider, error) {
-				return azuretf.NewProvider(provider)
+				return azuretf.NewProvider("azurerm")
 			},
 		}
 	} else if provider == "gcp" {
@@ -247,7 +247,7 @@ func estimateHCL(path string, provider string, backend *mysql.Backend) {
 		}
 	}
 	// terraform HCL directory
-	debugEnabled := false
+	debugEnabled := true
 	planhcl, err := terracost.EstimateHCL(context.Background(), backend, nil, path, "", false, 0, usage.Default, debugEnabled, terraformProviderInitializer)
 
 	if err != nil {
