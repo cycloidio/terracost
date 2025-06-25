@@ -96,13 +96,14 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			if fe, ok := rv.ForEach.(*hclsyntax.ForExpr); ok {
 				fev, err := fe.Value(evalCtx)
 				if err != nil {
-					return nil, fmt.Errorf("could not get value from ForEach: %w", err)
+					log.Logger.Error("hcl: could not get value from ForEach", err, err)
+				} else {
+					v, ok := convertCtyValue("", nil, fev)
+					if !ok {
+						// TODO: Return an error?
+					}
+					each = v.(map[string]interface{})
 				}
-				v, ok := convertCtyValue("", nil, fev)
-				if !ok {
-					// TODO: Return an error?
-				}
-				each = v.(map[string]interface{})
 			}
 		}
 		// When we only have to do it once
