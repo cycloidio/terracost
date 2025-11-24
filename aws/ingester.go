@@ -100,6 +100,8 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 		}
 
 		csvr := csv.NewReader(rd)
+		// It's possible that AWS provides CSV files with bare quotes. Enable LazyQuotes to be able to read those files.
+		csvr.LazyQuotes = true
 
 		// The CSV contains rows with different numbers of columns. Namely, the metadata rows only have 2 columns, while
 		// the other rows will have much more. This is needed in order to avoid errors from the reader.
