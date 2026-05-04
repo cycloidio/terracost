@@ -35,7 +35,7 @@ test-package: db-migrate
 
 .PHONY: db-inject
 db-inject:
-	@zcat $(MYSQL_DUMP) | $(DOCKER_COMPOSE_CMD) exec -T database mysql -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MYSQL_DB)
+	@gunzip -c $(MYSQL_DUMP) | $(DOCKER_COMPOSE_CMD) exec -T database mysql -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MYSQL_DB)
 
 $(ENUMER):
 	@go install github.com/dmarkham/enumer

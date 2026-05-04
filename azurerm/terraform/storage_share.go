@@ -261,7 +261,7 @@ func (inst *StorageShare) storageShareComponent(key, location, componentName str
 	}
 
 	return query.Component{
-		Name:            fmt.Sprintf(componentName),
+		Name:            componentName,
 		MonthlyQuantity: quantityUsed,
 		ProductFilter: &product.Filter{
 			Provider: util.StringPtr(key),

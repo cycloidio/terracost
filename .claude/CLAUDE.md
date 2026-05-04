@@ -83,15 +83,21 @@ Generated files (`mock/**`, `*_enumer.go`, anything a `go:generate` directive pr
 - **Tests**: table-driven with `t.Run(name, func(t *testing.T) { ... })`. Mocks via `github.com/golang/go-mock/gomock` generated into `mock/`. DB tests use `github.com/DATA-DOG/go-sqlmock` for unit tests and real MySQL (via docker-compose) for integration/e2e. Fixtures live under `testdata/` directories next to the code under test.
 - **Mocks**: add a `//go:generate mockgen ...` directive to the interface's file; `make generate` wipes and regenerates the whole `mock/` tree.
 
-## Working with the Terraform Fork Dependency
+## Working with the Terraform + Terragrunt Fork Dependencies
 
-Terracost depends on a Cycloid fork of HashiCorp Terraform, pinned in `go.mod`:
+Terracost depends on two Cycloid forks, both pinned in `go.mod`:
 
 ```
-replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.4.6-cy
+replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.13.5-cy
+replace github.com/gruntwork-io/terragrunt => github.com/cycloidio/terragrunt v1.13.5-cy
 ```
 
-Downstream consumers must apply the same replace (the README shows the exact `go mod edit` command). If something imported from `github.com/hashicorp/terraform/...` is missing or internal, the fix usually lives in the `cycloidio/terraform` repo (another checkout under `~/go/src/github.com/cycloidio/terraform`), not here. Don't vendor upstream Terraform types into this repo as a workaround.
+- **Terraform fork** (`cycloidio/terraform`, branch `cy-v1.13.5`): re-exposes `addrs`, `configs`, `lang`, `registry`, `registry/regsrc`, `getmodules`, `getmodules/moduleaddrs` from upstream's `internal/` so `terraform/hcl.go` can import them. Only that one file reaches into the fork.
+- **Terragrunt fork** (`cycloidio/terragrunt`, branch `terraform-cy-v1.13.5`): carries three Cycloid patches on top of upstream — `options.TerragruntOptions.DryRun` + short-circuit in `internal/runner/run/run.go`, `pkg/runner` re-export of `FindStackInSubfolders`/`Stack`/`TerraformModule`, and `var runner.Run = internalrun.Run` so callers can assign `tgo.RunTerragrunt = runner.Run`. `EstimateHCL` in `estimation.go` relies on all three.
+
+Downstream consumers must apply the same replaces (the README shows the exact `go mod edit` command). If something imported from `github.com/hashicorp/terraform/...` or `github.com/gruntwork-io/terragrunt/...` is missing, internal, or broken, the fix usually lives in the fork (`~/go/src/github.com/cycloidio/terraform` / `~/go/src/github.com/cycloidio/terragrunt`), not here. Don't vendor upstream types into this repo as a workaround.
+
+When using terragrunt for HCL estimation, terracost sets `tgo.DryRun = true` (skip terraform invocation) and `tgo.AutoInit = false` (skip the automatic `terraform init` that runs before DryRun's short-circuit). Expect a "Auto-Init is disabled" warning per module in the logs — this is intentional.
 
 ## Things NOT to Do
 

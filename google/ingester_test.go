@@ -17,7 +17,7 @@ func TestIngester(t *testing.T) {
 		ctx     = context.Background()
 		project = "proj"
 		zone    = "europe-west1-b"
-		cred    = []byte(`{"type": "service_account"}`)
+		cred    []byte
 	)
 
 	ts := testutil.StartGoogleServer(t)
@@ -36,7 +36,7 @@ func TestIngester(t *testing.T) {
 		assert.Equal(t, 1777, count)
 	})
 	t.Run("SuccessMinimal", func(t *testing.T) {
-		i, err := google.NewIngester(ctx, []byte(`{"type": "service_account"}`), google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(google.MinimalFilter))
+		i, err := google.NewIngester(ctx, nil, google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(google.MinimalFilter))
 		require.NoError(t, err)
 
 		pwps := make([]*price.WithProduct, 0, 215)
@@ -47,7 +47,7 @@ func TestIngester(t *testing.T) {
 		require.NoError(t, i.Err())
 	})
 	t.Run("SuccessIngestSubset", func(t *testing.T) {
-		i, err := google.NewIngester(ctx, []byte(`{"type": "service_account"}`), google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(func(pp *price.WithProduct) bool {
+		i, err := google.NewIngester(ctx, nil, google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(func(pp *price.WithProduct) bool {
 			// This filter will import only the components of the 'e2-small'
 			if pp.Product.Attributes["machine_family"] == "e2" {
 				if pp.Product.Attributes["group"] == "CPU" || pp.Product.Attributes["group"] == "RAM" {

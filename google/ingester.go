@@ -90,8 +90,13 @@ func NewIngester(ctx context.Context, credentialJSON []byte, service, project, z
 		opt(ing)
 	}
 
-	gcpOpts := []option.ClientOption{
-		option.WithCredentialsJSON(credentialJSON),
+	gcpOpts := make([]option.ClientOption, 0, 1+len(ing.gcpOptions))
+	// Skip injecting credentials when none were supplied so callers can pair
+	// their own auth options (e.g. option.WithoutAuthentication for tests)
+	// without colliding with a zero-value credentials option — the newer
+	// google.golang.org/api rejects that combination.
+	if len(credentialJSON) > 0 {
+		gcpOpts = append(gcpOpts, option.WithCredentialsJSON(credentialJSON))
 	}
 	gcpOpts = append(gcpOpts, ing.gcpOptions...)
 

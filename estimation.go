@@ -13,7 +13,6 @@ import (
 	"strings"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/afero"
 
 	"github.com/cycloidio/terracost/backend"
@@ -22,11 +21,13 @@ import (
 	"github.com/cycloidio/terracost/terraform"
 	"github.com/cycloidio/terracost/usage"
 	"github.com/cycloidio/terracost/util"
-	"github.com/gruntwork-io/terragrunt/cli"
-	"github.com/gruntwork-io/terragrunt/cli/tfsource"
 	"github.com/gruntwork-io/terragrunt/config"
-	"github.com/gruntwork-io/terragrunt/configstack"
+	"github.com/gruntwork-io/terragrunt/config/hclparse"
+	tglog "github.com/gruntwork-io/terragrunt/pkg/log"
+	"github.com/gruntwork-io/terragrunt/pkg/log/format"
+	"github.com/gruntwork-io/terragrunt/pkg/runner"
 	"github.com/gruntwork-io/terragrunt/options"
+	"github.com/gruntwork-io/terragrunt/tf"
 )
 
 // EstimateTerraformPlan is a helper function that reads a Terraform plan using the provided io.Reader,
@@ -117,7 +118,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 			if strings.Contains(relpath, string(os.PathSeparator)) {
 				return nil
 			}
-			if relpath == config.DefaultTerragruntConfigPath || relpath == config.DefaultTerragruntJsonConfigPath {
+			if relpath == config.DefaultTerragruntConfigPath || relpath == config.DefaultTerragruntJSONConfigPath {
 				hasTG = true
 			}
 			return nil
@@ -158,11 +159,11 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	}
 
 	log.Logger.DebugContext(ctx, "Getting TerraGrunt options", "path", relModulePath)
-	tgo, err := options.NewTerragruntOptions(filepath.Join(tmpdir, relModulePath))
+	tgo, err := options.NewTerragruntOptionsWithConfigPath(filepath.Join(tmpdir, relModulePath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create terragrunt options for %s: %w", tmpdir, err)
 	}
-	tgo.RunTerragrunt = cli.RunTerragrunt
+	tgo.RunTerragrunt = runner.Run
 
 	// If we have a specific Parallelism we set it, if not
 	// we'll use the default one
@@ -170,11 +171,14 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		tgo.Parallelism = ptg
 	}
 
-	// DryRun is an specific option we added to the fork of Terragrunt we have.
-	// This fork allows us to run everything except Terraform, so we have all
-	// the Terragrunt code run that generates the modules and code so then we
-	// can read that generated code and run TerraCost
+	// DryRun makes Terragrunt do all its setup (config parsing, source download, codegen)
+	// but skip invoking terraform. That is exactly the state terracost needs to read for
+	// cost estimation.
 	tgo.DryRun = true
+	// Terragrunt's auto-init would shell out to `terraform init` on each downloaded module
+	// before DryRun's short-circuit fires; disable it so DryRun actually runs zero terraform
+	// commands. The logs will show a "Auto-Init is disabled" warning per module — expected.
+	tgo.AutoInit = false
 
 	// We fake a 'show' so it's not intrusive
 	tgo.OriginalTerraformCommand = "show"
@@ -184,8 +188,6 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// any logs on the screen when running test of the tool itself
 	var buff = &bytes.Buffer{}
 	if debug {
-		tgo.LogLevel = logrus.DebugLevel
-
 		tgo.Env = map[string]string{
 			"TF_LOG": "trace",
 		}
@@ -204,9 +206,24 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		return nil, fmt.Errorf("failed to initialize git repo %q: %w", tmpdir, err)
 	}
 
-	// We initialize all the stacks from the modulePath URL
-	stack, err := configstack.FindStackInSubfolders(tgo, nil)
+	// Build a logger with an explicit formatter: terragrunt's config parser
+	// dereferences logger.Formatter() when building HCL diagnostics, and the
+	// package default logger has no formatter attached, so we install one
+	// here to avoid a nil-pointer panic inside the stack runner.
+	tgLogger := tglog.New(
+		tglog.WithFormatter(format.NewFormatter(format.NewKeyValueFormatPlaceholders())),
+	)
+	tgo.Logger = tgLogger
+
+	// We initialize all the stacks from the modulePath URL.
+	// The new terragrunt honors ctx inside FindStackInSubfolders (older fork did not),
+	// so when the caller cancels we want to surface their context.Cause verbatim rather
+	// than wrapping a generic "context deadline exceeded" string.
+	stack, err := runner.FindStackInSubfolders(ctx, tgLogger, tgo)
 	if err != nil {
+		if ctx.Err() != nil {
+			return nil, context.Cause(ctx)
+		}
 		return nil, fmt.Errorf("failed to FindStackInSubfolders: %w", err)
 	}
 
@@ -216,7 +233,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// Runs Terragrunt which basically generates some submodules
 	log.Logger.DebugContext(ctx, "Running TerraGrunt")
 	go func() {
-		localErr := stack.Run(tgo)
+		localErr := stack.Run(ctx, tgLogger, tgo)
 		tgRun <- localErr
 	}()
 	select {
@@ -225,35 +242,39 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		return nil, err
 	case err = <-tgRun:
 		if err != nil {
-			return nil, fmt.Errorf("failed to run stack %q: %w\nAlso this is the STDERR for TG: %s", stack.Path, err, buff.String())
+			return nil, fmt.Errorf("failed to run stack: %w\nAlso this is the STDERR for TG: %s", err, buff.String())
 		}
 	}
 
-	log.Logger.DebugContext(ctx, "Modules found", "count", len(stack.Modules))
+	modules := stack.Modules()
+	log.Logger.DebugContext(ctx, "Modules found", "count", len(modules))
 
 	costs := make([]*cost.Plan, 0)
-	for _, m := range stack.Modules {
-		log.Logger.DebugContext(ctx, "Working on module", "path", m.TerragruntOptions.WorkingDir)
+	for _, m := range modules {
+		mOpts := m.TerragruntOptions()
+		mCfg := m.Config()
+		log.Logger.DebugContext(ctx, "Working on module", "path", mOpts.WorkingDir)
 		// We ReadTerragruntConfig so we can have the 'tgc.Inputs' which has the values+variables
 		// that we need to set to the module. Normally those inputs are passed via ENV variables
-		// when Terragrunt is running
-		// We also have access to the 'Skip' because if true we do need to do any actions
-		tgc, _ := config.ReadTerragruntConfig(m.TerragruntOptions)
-		if tgc.Skip {
-			modAddr := filepath.Base(m.TerragruntOptions.WorkingDir)
+		// when Terragrunt is running.
+		// We also have access to Exclude.NoRun (replacement for the former Skip field) so we can
+		// short-circuit modules the user explicitly excluded from runs.
+		tgc, _ := config.ReadTerragruntConfig(ctx, tgLogger, mOpts, []hclparse.Option{})
+		if tgc != nil && tgc.Exclude != nil && tgc.Exclude.NoRun != nil && *tgc.Exclude.NoRun {
+			modAddr := filepath.Base(mOpts.WorkingDir)
 
 			costs = append(costs, cost.NewPlan(modAddr, nil, nil))
 			continue
 		}
 
-		sourceURL, err := config.GetTerraformSourceUrl(m.TerragruntOptions, &m.Config)
+		sourceURL, err := config.GetTerraformSourceURL(mOpts, mCfg)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get terraform source url: %w", err)
 		}
 
 		// We need to get the terraformSource as it has the '.WorkingDir' which has the right path of the module just downloaded on the 'stack.Run'
 		// this path is not predictable so we need to get it from this 'terraformSource'
-		terraformSource, err := tfsource.NewTerraformSource(sourceURL, m.TerragruntOptions.DownloadDir, m.TerragruntOptions.WorkingDir, m.TerragruntOptions.Logger)
+		terraformSource, err := tf.NewSource(tgLogger, sourceURL, mOpts.DownloadDir, mOpts.WorkingDir, false)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get terraform source: %w", err)
 		}
@@ -274,7 +295,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 				// the best way is to just return nil instead of the error so we
 				// can continue estimating the rest
 				if modAddr == "" {
-					modAddr = filepath.Base(m.TerragruntOptions.WorkingDir)
+					modAddr = filepath.Base(mOpts.WorkingDir)
 				}
 				costs = append(costs, cost.NewPlan(modAddr, nil, nil))
 				continue
@@ -289,7 +310,7 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		// If no module is defined we can always use the name of the WorkingDir in which
 		// TG found the modules
 		if modAddr == "" {
-			modAddr = filepath.Base(m.TerragruntOptions.WorkingDir)
+			modAddr = filepath.Base(mOpts.WorkingDir)
 		}
 
 		costs = append(costs, cost.NewPlan(modAddr, nil, planned))

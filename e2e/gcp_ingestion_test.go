@@ -25,7 +25,7 @@ func TestGoogleIngestion(t *testing.T) {
 		ctx     = context.Background()
 		project = "proj"
 		zone    = "europe-west1-b"
-		cred    = []byte(`{"type": "service_account"}`)
+		cred    []byte
 	)
 
 	db, err := sql.Open("mysql", "root:terracost@tcp(172.44.0.2:3306)/terracost_test?multiStatements=true")

@@ -1,7 +1,20 @@
 ## [Unreleased]
 
+### Changed
+
+- Bumped the Cycloid Terraform fork from `v1.4.6-cy` to `v1.13.5-cy`, tracking upstream Terraform 1.13.5.
+- Bumped the Cycloid Terragrunt fork to `v1.13.5-cy` (previous pin was a July 2023 commit).
+- `EstimateHCL` now uses the re-exposed `pkg/runner` from the Terragrunt fork instead of the removed `configstack` package, and `tf.NewSource` instead of the removed `cli/tfsource.NewTerraformSource`.
+- `EstimateHCL` now sets `tgo.AutoInit = false` so Terragrunt does not shell out to `terraform init` before the `DryRun` short-circuit fires.
+- The MySQL test container in `docker-compose.yml` is now `mysql:8.0.42` (multi-arch manifest so `make test` works on Apple Silicon); the obsolete `MYSQL_USER=root` env var was removed because modern MySQL rejects it.
+- `make db-inject` now uses `gunzip -c` instead of `zcat` so it works on macOS (BSD `zcat` only reads `.Z`).
+- Minimum Go version is now 1.25 (required by the refreshed Terragrunt fork).
+
 ### Fixed
 
+- `terraform/hcl.go` now wraps every `Expr.Value(evalCtx)` in a panic-recovering helper so incomplete HCL fixtures (e.g. conditionals with unknown-type branches) surface as diagnostics instead of crashing the estimator — a regression in `hcl/v2 v2.24.0`'s evaluator.
+- `google.NewIngester` skips injecting `option.WithCredentialsJSON` when the caller passes empty credentials, so tests can pair `option.WithoutAuthentication()` without tripping the newer `google.golang.org/api` sanity check that forbids both.
+- `EstimateHCL` surfaces `context.Cause(ctx)` verbatim when `runner.FindStackInSubfolders` fails on a cancelled context, restoring the pre-bump behaviour where the caller's cancellation reason is propagated unchanged.
 - Now HCL functions are loaded so no more errors related to functions missing
   ([Issue #126](https://github.com/cycloidio/terracost/issue/126))
 - Now Dynamic are converted correctly to specific type to be used

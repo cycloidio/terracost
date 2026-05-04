@@ -12,9 +12,9 @@ import (
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	"github.com/hashicorp/terraform/addrs"
 	"github.com/hashicorp/terraform/configs"
 	"github.com/hashicorp/terraform/getmodules"
+	"github.com/hashicorp/terraform/getmodules/moduleaddrs"
 	"github.com/hashicorp/terraform/lang"
 	"github.com/hashicorp/terraform/registry"
 	"github.com/hashicorp/terraform/registry/regsrc"
@@ -35,13 +35,34 @@ const (
 	hclRefPrefix = "_tc_ref"
 )
 
+// safeExprValue evaluates an HCL expression and recovers from panics in
+// hcl/v2's evaluator. Some expressions in incomplete fixtures (conditionals
+// with unknown-type branches, in particular) panic inside hcl/v2 v2.24's
+// describeConditionalTypeMismatch rather than returning diagnostics; we
+// surface those as synthetic diagnostics so the caller's existing
+// diags.HasErrors() path handles them.
+func safeExprValue(expr hcl.Expression, evalCtx *hcl.EvalContext) (val cty.Value, diags hcl.Diagnostics) {
+	defer func() {
+		if r := recover(); r != nil {
+			val = cty.DynamicVal
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "expression evaluation panicked",
+				Detail:   fmt.Sprintf("%v", r),
+				Subject:  expr.Range().Ptr(),
+			})
+		}
+	}()
+	return expr.Value(evalCtx)
+}
+
 // ExtractQueriesFromHCL returns the resources found in the module identified by the modPath.
 func ExtractQueriesFromHCL(fs afero.Fs, providerInitializers []ProviderInitializer, modPath string, u usage.Usage, inputs map[string]interface{}) ([]query.Resource, string, error) {
 	parser := configs.NewParser(fs)
 	log.Logger.Debug("hcl: Loading module", "path", modPath)
 	mod, diags := parser.LoadConfigDir(modPath)
 	if diags.HasErrors() {
-		return nil, "", fmt.Errorf(diags.Error())
+		return nil, "", fmt.Errorf("%s", diags.Error())
 	}
 
 	evalCtx := getEvalCtx(mod, nil, inputs)
@@ -96,7 +117,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			if fe, ok := rv.ForEach.(*hclsyntax.ForExpr); ok {
 				fev, err := fe.Value(evalCtx)
 				if err != nil {
-					log.Logger.Error("hcl: could not get value from ForEach", err, err)
+					log.Logger.Error("hcl: could not get value from ForEach", "err", err)
 				} else {
 					v, ok := convertCtyValue("", nil, fev)
 					if !ok {
@@ -289,7 +310,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 			if err != nil {
 				return nil, fmt.Errorf("failed to install remote module: %w", err)
 			}
-			maddr, err := addrs.ParseModuleSource(dir)
+			maddr, err := moduleaddrs.ParseModuleSource(dir)
 			if err != nil {
 				return nil, fmt.Errorf("failed parse module source %q: %w", dir, err)
 			}
@@ -333,7 +354,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 				} else if sv[0] == "var" || sv[0] == "local" {
 					depAttr, ok := body.Attributes[sv[1]]
 					if ok {
-						val, diags := depAttr.Expr.Value(evalCtx)
+						val, diags := safeExprValue(depAttr.Expr, evalCtx)
 						if diags != nil && diags.HasErrors() {
 							log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", depAttr.Name, "reason", diags.Error())
 							continue
@@ -343,7 +364,7 @@ func extractHCLModule(fs afero.Fs, providers map[string]Provider, parser *config
 					}
 				}
 			}
-			val, diags := attr.Expr.Value(evalCtx)
+			val, diags := safeExprValue(attr.Expr, evalCtx)
 			if diags != nil && diags.HasErrors() {
 				log.Logger.Error("hcl: Error on abstracting value for 'vars'", "name", attr.Name, "reason", diags.Error())
 				continue
@@ -505,7 +526,7 @@ func getEvalCtx(mod *configs.Module, vars map[string]cty.Value, inputs map[strin
 	// Set values of locals.
 	lm := make(map[string]cty.Value)
 	for lk, lv := range mod.Locals {
-		val, diags := lv.Expr.Value(evalCtx)
+		val, diags := safeExprValue(lv.Expr, evalCtx)
 		if diags != nil && diags.HasErrors() {
 			log.Logger.Error("hcl: Error on abstracting value for 'local'", "key", lk, "reason", diags.Error())
 			continue
@@ -676,7 +697,7 @@ func getBodyJSON(modulePrefix string, b *hclsyntax.Body, evalCtx *hcl.EvalContex
 	cfg := make(map[string]interface{})
 	// Each attribute of the body is casted to the correct type and placed into the cfg map.
 	for attrk, attrv := range b.Attributes {
-		val, diags := attrv.Expr.Value(evalCtx)
+		val, diags := safeExprValue(attrv.Expr, evalCtx)
 		if diags != nil && diags.HasErrors() && !val.IsKnown() && len(attrv.Expr.Variables()) == 0 {
 			log.Logger.Error("hcl: Error on abstracting value for 'attribute'", "name", attrk, "reason", diags.Error())
 			continue
