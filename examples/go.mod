@@ -236,6 +236,15 @@ replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.13.5
 
 replace github.com/gruntwork-io/terragrunt => github.com/cycloidio/terragrunt v1.13.5-cy
 
+// The cycloidio/terraform fork's root go.mod requires the sub-modules below
+// at the upstream-style placeholder version v0.0.0-00010101000000-000000000000
+// with local-path replaces. Local-path replaces are not propagated to
+// downstream consumers, so without these matching tagged-version replaces
+// `go list -m all` (and any tool that walks the full module graph, including
+// GoLand's indexer) fails with "invalid version: unknown revision 000000000000".
+// We don't import these sub-modules; this is purely a graph-resolution shim.
+// On future bumps, push tags <subpath>/v<x.y.z>-cy on the fork pointing at the
+// same commit as the root v<x.y.z>-cy tag, then update the version below.
 replace github.com/hashicorp/terraform/backend/remote-state/azure => github.com/cycloidio/terraform/backend/remote-state/azure v1.13.5-cy
 
 replace github.com/hashicorp/terraform/backend/remote-state/consul => github.com/cycloidio/terraform/backend/remote-state/consul v1.13.5-cy
