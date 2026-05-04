@@ -210,9 +210,18 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 	// dereferences logger.Formatter() when building HCL diagnostics, and the
 	// package default logger has no formatter attached, so we install one
 	// here to avoid a nil-pointer panic inside the stack runner.
-	tgLogger := tglog.New(
+	// In non-debug mode we also redirect the logger's output to io.Discard so
+	// terragrunt-internal log lines (notably the per-module "Auto-Init is
+	// disabled" warning that follows from tgo.AutoInit = false) do not leak
+	// to the calling process's stderr — tgo.Writer/ErrWriter only silence the
+	// terraform subprocess output, not the logger itself.
+	tgLoggerOpts := []tglog.Option{
 		tglog.WithFormatter(format.NewFormatter(format.NewKeyValueFormatPlaceholders())),
-	)
+	}
+	if !debug {
+		tgLoggerOpts = append(tgLoggerOpts, tglog.WithOutput(io.Discard))
+	}
+	tgLogger := tglog.New(tgLoggerOpts...)
 	tgo.Logger = tgLogger
 
 	// We initialize all the stacks from the modulePath URL.
@@ -257,10 +266,11 @@ func EstimateHCL(ctx context.Context, be backend.Backend, afs afero.Fs, stackPat
 		// We ReadTerragruntConfig so we can have the 'tgc.Inputs' which has the values+variables
 		// that we need to set to the module. Normally those inputs are passed via ENV variables
 		// when Terragrunt is running.
-		// We also have access to Exclude.NoRun (replacement for the former Skip field) so we can
-		// short-circuit modules the user explicitly excluded from runs.
+		// We also delegate to ExcludeConfig.ShouldPreventRun (replacement for the former Skip
+		// field) so the module's exclude { if = ..., no_run = ..., actions = [...] } block is
+		// honoured the same way terragrunt itself would honour it.
 		tgc, _ := config.ReadTerragruntConfig(ctx, tgLogger, mOpts, []hclparse.Option{})
-		if tgc != nil && tgc.Exclude != nil && tgc.Exclude.NoRun != nil && *tgc.Exclude.NoRun {
+		if tgc != nil && tgc.Exclude != nil && tgc.Exclude.ShouldPreventRun(mOpts.TerraformCommand) {
 			modAddr := filepath.Base(mOpts.WorkingDir)
 
 			costs = append(costs, cost.NewPlan(modAddr, nil, nil))
