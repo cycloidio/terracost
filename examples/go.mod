@@ -235,3 +235,23 @@ replace github.com/cycloidio/terracost => ../
 replace github.com/hashicorp/terraform => github.com/cycloidio/terraform v1.13.5-cy
 
 replace github.com/gruntwork-io/terragrunt => github.com/cycloidio/terragrunt v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/azure => github.com/cycloidio/terraform/backend/remote-state/azure v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/consul => github.com/cycloidio/terraform/backend/remote-state/consul v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/cos => github.com/cycloidio/terraform/backend/remote-state/cos v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/gcs => github.com/cycloidio/terraform/backend/remote-state/gcs v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/kubernetes => github.com/cycloidio/terraform/backend/remote-state/kubernetes v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/oci => github.com/cycloidio/terraform/backend/remote-state/oci v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/oss => github.com/cycloidio/terraform/backend/remote-state/oss v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/pg => github.com/cycloidio/terraform/backend/remote-state/pg v1.13.5-cy
+
+replace github.com/hashicorp/terraform/backend/remote-state/s3 => github.com/cycloidio/terraform/backend/remote-state/s3 v1.13.5-cy
+
+replace github.com/hashicorp/terraform/legacy => github.com/cycloidio/terraform/legacy v1.13.5-cy
