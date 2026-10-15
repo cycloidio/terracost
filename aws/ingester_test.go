@@ -29,6 +29,35 @@ func TestIngester_Ingest(t *testing.T) {
 		assert.Nil(t, ing)
 	})
 
+	t.Run("MinimalFilterInstanceComponents", func(t *testing.T) {
+		for _, tc := range []struct {
+			service, family, unit string
+		}{
+			{"AmazonEC2", "CPU Credits", "vCPU-Hours"},
+			{"AmazonCloudWatch", "Metric", "Metrics"},
+		} {
+			t.Run(tc.family, func(t *testing.T) {
+				ctrl := gomock.NewController(t)
+				defer ctrl.Finish()
+				client := mock.NewHTTPClient(ctrl)
+				ing, err := NewIngester(tc.service, "eu-west-3", WithHTTPClient(client), WithIngestionFilter(MinimalFilter))
+				require.NoError(t, err)
+				// Only record retention is under test, not the vendor's current rate.
+				content := makeCSV([][]string{
+					{"SKU", "Product Family", "serviceCode", "TermType", "Location", "Unit", "Currency", "PricePerUnit"},
+					{"component", tc.family, tc.service, "OnDemand", "EU (Paris)", tc.unit, "USD", "0"},
+				})
+				client.EXPECT().Do(gomock.Any()).Return(&http.Response{Body: io.NopCloser(strings.NewReader(content))}, nil)
+				var results []*price.WithProduct
+				for pp := range ing.Ingest(context.Background(), 1) {
+					results = append(results, pp)
+				}
+				require.NoError(t, ing.Err())
+				require.Len(t, results, 1)
+				assert.Equal(t, tc.family, results[0].Product.Family)
+			})
+		}
+	})
 	t.Run("EC2", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
