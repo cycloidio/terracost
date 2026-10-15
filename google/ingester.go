@@ -246,9 +246,8 @@ func (ing *Ingester) Ingest(ctx context.Context, chSize int) <-chan *price.WithP
 				continue
 			}
 
-			// The mt.MemboryMb is in MB and the rp.Unit is on GiBy
-			// so we have to convert it to the same unit
-			rp.Value = rp.Value.Mul(decimal.NewFromInt(mt.MemoryMb / 1_000))
+			// Machine type memory is reported in MiB, while RAM is priced per GiB.
+			rp.Value = rp.Value.Mul(decimal.NewFromInt(mt.MemoryMb).Div(decimal.NewFromInt(1024)))
 			cp.Value = cp.Value.Mul(decimal.NewFromInt(mt.GuestCpus))
 
 			// The Unit for the RAM is in GiBy.h, but for the addition
