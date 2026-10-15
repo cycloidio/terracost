@@ -99,11 +99,11 @@ terraform show -json update.tfplan > tfplan.json
 2. Read the plan file, estimate it and show the resource differences:
 
 ```go
-db, err := db.Open("mysql", "...")
+db, err := sql.Open("mysql", "...")
 backend := mysql.NewBackend(db)
 
 file, err := os.Open("path/to/tfplan.json")
-plan, err := terracost.EstimateTerraformPlan(context.Background(), backend, file)
+plan, err := terracost.EstimateTerraformPlan(context.Background(), backend, file, usage.Default)
 
 for _, res := range plan.ResourceDifferences() {
   priorCost, err := res.PriorCost()
