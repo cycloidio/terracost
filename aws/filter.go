@@ -63,7 +63,7 @@ func minimalFilterEC2(pp *price.WithProduct) bool {
 			}
 		}
 		return true
-	case "Storage", "System Operation", "NAT Gateway":
+	case "Storage", "System Operation", "NAT Gateway", "CPU Credits":
 		return true
 	default:
 		return false
@@ -73,7 +73,7 @@ func minimalFilterEC2(pp *price.WithProduct) bool {
 // minimalFilterCloudWatch only ingests records of supported product families.
 func minimalFilterCloudWatch(pp *price.WithProduct) bool {
 	switch pp.Product.Family {
-	case "Data Payload", "Storage Snapshot", "Alarm":
+	case "Data Payload", "Storage Snapshot", "Alarm", "Metric":
 		return true
 	default:
 		return false
