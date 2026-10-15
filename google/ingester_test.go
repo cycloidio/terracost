@@ -69,6 +69,24 @@ func TestIngester(t *testing.T) {
 		assert.Equal(t, 3, len(pwps))
 		assert.Equal(t, "0.05441892", pwps[2].Price.Value.String())
 	})
+	t.Run("MachineTypeMemoryUnits", func(t *testing.T) {
+		i, err := google.NewIngester(ctx, nil, google.ComputeEngine.String(), project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()), google.WithIngestionFilter(func(pp *price.WithProduct) bool {
+			return pp.Product.Attributes["machine_type"] == "e2-standard-32"
+		}))
+		require.NoError(t, err)
+
+		var prices []*price.WithProduct
+		for pp := range i.Ingest(ctx, 10) {
+			prices = append(prices, pp)
+		}
+		require.NoError(t, i.Err())
+		require.Len(t, prices, 1)
+		// The existing fixtures describe 32 CPUs and 131072 MiB (128 GiB),
+		// with rates of 0.023993370 USD/CPU-hour and 0.003216090 USD/GiB-hour.
+		assert.Equal(t, "1.17944736", prices[0].Price.Value.String())
+		assert.Equal(t, "h", prices[0].Price.Unit)
+		assert.Equal(t, "USD", prices[0].Price.Currency)
+	})
 	t.Run("ErrNotSupportedService", func(t *testing.T) {
 		_, err := google.NewIngester(ctx, cred, "service", project, zone, google.WithGCPOption(option.WithEndpoint(ts.URL), option.WithoutAuthentication()))
 		assert.EqualError(t, err, google.ErrNotSupportedService.Error())
